@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF to Image Converter</title>
+</head>
+<body>
+    <h1>PDF to Image Converter</h1>
+    <form action="/convert" method="post" enctype="multipart/form-data">
+        <label for="file">Upload PDF:</label>
+        <input type="file" name="file" id="file" required>
+        <button type="submit">Convert to JPG</button>
+    </form>
+    <br>
+    <form action="/panoramic" method="post" enctype="multipart/form-data">
+        <label for="file">Upload PDF:</label>
+        <input type="file" name="file" id="file" required>
+        <button type="submit">Create Panoramic Image</button>
+    </form>
+</body>
+</html>

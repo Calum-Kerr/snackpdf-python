@@ -2,6 +2,7 @@ from flask import Flask, request, send_file, render_template
 from pdf2image import convert_from_path
 from PIL import Image
 import os
+import zipfile
 
 app = Flask(__name__)
 STATIC_DIR = os.path.join(os.getcwd(), 'pdf_to_image', 'static')
@@ -27,8 +28,14 @@ def convert():
         image.save(image_path, 'JPEG')
         image_paths.append(image_path)
 
-    # Send the first image for simplicity
-    return send_file(image_paths[0], as_attachment=True)
+    # Create a ZIP file containing all the images
+    zip_path = os.path.join(STATIC_DIR, f'{file.filename}.zip')
+    with zipfile.ZipFile(zip_path, 'w') as zipf:
+        for image_path in image_paths:
+            zipf.write(image_path, os.path.basename(image_path))
+
+    # Send the ZIP file
+    return send_file(zip_path, as_attachment=True)
 
 @app.route('/panoramic', methods=['POST'])
 def panoramic():

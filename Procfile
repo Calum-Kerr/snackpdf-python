@@ -1,2 +1,2 @@
-release: apt-get update && apt-get install -y swig
+release: ./release.sh
 web: gunicorn app:app

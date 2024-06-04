@@ -18,5 +18,17 @@
         <input type="file" name="file" id="file" required>
         <button type="submit">Create Panoramic Image</button>
     </form>
+    <br>
+    <form action="/compress" method="post" enctype="multipart/form-data">
+        <label for="file">Upload PDF:</label>
+        <input type="file" name="file" id="file" required>
+        <label for="compression_level">Compression Level:</label>
+        <select name="compression_level" id="compression_level">
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+        </select>
+        <button type="submit">Compress PDF</button>
+    </form>
 </body>
 </html>

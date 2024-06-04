@@ -1,1 +1,1 @@
-web: gunicorn pdf_to_image.app:app
+web: gunicorn app:app

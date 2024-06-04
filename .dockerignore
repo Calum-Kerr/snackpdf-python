@@ -1,0 +1,10 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.db
+*.sqlite3
+venv
+instance
+.webassets-cache

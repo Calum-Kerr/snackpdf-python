@@ -1,7 +1,5 @@
-# pdf_to_image/1_convert.py
 from flask import Blueprint, request, send_file
-from pdf2image import convert_from_path
-from PIL import Image
+import fitz  # PyMuPDF
 import os
 import zipfile
 
@@ -19,11 +17,14 @@ def convert():
     file_path = os.path.join(STATIC_DIR, file.filename)
     file.save(file_path)
 
-    images = convert_from_path(file_path)
+    doc = fitz.open(file_path)
     image_paths = []
-    for i, image in enumerate(images):
-        image_path = os.path.join(STATIC_DIR, f'{file.filename}_page_{i + 1}.jpg')
-        image.save(image_path, 'JPEG')
+
+    for page_number in range(len(doc)):
+        page = doc.load_page(page_number)
+        pix = page.get_pixmap()
+        image_path = os.path.join(STATIC_DIR, f'{file.filename}_page_{page_number + 1}.jpg')
+        pix.save(image_path)
         image_paths.append(image_path)
 
     # Create a ZIP file containing all the images

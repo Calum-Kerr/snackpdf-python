@@ -3,32 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF to Image Converter</title>
+    <title>SnackPDF</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            font-size: 0.8em;
+            transition: background 0.3s, border 0.3s;
+        }
+
+        body.dark-mode footer {
+            background: #444;
+            border-top: 1px solid #555;
+        }
+
+        footer a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>PDF to Image Converter</h1>
-    <form action="/convert" method="post" enctype="multipart/form-data">
-        <label for="file">Upload PDF:</label>
-        <input type="file" name="file" id="file" required>
-        <button type="submit">Convert to JPG</button>
-    </form>
-    <br>
-    <form action="/panoramic" method="post" enctype="multipart/form-data">
-        <label for="file">Upload PDF:</label>
-        <input type="file" name="file" id="file" required>
-        <button type="submit">Create Panoramic Image</button>
-    </form>
-    <br>
-    <form action="/compress" method="post" enctype="multipart/form-data">
-        <label for="file">Upload PDF:</label>
-        <input type="file" name="file" id="file" required>
-        <label for="compression_level">Compression Level:</label>
-        <select name="compression_level" id="compression_level">
-            <option value="high">High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
-        </select>
-        <button type="submit">Compress PDF</button>
-    </form>
+    <main>
+        <h1>Tools</h1>
+        <form action="/convert" method="post" enctype="multipart/form-data">
+            <label for="file">Upload PDF:</label>
+            <input type="file" name="file" id="file" required>
+            <button type="submit">Convert to JPG</button>
+        </form>
+        <br>
+        <form action="/panoramic" method="post" enctype="multipart/form-data">
+            <label for="file">Upload PDF:</label>
+            <input type="file" name="file" id="file" required>
+            <button type="submit">Create Panoramic Image</button>
+        </form>
+        <br>
+        <form action="/compress" method="post" enctype="multipart/form-data">
+            <label for="file">Upload PDF:</label>
+            <input type="file" name="file" id="file" required>
+            <label for="compression_level">Compression Level:</label>
+            <select name="compression_level" id="compression_level">
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+            <button type="submit">Compress PDF</button>
+        </form>
+    </main>
+    <footer>
+        <p>This application uses open-source software licensed under the AGPL:
+            <br>
+            <a href="https://github.com/ArtifexSoftware/mupdf" target="_blank">MuPDF - GitHub</a> | 
+            <a href="https://github.com/pymupdf/PyMuPDF" target="_blank">PyMuPDF - GitHub</a>
+        </p>
+        <p>You can access the source code of this application <a href="https://github.com/Calum-Kerr/snackpdf-python" target="_blank">here</a>.</p>
+    </footer>
 </body>
 </html>

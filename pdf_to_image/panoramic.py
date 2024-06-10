@@ -1,6 +1,5 @@
-# pdf_to_image/2_panoramic.py
 from flask import Blueprint, request, send_file
-from pdf2image import convert_from_path
+import fitz  # PyMuPDF
 from PIL import Image
 import os
 
@@ -14,9 +13,16 @@ def panoramic():
     file_path = os.path.join(STATIC_DIR, file.filename)
     file.save(file_path)
 
-    images = convert_from_path(file_path)
-    widths, heights = zip(*(i.size for i in images))
+    doc = fitz.open(file_path)
+    images = []
 
+    for page_number in range(len(doc)):
+        page = doc.load_page(page_number)
+        pix = page.get_pixmap()
+        image = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+        images.append(image)
+
+    widths, heights = zip(*(i.size for i in images))
     total_width = sum(widths)
     max_height = max(heights)
 

@@ -47,6 +47,8 @@
             <label for="file">Upload PDF:</label>
             <input type="file" name="file" id="file" required>
             <button type="submit">Convert to JPG</button>
+            <button formaction="/pdf_to_word" type="submit">Convert to Word</button>
+            <button formaction="/pdf_to_powerpoint" type="submit">Convert to PowerPoint</button>
         </form>
         <br>
         <form action="/panoramic" method="post" enctype="multipart/form-data">

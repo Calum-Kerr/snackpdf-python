@@ -20,9 +20,13 @@ def convert():
     doc = fitz.open(file_path)
     image_paths = []
 
+    # Set desired resolution (e.g., 300 DPI)
+    zoom = 3.0  # 3.0 corresponds to 300 DPI
+
     for page_number in range(len(doc)):
         page = doc.load_page(page_number)
-        pix = page.get_pixmap()
+        mat = fitz.Matrix(zoom, zoom)  # Use the matrix to scale the image
+        pix = page.get_pixmap(matrix=mat)
         image_path = os.path.join(STATIC_DIR, f'{file.filename}_page_{page_number + 1}.jpg')
         pix.save(image_path)
         image_paths.append(image_path)

@@ -11,3 +11,5 @@ pillow==10.3.0
 Werkzeug==3.0.3
 pdfplumber==0.7.5
 PyMuPDF==1.23.9
+python-docx==0.8.11
+python-pptx==0.6.21

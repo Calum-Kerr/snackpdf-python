@@ -7,6 +7,10 @@ panoramic_bp = Blueprint('panoramic', __name__)
 
 STATIC_DIR = os.path.join(os.getcwd(), 'pdf_to_image', 'static')
 
+# Ensure the static directory exists
+if not os.path.exists(STATIC_DIR):
+    os.makedirs(STATIC_DIR)
+
 @panoramic_bp.route('/panoramic', methods=['POST'])
 def panoramic():
     file = request.files['file']
@@ -16,9 +20,13 @@ def panoramic():
     doc = fitz.open(file_path)
     images = []
 
+    # Set desired resolution (e.g., 300 DPI)
+    zoom = 3.0  # 3.0 corresponds to 300 DPI
+
     for page_number in range(len(doc)):
         page = doc.load_page(page_number)
-        pix = page.get_pixmap()
+        mat = fitz.Matrix(zoom, zoom)  # Use the matrix to scale the image
+        pix = page.get_pixmap(matrix=mat)
         image = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
         images.append(image)
 

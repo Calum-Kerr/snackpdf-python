@@ -43,22 +43,36 @@
 <body>
     <main>
         <h1>Tools</h1>
+        <form action="/merge" method="post" enctype="multipart/form-data">
+            <label for="merge_files">Upload PDFs:</label>
+            <input type="file" name="files" id="merge_files" multiple onchange="updatePageCount(this, 'merge_page_count')" required>
+            <button type="submit">Merge PDFs</button>
+        </form>
+        <br>
+        <form action="/split" method="post" enctype="multipart/form-data">
+            <label for="split_file">Upload PDFs:</label>
+            <input type="file" name="file" id="split_file" onchange="updatePageCount(this, 'split_page_count')" required>
+            <label for="page_ranges">Page Ranges (e.g., 1-3,5-7):</label>
+            <input type="text" name="page_ranges" id="page_ranges" required>
+            <button type="submit">Split PDF</button>
+        </form>
+        <br>
         <form action="/convert" method="post" enctype="multipart/form-data">
-            <label for="file">Upload PDF:</label>
+            <label for="file">Upload PDFs:</label>
             <input type="file" name="file" id="file" required>
             <button type="submit">Convert to JPG</button>
-            <button formaction="/pdf_to_word" type="submit">Word</button>
-            <button formaction="/pdf_to_powerpoint" type="submit">PowerPoint</button>
+            <button formaction="/pdf_to_word" type="submit">Word (Not fully working)</button>
+            <button formaction="/pdf_to_powerpoint" type="submit">PowerPoint (Uses images)</button>
         </form>
         <br>
         <form action="/panoramic" method="post" enctype="multipart/form-data">
-            <label for="file">Upload PDF:</label>
+            <label for="file">Upload PDFs:</label>
             <input type="file" name="file" id="file" required>
             <button type="submit">Create Panoramic Image</button>
         </form>
         <br>
         <form action="/compress" method="post" enctype="multipart/form-data">
-            <label for="file">Upload PDF:</label>
+            <label for="file">Upload PDFs:</label>
             <input type="file" name="file" id="file" required>
             <label for="compression_level">Compression Level:</label>
             <select name="compression_level" id="compression_level">

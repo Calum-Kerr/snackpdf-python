@@ -82,6 +82,29 @@
             </select>
             <button type="submit">Compress PDF</button>
         </form>
+        <br>
+        <form action="/unlock" method="post" enctype="multipart/form-data">
+            <label for="unlock_file">Upload PDFs:</label>
+            <input type="file" name="file" id="unlock_file" required>
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+            <button type="submit">Unlock PDF</button>
+        </form>
+        <br>
+        <form action="/protect" method="post" enctype="multipart/form-data">
+            <label for="protect_file">Upload PDFs:</label>
+            <input type="file" name="file" id="protect_file" required>
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+            <button type="submit">Protect PDF</button>
+        </form>
+        <br>
+        <form action="/convert_to_pdf" method="post" enctype="multipart/form-data">
+            <label for="convert_to_pdf_file">Upload .zip with images inside:</label>
+            <input type="file" name="file" id="convert_to_pdf_file" required>
+            <button type="submit">Convert to PDF</button>
+        </form>
+        <br>
     </main>
     <footer>
         <p>This application uses open-source software licensed under the AGPL:

@@ -6,12 +6,12 @@ from .pdf_to_word import pdf_to_word_bp
 from .pdf_to_powerpoint import pdf_to_powerpoint_bp
 from .merge import merge_bp
 from .split import split_bp
-#from .convert_to_pdf import convert_to_pdf_bp
+from .convert_to_pdf import convert_to_pdf_bp
 #from .convert_from_pdf import convert_from_pdf_bp
 #from .organize import organize_bp
 #from .optimise import optimise_bp
 #from .edit import edit_bp
-#from .security import security_bp
+from .security import security_bp
 #from .ocr import ocr_bp
 #from .batch import batch_bp
 #from .annotate import annotate_bp
@@ -29,12 +29,12 @@ def create_app():
     app.register_blueprint(pdf_to_powerpoint_bp)
     app.register_blueprint(merge_bp)
     app.register_blueprint(split_bp)
-    #app.register_blueprint(convert_to_pdf_bp)
+    app.register_blueprint(convert_to_pdf_bp)
     #app.register_blueprint(convert_from_pdf_bp)
     #app.register_blueprint(optimise_bp)
     #app.register_blueprint(organize_bp)
     #app.register_blueprint(edit_bp)
-    #app.register_blueprint(security_bp)
+    app.register_blueprint(security_bp)
     #app.register_blueprint(ocr_bp)
     #app.register_blueprint(batch_bp)
     #app.register_blueprint(annotate_bp)

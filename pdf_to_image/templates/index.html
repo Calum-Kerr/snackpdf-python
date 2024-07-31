@@ -8,111 +8,262 @@
         body {
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
             margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
         }
-
-        main {
+        header {
+            background: #1f2937;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        header button {
+            background: #1f2937;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        header button:hover {
+            background: #4b5563;
+        }
+        .container {
+            display: flex;
             flex: 1;
         }
-
+        .sidebar {
+            width: 200px;
+            background: #ffffff;
+            padding: 20px;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        .tool-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .tool-list li {
+            margin: 10px 0;
+        }
+        .tool-list li a {
+            text-decoration: none;
+            color: #1f2937;
+        }
+        .tool-list li a:hover {
+            color: #4b5563;
+        }
+        .section-title {
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #1f2937;
+            font-weight: bold;
+        }
+        .drag-drop {
+            border: 2px dashed #d1d5db;
+            border-radius: 10px;
+            padding: 113px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+            font-size: 13px;
+            color: #6b7280;
+        }
+        .drag-drop.dragover {
+            border-color: #1f2937;
+        }
+        .convert-button {
+            display: block;
+            padding: 10px;
+            background: #1f2937;
+            color: #fff;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .convert-button:hover {
+            background: #4b5563;
+        }
+        form {
+            display: none;
+        }
+        form.active {
+            display: block;
+        }
+        .footer-container {
+            flex-shrink: 0;
+        }
         footer {
             text-align: center;
-            padding: 20px;
-            background: #fff;
-            border-top: 1px solid #ddd;
+            padding: 10px;
+            background: #ffffff;
             font-size: 0.8em;
-            transition: background 0.3s, border 0.3s;
         }
-
-        body.dark-mode footer {
-            background: #444;
-            border-top: 1px solid #555;
-        }
-
         footer a {
-            color: inherit;
             text-decoration: none;
         }
-
         footer a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <main>
-        <h1>Tools</h1>
-        <form action="/merge" method="post" enctype="multipart/form-data">
-            <label for="merge_files">Upload PDFs:</label>
-            <input type="file" name="files" id="merge_files" multiple onchange="updatePageCount(this, 'merge_page_count')" required>
-            <button type="submit">Merge PDFs</button>
-        </form>
-        <br>
-        <form action="/split" method="post" enctype="multipart/form-data">
-            <label for="split_file">Upload PDFs:</label>
-            <input type="file" name="file" id="split_file" onchange="updatePageCount(this, 'split_page_count')" required>
-            <label for="page_ranges">Page Ranges (e.g., 1-3,5-7):</label>
-            <input type="text" name="page_ranges" id="page_ranges" required>
-            <button type="submit">Split PDF</button>
-        </form>
-        <br>
-        <form action="/convert" method="post" enctype="multipart/form-data">
-            <label for="file">Upload PDFs:</label>
-            <input type="file" name="file" id="file" required>
-            <button type="submit">Convert to JPG</button>
-            <button formaction="/pdf_to_word" type="submit">Word (Not fully working)</button>
-            <button formaction="/pdf_to_powerpoint" type="submit">PowerPoint (Uses images)</button>
-        </form>
-        <br>
-        <form action="/panoramic" method="post" enctype="multipart/form-data">
-            <label for="file">Upload PDFs:</label>
-            <input type="file" name="file" id="file" required>
-            <button type="submit">Create Panoramic Image</button>
-        </form>
-        <br>
-        <form action="/compress" method="post" enctype="multipart/form-data">
-            <label for="file">Upload PDFs:</label>
-            <input type="file" name="file" id="file" required>
-            <label for="compression_level">Compression Level:</label>
-            <select name="compression_level" id="compression_level">
-                <option value="high">High</option>
-                <option value="medium">Medium</option>
-                <option value="low">Low</option>
-            </select>
-            <button type="submit">Compress PDF</button>
-        </form>
-        <br>
-        <form action="/unlock" method="post" enctype="multipart/form-data">
-            <label for="unlock_file">Upload PDFs:</label>
-            <input type="file" name="file" id="unlock_file" required>
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" required>
-            <button type="submit">Unlock PDF</button>
-        </form>
-        <br>
-        <form action="/protect" method="post" enctype="multipart/form-data">
-            <label for="protect_file">Upload PDFs:</label>
-            <input type="file" name="file" id="protect_file" required>
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" required>
-            <button type="submit">Protect PDF</button>
-        </form>
-        <br>
-        <form action="/convert_to_pdf" method="post" enctype="multipart/form-data">
-            <label for="convert_to_pdf_file">Upload .zip with images inside:</label>
-            <input type="file" name="file" id="convert_to_pdf_file" required>
-            <button type="submit">Convert to PDF</button>
-        </form>
-        <br>
-    </main>
-    <footer>
-        <p>This application uses open-source software licensed under the AGPL:
-            <br>
-            <a href="https://github.com/ArtifexSoftware/mupdf" target="_blank">MuPDF - GitHub</a> | 
-            <a href="https://github.com/pymupdf/PyMuPDF" target="_blank">PyMuPDF - GitHub</a>
-        </p>
-        <p>You can access the source code of this application <a href="https://github.com/Calum-Kerr/snackpdf-python" target="_blank">here</a>.</p>
+    <header>
+        <h1>SnackPDF</h1>
+        <button>Login</button>
+    </header>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="section-title">Edit</div>
+            <ul class="tool-list">
+                <li><a href="#" data-tool="merge">Merge</a></li>
+                <li><a href="#" data-tool="split">Split</a></li>
+                <li><a href="#" data-tool="compress-high">Compress PDF (High)</a></li>
+                <li><a href="#" data-tool="compress-medium">Compress PDF (Medium)</a></li>
+                <li><a href="#" data-tool="compress-low">Compress PDF (Low)</a></li>
+            </ul>
+            <div class="section-title">Organize</div>
+            <ul class="tool-list">
+                <li><a href="#" data-tool="convert-to-jpg">Convert to JPG</a></li>
+                <li><a href="#" data-tool="convert-to-word">Convert to Word</a></li>
+                <li><a href="#" data-tool="convert-to-ppt">Convert to PPT</a></li>
+                <li><a href="#" data-tool="convert-to-panoramic-image">Convert to Panoramic Image</a></li>
+                <li><a href="#" data-tool="upload-zip">Upload Zip of Images to PDF</a></li>
+            </ul>
+            <div class="section-title">Security</div>
+            <ul class="tool-list">
+                <li><a href="#" data-tool="unlock-pdf">Unlock PDF</a></li>
+                <li><a href="#" data-tool="protect-pdf">Protect PDF</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+            <div class="drag-drop" id="drop-area">
+                Drag and drop a PDF file here
+            </div>
+            <form id="merge" action="/merge" method="post" enctype="multipart/form-data">
+                <label for="merge_files">Upload PDFs:</label>
+                <input type="file" name="files" id="merge_files" multiple required>
+                <button type="submit" class="convert-button">Merge PDFs</button>
+            </form>
+            <form id="split" action="/split" method="post" enctype="multipart/form-data">
+                <label for="split_file">Upload PDFs:</label>
+                <input type="file" name="file" id="split_file" required>
+                <label for="page_ranges">Page Ranges (e.g., 1-3,5-7):</label>
+                <input type="text" name="page_ranges" id="page_ranges" required>
+                <button type="submit" class="convert-button">Split PDF</button>
+            </form>
+            <form id="convert-to-jpg" action="/convert" method="post" enctype="multipart/form-data">
+                <label for="file">Upload PDFs:</label>
+                <input type="file" name="file" id="file" required>
+                <button type="submit" class="convert-button">Convert to JPG</button>
+            </form>
+            <form id="convert-to-word" action="/pdf_to_word" method="post" enctype="multipart/form-data">
+                <label for="file">Upload PDFs:</label>
+                <input type="file" name="file" id="file" required>
+                <button type="submit" class="convert-button">Convert to Word</button>
+            </form>
+            <form id="convert-to-ppt" action="/pdf_to_powerpoint" method="post" enctype="multipart/form-data">
+                <label for="file">Upload PDFs:</label>
+                <input type="file" name="file" id="file" required>
+                <button type="submit" class="convert-button">Convert to PPT</button>
+            </form>
+            <form id="convert-to-panoramic-image" action="/panoramic" method="post" enctype="multipart/form-data">
+                <label for="file">Upload PDFs:</label>
+                <input type="file" name="file" id="file" required>
+                <button type="submit" class="convert-button">Create Panoramic Image</button>
+            </form>
+            <form id="compress-high" action="/compress" method="post" enctype="multipart/form-data">
+                <label for="file">Upload PDFs:</label>
+                <input type="file" name="file" id="file" required>
+                <label for="compression_level">Compression Level:</label>
+                <select name="compression_level" id="compression_level">
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+                <button type="submit" class="convert-button">Compress PDF</button>
+            </form>
+            <form id="unlock-pdf" action="/unlock" method="post" enctype="multipart/form-data">
+                <label for="unlock_file">Upload PDFs:</label>
+                <input type="file" name="file" id="unlock_file" required>
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" required>
+                <button type="submit" class="convert-button">Unlock PDF</button>
+            </form>
+            <form id="protect-pdf" action="/protect" method="post" enctype="multipart/form-data">
+                <label for="protect_file">Upload PDFs:</label>
+                <input type="file" name="file" id="protect_file" required>
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" required>
+                <button type="submit" class="convert-button">Protect PDF</button>
+            </form>
+            <form id="upload-zip" action="/convert_to_pdf" method="post" enctype="multipart/form-data">
+                <label for="convert_to_pdf_file">Upload .zip with images inside:</label>
+                <input type="file" name="file" id="convert_to_pdf_file" required>
+                <button type="submit" class="convert-button">Convert to PDF</button>
+            </form>
+        </main>
+    </div>
+    <footer class="footer-container">
+        <footer>
+            <p>This application uses open-source software licensed under the AGPL:
+                <br>
+                <a href="https://github.com/ArtifexSoftware/mupdf" target="_blank">MuPDF - GitHub</a> | 
+                <a href="https://github.com/pymupdf/PyMuPDF" target="_blank">PyMuPDF - GitHub</a>
+            </p>
+            <p>You can access the source code of this application <a href="https://github.com/Calum-Kerr/snackpdf-python" target="_blank">here</a>.</p>
+        </footer>
     </footer>
+    <script>
+        const dropArea = document.getElementById('drop-area');
+        const toolListItems = document.querySelectorAll('.tool-list li a');
+        const forms = document.querySelectorAll('form');
+
+        let selectedTool = 'upload-zip';
+        document.getElementById(selectedTool).classList.add('active');
+
+        toolListItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                selectedTool = item.getAttribute('data-tool');
+                toolListItems.forEach(i => i.style.fontWeight = 'normal');
+                item.style.fontWeight = 'bold';
+                forms.forEach(form => form.classList.remove('active'));
+                document.getElementById(selectedTool).classList.add('active');
+            });
+        });
+
+        dropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropArea.classList.add('dragover');
+        });
+
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('dragover');
+        });
+
+        dropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            const activeForm = document.querySelector('form.active input[type="file"]');
+            if (activeForm) {
+                activeForm.files = files;
+            }
+        });
+    </script>
 </body>
 </html>

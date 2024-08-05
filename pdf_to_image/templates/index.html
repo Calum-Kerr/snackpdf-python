@@ -122,12 +122,50 @@
         footer a:hover {
             text-decoration: underline;
         }
+        .login-panel {
+            position: fixed;
+            top: 0;
+            right: -100%; /* Start off the screen */
+            width: 300px;
+            height: 100%;
+            background: #fff;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+            transition: right 0.5s ease;
+            padding: 20px;
+
+        }
+        .login-panel.open {
+            right: 0; /* Slide in */
+        }
+        .close-btn {
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 16px;
+            background: none;
+            border: none;
+        }
+        .login-panel.active {
+            right: 0; /* Slide in */
+        }
+        .login-panel form {
+            display: flex;
+            flex-direction: column;
+        }
+        .login-panel input, .login-panel button {
+            margin-top: 10px;
+        }
+        .login-panel h2 {
+            color: #333;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>SnackPDF</h1>
-        <button>Login</button>
+        <button id="loginBtn">Login</button>
+        <div class="user-initials" style="display: none;">CK</div> <!-- placeholder for user initials -->
     </header>
     <div class="container">
         <aside class="sidebar">
@@ -219,6 +257,24 @@
             </form>
         </main>
     </div>
+    <div id="loginPanel" class="login-panel">
+        <button onclick="closePanel()" class="close-btn">X</button>
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <h2>Register</h2>
+        <form id="registerForm">
+            <input type="text" placeholder="First Name" required>
+            <input type="text" placeholder="Last Name" required>
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Password" required>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
     <footer class="footer-container">
         <footer>
             <p>This application uses open-source software licensed under the AGPL:
@@ -265,6 +321,22 @@
             if (activeForm) {
                 activeForm.files = files;
             }
+        });
+    </script>
+    <script>
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            document.getElementById('loginPanel').classList.toggle('active');
+        });
+        function closePanel() {
+            document.getElementById('loginPanel').classList.remove('open');
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const userInitials = document.querySelector('.user-initials');
+            userInitials.style.display = 'block'; // user initials after login
+            userInitials.textContent = 'CK'; // set based on user data
+            document.getElementById('loginPanel').classList.remove('active');
         });
     </script>
 </body>

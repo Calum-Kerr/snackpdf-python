@@ -180,7 +180,7 @@
                 <li><a href="#" data-tool="split">Split</a></li>
                 <li><a href="#" data-tool="compress-high">Compress PDF</a></li>
             </ul>
-            <div class="section-title">Organize</div>
+            <div class="section-title">Organise</div>
             <ul class="tool-list">
                 <li><a href="#" data-tool="convert-to-jpg">Convert to JPG</a></li>
                 <li><a href="#" data-tool="convert-to-word">Convert to Word</a></li>
@@ -262,7 +262,7 @@
             </form>
         </main>
     </div>
-    <div id="loginPanel" class="login-panel">
+    <!--<div id="loginPanel" class="login-panel">
         <button onclick="closePanel()" class="close-btn">X</button>
         <h2>Login</h2>
         <form id="loginForm">
@@ -278,9 +278,17 @@
             <input type="password" placeholder="Password" required>
             <button type="submit">Register</button>
         </form>
-    </div>
+        <h2>Feedback Form</h2>
+        <form id="feedbackForm">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" placeholder="Your Feedback" required></textarea>
+            <button type="submit">Submit Feedback</button>
+        </form>
+        
+    </div> -->
 
-    <!-- <footer class="footer-container">
+    <!--<footer class="footer-container">
         <footer>
             <p>This application uses open-source software licensed under the AGPL:
                 <br>
@@ -298,11 +306,12 @@
             const loginButton = document.getElementById('loginBtn');
             const loginPanel = document.getElementById('loginPanel');
             const closeButton = document.querySelector('.close-btn');
+            const header = document.querySelector('header');
     
             let selectedTool = 'upload-zip';
             document.getElementById(selectedTool).classList.add('active');
     
-            // tool selection logic
+            // Tool selection logic
             toolListItems.forEach(item => {
                 item.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -314,7 +323,7 @@
                 });
             });
     
-            // drag and drop 
+            // Drag and drop functionality
             dropArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 dropArea.classList.add('dragover');
@@ -334,31 +343,33 @@
                 }
             });
     
-            // login panel
+            // Login panel toggling
             loginButton.addEventListener('click', function() {
                 loginPanel.classList.toggle('active');
             });
     
-            // close login panel
+            // Closing the login panel
             closeButton.addEventListener('click', function() {
                 loginPanel.classList.remove('active');
             });
     
-            // login form (for now it does nothing)
+            // Dummy login form submission handler
             document.getElementById('loginForm').addEventListener('submit', function(e) {
                 e.preventDefault(); // Prevent actual form submission
                 loginUser();
             });
     
+            // Function to simulate a user login
             function loginUser() {
-                loginPanel.classList.remove('active'); // hide login panel after login
+                loginPanel.classList.remove('active'); // Hide login panel after login
                 const userInitials = document.createElement('div');
-                userInitials.textContent = 'CK'; //  set user initials
+                userInitials.textContent = 'CK'; // Set user initials
                 userInitials.className = 'user-initials';
-                header.replaceChild(userInitials, loginButton); // replace login button with initials
+                header.replaceChild(userInitials, loginButton); // Replace login button with initials
             }
         });
     </script>
+    
     
 </body>
 </html>

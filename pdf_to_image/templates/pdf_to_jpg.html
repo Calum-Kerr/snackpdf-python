@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnackPDF</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            text-align: center;
+        }
+        header {
+            background: #1f2937;
+            color: white;
+            padding: 15px 20px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+        .tools-section {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+            padding: 20px 40px;
+            margin: 0 auto;
+            max-width: 1100px;
+            text-align: center;
+        }
+        .tools-section div {
+            text-align: center;
+        }
+        .tools-section div h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .tools-section ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .tools-section ul li a {
+            text-decoration: none;
+            color: #000;
+            font-size: 14px;
+        }
+        .tools-section ul li a:hover {
+            text-decoration: underline;
+        }
+        .tool-form-container {
+            margin: 30px auto;
+            max-width: 600px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .tool-form-container h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .tool-form-container p {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        .drag-drop {
+            border: 2px dashed #d1d5db;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .drag-drop strong {
+            font-weight: 600;
+            display: block;
+            margin-top: 10px;
+        }
+        .page-selection label {
+            display: inline-block;
+            margin-right: 10px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .dpi-selection,
+        .format-selection {
+            margin-bottom: 20px;
+        }
+        .dpi-selection select,
+        .format-selection select {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #d1d5db;
+            cursor: pointer;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        .action-buttons button {
+            background-color: #1f2937;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .action-buttons button:hover {
+            background-color: #4b5563;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SnackPDF</h1>
+    </header>
+
+    <div class="tools-section">
+        <div>
+            <h2>OPTIMISE</h2>
+            <ul>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Compress</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Repair</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">OCR</a></li>
+            </ul>
+        </div>
+        <div>
+            <h2>CONVERT TO PDF</h2>
+            <ul>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">JPG to PDF</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Word to PDF</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PowerPoint to PDF</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Excel to PDF</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">HTML to PDF</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Zip of Images to PDF</a></li>
+            </ul>
+        </div>
+        <div>
+            <h2>CONVERT FROM PDF</h2>
+            <ul>
+                <li><a href="{{ url_for('pdf_to_jpg') }}" style="font-weight: bold;">PDF to JPG</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to Panoramic</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to Word</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to PowerPoint</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to Excel</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to PDF/A</a></li>
+            </ul>
+        </div>
+        <div>
+            <h2>ORGANISE</h2>
+            <ul>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Merge</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Split</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Remove</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Extract</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Sort</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Scan</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Rotate</a></li>
+            </ul>
+        </div>
+        <div>
+            <h2>SECURITY</h2>
+            <ul>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Unlock</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Protect</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Sign</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Compare</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Redact</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Flatten</a></li>
+            </ul>
+        </div>
+        <div>
+            <h2>EDIT</h2>
+            <ul>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Page Numbers</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Add Watermark</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Edit Content</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="tool-form-container">
+        <h3>Convert PDF to JPG</h3>
+        <p>Extract images from your PDFs into high-quality JPG or PNG format.</p>
+
+        <!-- Form tag without action and method since we're using AJAX -->
+        <form id="convertForm" enctype="multipart/form-data">
+            <div id="dragDropBox" class="drag-drop">
+                <strong>Drag and drop a PDF file here or click to upload</strong>
+                <input type="file" id="fileInput" accept="application/pdf" style="display: none;">
+            </div>
+            <div class="page-selection">
+                <label><input type="checkbox" id="selectAll" checked> Select All</label>
+                <!-- Dynamically generate checkboxes for pages -->
+                {% for i in range(1, total_pages + 1) %}
+                    <label><input type="checkbox" name="pages" value="{{ i }}" checked> Page {{ i }}</label>
+                {% endfor %}
+            </div>
+
+            <div class="dpi-selection">
+                <select name="dpi" id="dpi">
+                    <option value="72" title="Lower image quality, smaller file size">72 DPI</option>
+                    <option value="150" title="Standard image quality">150 DPI</option>
+                    <option value="300" title="High image quality, larger file size">300 DPI</option>
+                    <option value="600" title="Very high image quality, very large file size">600 DPI</option>
+                </select>
+            </div>
+
+            <div class="format-selection">
+                <select name="format" id="format">
+                    <option value="jpg">JPG</option>
+                    <option value="png">PNG</option>
+                </select>
+            </div>
+
+            <div class="action-buttons">
+                <button type="button" id="convertButton">Convert</button>
+                <button type="button" id="cancelButton">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const dragDropBox = document.getElementById('dragDropBox');
+        const fileInput = document.getElementById('fileInput');
+        let selectedFile = null;
+
+        dragDropBox.addEventListener('click', function () {
+            fileInput.click();  // Trigger the file input when clicking on the drag-drop box
+        });
+
+        dragDropBox.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            dragDropBox.classList.add('dragover');  // Optional: Add some visual feedback
+        });
+
+        dragDropBox.addEventListener('dragleave', function () {
+            dragDropBox.classList.remove('dragover');
+        });
+
+        dragDropBox.addEventListener('drop', function (e) {
+            e.preventDefault();
+            dragDropBox.classList.remove('dragover');
+            handleFileUpload(e.dataTransfer.files[0]);  // Handle the dropped file
+        });
+
+        fileInput.addEventListener('change', function () {
+            handleFileUpload(fileInput.files[0]);  // Handle the file selected through input
+        });
+
+        function handleFileUpload(file) {
+            if (file && file.type === 'application/pdf') {
+                selectedFile = file;
+                dragDropBox.querySelector('strong').textContent = file.name;
+
+                const formData = new FormData();
+                formData.append('file', selectedFile);
+
+                // Send the file to the server to get the total number of pages
+                fetch('{{ url_for("convert.get_total_pages") }}', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.total_pages) {
+                        populatePageCheckboxes(data.total_pages);
+                    } else {
+                        console.error('Failed to retrieve total pages');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            } else {
+                alert('Please upload a valid PDF file.');
+            }
+        }
+
+        function populatePageCheckboxes(totalPages) {
+            const pageCheckboxes = document.querySelector('.page-selection');
+            pageCheckboxes.innerHTML = '';
+            const selectAll = document.createElement('label');
+            selectAll.innerHTML = `<input type="checkbox" id="selectAll" checked>Select All`;
+            pageCheckboxes.appendChild(selectAll);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const label = document.createElement('label');
+                label.innerHTML = `<input type="checkbox" name="pages" value="${i}" checked> Page ${i}`;
+                pageCheckboxes.appendChild(label);
+            }
+
+            document.getElementById('selectAll').addEventListener('change', (e) => {
+                const checked = e.target.checked;
+                const checkboxes = pageCheckboxes.querySelectorAll('input[name="pages"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = checked;
+                });
+            });
+        }
+
+        document.getElementById('convertButton').addEventListener('click', function() {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            const checkboxes = document.querySelectorAll('input[name="pages"]:checked');
+            checkboxes.forEach(checkbox => {
+                formData.append('pages', checkbox.value);
+            });
+
+            formData.append('dpi', document.getElementById('dpi').value);
+            formData.append('format', document.getElementById('format').value);
+
+            // Implement AJAX request to send the form data to the server
+            fetch('{{ url_for("convert.convert") }}', {  // Make sure this is the correct endpoint
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'converted_images.zip';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        document.getElementById('cancelButton').addEventListener('click', function() {
+            selectedFile = null;
+            dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
+            document.querySelector('.page-selection').innerHTML = '';
+            document.getElementById('dpi').value = '72';
+            document.getElementById('format').value = 'jpg';
+        });
+    </script>
+</body>
+</html>

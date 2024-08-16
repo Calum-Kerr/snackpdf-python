@@ -5,404 +5,142 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SnackPDF</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
     <style>
         body {
-            display: flex;
-            flex-direction: column;
             margin: 0;
-            min-height: 100vh;
             font-family: Inter, sans-serif;
-            font-size: 12px;
             background-color: #f8f9fa;
+            text-align: center;
         }
         header {
             background: #1f2937;
             color: white;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 15px 20px;
         }
         header h1 {
             margin: 0;
-            font-size: 14px;
+            font-size: 32px;
         }
-        header button {
-            background: #1f2937;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
+        .tools-section {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+            padding: 20px 40px;
+            margin: 0 auto;
+            max-width: 1100px;
+            text-align: center;
         }
-        header button:hover {
-            background: #4b5563;
+        .tools-section div {
+            text-align: center;
         }
-        .container {
-            display: flex;
-            flex: 1;
+        .tools-section div h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
         }
-        .sidebar {
-            width: 200px;
-            background: #ffffff;
-            padding: 20px;
-        }
-        .content {
-            flex: 1;
-            padding: 20px;
-            background-color: #ffffff;
-        }
-        .tool-list {
+        .tools-section ul {
             list-style-type: none;
             padding: 0;
             margin: 0;
         }
-        .tool-list li {
-            margin: 10px 0;
-        }
-        .tool-list li a {
+        .tools-section ul li a {
             text-decoration: none;
-            color: #1f2937;
+            color: #000;
             font-size: 14px;
         }
-        .tool-list li a:hover {
-            color: #4b5563;
-        }
-        .section-title {
-            font-size: 14px;
-            margin-top: 20px;
-            margin-bottom: 10px;
-            color: #1f2937;
-            font-weight: bold;
-        }
-        .drag-drop {
-            border: 2px dashed #d1d5db;
-            border-radius: 10px;
-            padding: 113px;
-            text-align: center;
-            margin-bottom: 20px;
-            transition: border-color 0.3s;
-            font-size: 13px;
-            color: #6b7280;
-        }
-        .drag-drop.dragover {
-            border-color: #1f2937;
-        }
-        .convert-button {
-            display: block;
-            padding: 10px;
-            background: #1f2937;
-            color: #fff;
-            text-align: center;
-            border: none;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .convert-button:hover {
-            background: #4b5563;
-        }
-        form {
-            display: none;
-        }
-        form.active {
-            display: block;
-        }
-        .footer-container {
-            flex-shrink: 0;
-        }
-        footer {
-            text-align: center;
-            padding: 10px;
-            background: #ffffff;
-            font-size: 0.8em;
-        }
-        footer a {
-            text-decoration: none;
-        }
-        footer a:hover {
+        .tools-section ul li a:hover {
             text-decoration: underline;
         }
-        .login-panel {
-            position: fixed;
-            top: 0;
-            right: -100%; /* Start off the screen */
-            width: 300px;
-            height: 100%;
-            background: #fff;
-            box-shadow: -2px 0 5px rgba(0,0,0,0.2);
-            transition: right 0.5s ease;
+        .tool-action {
+            max-width: 1100px;
+            margin: 50px auto;
             padding: 20px;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            font-size: 18px;
+            color: #1f2937;
+        }
 
-        }
-        .login-panel.open {
-            right: 0; /* Slide in */
-        }
-        .close-btn {
-            cursor: pointer;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 16px;
-            background: none;
-            border: none;
-        }
-        .login-panel.active {
-            right: 0; /* Slide in */
-        }
-        .login-panel form {
-            display: flex;
-            flex-direction: column;
-        }
-        .login-panel input, .login-panel button {
-            margin-top: 10px;
-        }
-        .login-panel h2 {
-            color: #333;
-        }
-        .user-initials {
-            color: white;
-            cursor: pointer;
-            padding: 10px 20px;
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .tools-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .tool-action {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
     <header>
         <h1>SnackPDF</h1>
-        <button id="loginBtn">Login</button>
-        <div class="user-initials" style="display: none;">CK</div> <!-- placeholder for user initials -->
     </header>
-    <div class="container">
-        <aside class="sidebar">
-            Red Tools Are Incomplete.
-            <br>
-            Green Tools Are Complete.
-            <div class="section-title">CONVERT TO PDF</div>
-            <ul class="tool-list">
-                <li><a href="#" data-tool="merge" style="color: red;">JPG to PDF</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">Word to PDF</a></li>
-                <li><a href="#" data-tool="convert-to-ppt" style="color: red;">PowerPoint to PDF</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">Excel to PDF</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">HTML to PDF</a></li>
-                <li><a href="#" data-tool="upload-zip" style="color: greenyellow;">Upload Zip of Images to PDF</a></li>
+    <div class="tools-section">
+        <div>
+            <h2>OPTIMISE</h2>
+            <ul>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Compress</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Repair</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">OCR</a></li>
             </ul>
-            <div class="section-title">CONVERT FROM PDF</div>
-            <ul class="tool-list">
-                <li><a href="#" data-tool="convert-to-jpg" style="color: greenyellow;">PDF to JPG</a></li>
-                <li><a href="#" data-tool="convert-to-panoramic-image" style="color: greenyellow;">PDF to Panoramic</a></li>
-                <li><a href="#" data-tool="convert-to-word" style="color: red;">PDF to Word</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">PDF to PowerPoint</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">PDF to Excel</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">PDF to PDF/A</a></li>
+        </div>
+        <div>
+            <h2>CONVERT TO PDF</h2>
+            <ul>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">JPG to PDF</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Word to PDF</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PowerPoint to PDF</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Excel to PDF</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">HTML to PDF</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Zip of Images to PDF</a></li>
             </ul>
-            <div class="section-title">ORGANISE</div>
-            <ul class="tool-list">
-                <li><a href="#" data-tool="merge" style="color: greenyellow;">Merge</a></li>
-                <li><a href="#" data-tool="split" style="color: greenyellow;">Split</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">Remove</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">Extract</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">Sort</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">Scan</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">Rotate</a></li>
+        </div>
+        <div>
+            <h2>CONVERT FROM PDF</h2>
+            <ul>
+                <li><a href="{{ url_for('pdf_to_jpg') }}" style="font-weight: bold;">PDF to JPG</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to Panoramic</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to Word</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to PowerPoint</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to Excel</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to PDF/A</a></li>
             </ul>
-            <div class="section-title">OPTIMISE</div>
-            <ul class="tool-list">
-                <li><a href="#" data-tool="compress-high" style="color: greenyellow;">Compress</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">Repair</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">OCR</a></li>
+        </div>
+        <div>
+            <h2>ORGANISE</h2>
+            <ul>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Merge</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Split</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Remove</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Extract</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Sort</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Scan</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Rotate</a></li>
             </ul>
-            <div class="section-title">EDIT PDF</div>
-            <ul class="tool-list">
-                <li><a href="#" data-tool="merge" style="color: red;">Page Numbers</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">Add Watermark</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">Edit Content</a></li>
+        </div>
+        <div>
+            <h2>SECURITY</h2>
+            <ul>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Unlock</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Protect</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Sign</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Compare</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Redact</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Flatten</a></li>
             </ul>
-            <div class="section-title">SECURITY</div>
-            <ul class="tool-list">
-                <li><a href="#" data-tool="unlock-pdf" style="color: greenyellow;">Unlock</a></li>
-                <li><a href="#" data-tool="protect-pdf" style="color: greenyellow;">Protect</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">Sign</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">Compare</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">Redact</a></li>
-                <li><a href="#" data-tool="merge" style="color: red;">Flatten</a></li>
+        </div>
+        <div>
+            <h2>EDIT</h2>
+            <ul>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Page Numbers</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Add Watermark</a></li>
+                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Edit Content</a></li>
             </ul>
-        </aside>
-        <main class="content">
-            <div class="drag-drop" id="drop-area">
-                Drag and drop a PDF file here
-            </div>
-            <form id="merge" action="/merge" method="post" enctype="multipart/form-data">
-                <label for="merge_files">Upload PDFs:</label>
-                <input type="file" name="files" id="merge_files" multiple required>
-                <button type="submit" class="convert-button">Merge PDFs</button>
-            </form>
-            <form id="split" action="/split" method="post" enctype="multipart/form-data">
-                <label for="split_file">Upload PDFs:</label>
-                <input type="file" name="file" id="split_file" required>
-                <label for="page_ranges">Page Ranges (e.g., 1-3,5-7):</label>
-                <input type="text" name="page_ranges" id="page_ranges" required>
-                <button type="submit" class="convert-button">Split PDF</button>
-            </form>
-            <form id="convert-to-jpg" action="/convert" method="post" enctype="multipart/form-data">
-                <label for="file">Upload PDFs:</label>
-                <input type="file" name="file" id="file" required>
-                <button type="submit" class="convert-button">Convert to JPG</button>
-            </form>
-            <form id="convert-to-word" action="/pdf_to_word" method="post" enctype="multipart/form-data">
-                <label for="file">Upload PDFs:</label>
-                <input type="file" name="file" id="file" required>
-                <button type="submit" class="convert-button">Convert to Word</button>
-            </form>
-            <form id="convert-to-ppt" action="/pdf_to_powerpoint" method="post" enctype="multipart/form-data">
-                <label for="file">Upload PDFs:</label>
-                <input type="file" name="file" id="file" required>
-                <button type="submit" class="convert-button">Convert to PPT</button>
-            </form>
-            <form id="convert-to-panoramic-image" action="/panoramic" method="post" enctype="multipart/form-data">
-                <label for="file">Upload PDFs:</label>
-                <input type="file" name="file" id="file" required>
-                <button type="submit" class="convert-button">Create Panoramic Image</button>
-            </form>
-            <form id="compress-high" action="/compress" method="post" enctype="multipart/form-data">
-                <label for="file">Upload PDFs:</label>
-                <input type="file" name="file" id="file" required>
-                <label for="compression_level">Compression Level:</label>
-                <select name="compression_level" id="compression_level">
-                    <option value="high">High</option>
-                    <option value="medium">Medium</option>
-                    <option value="low">Low</option>
-                </select>
-                <button type="submit" class="convert-button">Compress PDF</button>
-            </form>
-            <form id="unlock-pdf" action="/unlock" method="post" enctype="multipart/form-data">
-                <label for="unlock_file">Upload PDFs:</label>
-                <input type="file" name="file" id="unlock_file" required>
-                <label for="password">Password:</label>
-                <input type="password" name="password" id="password" required>
-                <button type="submit" class="convert-button">Unlock PDF</button>
-            </form>
-            <form id="protect-pdf" action="/protect" method="post" enctype="multipart/form-data">
-                <label for="protect_file">Upload PDFs:</label>
-                <input type="file" name="file" id="protect_file" required>
-                <label for="password">Password:</label>
-                <input type="password" name="password" id="password" required>
-                <button type="submit" class="convert-button">Protect PDF</button>
-            </form>
-            <form id="upload-zip" action="/convert_to_pdf" method="post" enctype="multipart/form-data">
-                <label for="convert_to_pdf_file">Upload .zip with images inside:</label>
-                <input type="file" name="file" id="convert_to_pdf_file" required>
-                <button type="submit" class="convert-button">Convert to PDF</button>
-            </form>
-        </main>
+        </div>
     </div>
-    <!--<div id="loginPanel" class="login-panel">
-        <button onclick="closePanel()" class="close-btn">X</button>
-        <h2>Login</h2>
-        <form id="loginForm">
-            <input type="email" placeholder="Email" required>
-            <input type="password" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
-        <h2>Register</h2>
-        <form id="registerForm">
-            <input type="text" placeholder="First Name" required>
-            <input type="text" placeholder="Last Name" required>
-            <input type="email" placeholder="Email" required>
-            <input type="password" placeholder="Password" required>
-            <button type="submit">Register</button>
-        </form>
-        <h2>Feedback Form</h2>
-        <form id="feedbackForm">
-            <input type="text" name="name" placeholder="Your Name" required>
-            <input type="email" name="email" placeholder="Your Email" required>
-            <textarea name="message" placeholder="Your Feedback" required></textarea>
-            <button type="submit">Submit Feedback</button>
-        </form>
-        
-    </div> -->
 
-    <!--<footer class="footer-container">
-        <footer>
-            <p>This application uses open-source software licensed under the AGPL:
-                <br>
-                <a href="https://github.com/ArtifexSoftware/mupdf" target="_blank">MuPDF - GitHub</a> | 
-                <a href="https://github.com/pymupdf/PyMuPDF" target="_blank">PyMuPDF - GitHub</a>
-            </p>
-            <p>You can access the source code of this application <a href="https://github.com/Calum-Kerr/snackpdf-python" target="_blank">here</a>.</p>
-        </footer>
-    </footer> -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const dropArea = document.getElementById('drop-area');
-            const toolListItems = document.querySelectorAll('.tool-list li a');
-            const forms = document.querySelectorAll('form');
-            const loginButton = document.getElementById('loginBtn');
-            const loginPanel = document.getElementById('loginPanel');
-            const closeButton = document.querySelector('.close-btn');
-            const header = document.querySelector('header');
-    
-            let selectedTool = 'upload-zip';
-            document.getElementById(selectedTool).classList.add('active');
-    
-            // Tool selection logic
-            toolListItems.forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    selectedTool = item.getAttribute('data-tool');
-                    toolListItems.forEach(i => i.style.fontWeight = 'normal');
-                    item.style.fontWeight = 'bold';
-                    forms.forEach(form => form.classList.remove('active'));
-                    document.getElementById(selectedTool).classList.add('active');
-                });
-            });
-    
-            // Drag and drop functionality
-            dropArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                dropArea.classList.add('dragover');
-            });
-    
-            dropArea.addEventListener('dragleave', () => {
-                dropArea.classList.remove('dragover');
-            });
-    
-            dropArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                dropArea.classList.remove('dragover');
-                const files = e.dataTransfer.files;
-                const activeForm = document.querySelector('form.active input[type="file"]');
-                if (activeForm) {
-                    activeForm.files = files;
-                }
-            });
-    
-            // Login panel toggling
-            loginButton.addEventListener('click', function() {
-                loginPanel.classList.toggle('active');
-            });
-    
-            // Closing the login panel
-            closeButton.addEventListener('click', function() {
-                loginPanel.classList.remove('active');
-            });
-    
-            // Dummy login form submission handler
-            document.getElementById('loginForm').addEventListener('submit', function(e) {
-                e.preventDefault(); // Prevent actual form submission
-                loginUser();
-            });
-    
-            // Function to simulate a user login
-            function loginUser() {
-                loginPanel.classList.remove('active'); // Hide login panel after login
-                const userInitials = document.createElement('div');
-                userInitials.textContent = 'CK'; // Set user initials
-                userInitials.className = 'user-initials';
-                header.replaceChild(userInitials, loginButton); // Replace login button with initials
-            }
-        });
-    </script>
-    
-    
+    <div class="tool-action">
+        Pick your tool above.
+    </div>
 </body>
 </html>

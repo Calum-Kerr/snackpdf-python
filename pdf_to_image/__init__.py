@@ -32,6 +32,10 @@ def create_app():
     def pdf_to_jpg():
         return render_template('pdf_to_jpg.html')
 
+    @app.route('/pdf_to_panoramic')
+    def pdf_to_panoramic():
+        return render_template('pdf_to_panoramic.html')
+
     @app.errorhandler(Exception)
     def handle_exception(e):
         # Print the traceback to the console

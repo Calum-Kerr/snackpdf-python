@@ -36,6 +36,10 @@ def create_app():
     def pdf_to_panoramic():
         return render_template('pdf_to_panoramic.html')
 
+    @app.route('/compress')
+    def compress():
+        return render_template('compress.html')
+
     @app.errorhandler(Exception)
     def handle_exception(e):
         # Print the traceback to the console

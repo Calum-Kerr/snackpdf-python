@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SnackPDF</title>
+    <title>SnackPDF - Compress PDF</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -80,20 +80,18 @@
             display: block;
             margin-top: 10px;
         }
-        .page-selection label {
-            display: inline-block;
-            margin-right: 10px;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-        .dpi-selection,
-        .format-selection,
-        .orientation-selection {
+        .compression-level-selection,
+        .metadata-selection,
+        .resolution-selection,
+        .lossless-selection,
+        .fast-mode-selection {
             margin-bottom: 20px;
         }
-        .dpi-selection select,
-        .format-selection select,
-        .orientation-selection select {
+        .compression-level-selection select,
+        .metadata-selection select,
+        .resolution-selection select,
+        .lossless-selection select,
+        .fast-mode-selection select {
             width: 100%;
             padding: 10px;
             font-size: 14px;
@@ -189,53 +187,60 @@
     </div>
 
     <div class="tool-form-container">
-        <h3>Convert PDF to Panoramic Image</h3>
-        <p>Create a panoramic image from your PDF pages with customizable resolution and format.</p>
+        <h3>Compress PDF</h3>
+        <p>Reduce the size of your PDF with customizable compression settings.</p>
 
-        <form id="panoramicForm" enctype="multipart/form-data">
+        <form id="compressForm" enctype="multipart/form-data">
             <div id="dragDropBox" class="drag-drop">
-                <strong>Drag and drop a PDF file here or click to upload</strong>
-                <input type="file" id="fileInput" accept="application/pdf" style="display: none;">
+                <strong>Drag and drop PDF files here or click to upload</strong>
+                <input type="file" id="fileInput" accept="application/pdf" multiple style="display: none;">
             </div>
 
-            <!-- Page Range Selection -->
-            <div class="page-selection">
-                <label><input type="checkbox" id="selectAll" checked> Select All</label>
-                <!-- Dynamically generate checkboxes for pages -->
-                {% for i in range(1, total_pages + 1) %}
-                    <label><input type="checkbox" name="pages" value="{{ i }}" checked> Page {{ i }}</label>
-                {% endfor %}
-            </div>
-
-            <!-- Resolution (DPI) Selection -->
-            <div class="dpi-selection">
-                <select name="dpi" id="dpi">
-                    <option value="72" title="Lower image quality, smaller file size">72 DPI</option>
-                    <option value="150" title="Standard image quality">150 DPI</option>
-                    <option value="300" title="High image quality, larger file size" selected>300 DPI</option>
-                    <option value="600" title="Very high image quality, very large file size">600 DPI</option>
+            <!-- Compression Level Selection -->
+            <div class="compression-level-selection">
+                <select name="compression_level" id="compression_level">
+                    <option value="low">Low Compression (High Quality)</option>
+                    <option value="medium" selected>Medium Compression</option>
+                    <option value="high">High Compression (Low Quality)</option>
                 </select>
             </div>
 
-            <!-- Output Format Selection -->
-            <div class="format-selection">
-                <select name="format" id="format">
-                    <option value="jpg" selected>JPG</option>
-                    <option value="png">PNG</option>
-                    <option value="tiff">TIFF</option>
+            <!-- Retain Metadata -->
+            <div class="metadata-selection">
+                <select name="retain_metadata" id="retain_metadata">
+                    <option value="true" selected>Retain Metadata</option>
+                    <option value="false">Remove Metadata</option>
                 </select>
             </div>
 
-            <!-- Orientation Selection -->
-            <div class="orientation-selection">
-                <select name="orientation" id="orientation">
-                    <option value="horizontal" selected>Horizontal</option>
-                    <option value="vertical">Vertical</option>
+            <!-- Lossless Compression -->
+            <div class="lossless-selection">
+                <select name="lossless" id="lossless">
+                    <option value="false" selected>Standard Compression</option>
+                    <option value="true">Lossless Compression</option>
+                </select>
+            </div>
+
+            <!-- Resolution Selection -->
+            <div class="resolution-selection">
+                <select name="resolution" id="resolution">
+                    <option value="" selected>No Downscaling</option>
+                    <option value="72">72 DPI</option>
+                    <option value="150">150 DPI</option>
+                    <option value="300">300 DPI</option>
+                </select>
+            </div>
+
+            <!-- Fast Mode -->
+            <div class="fast-mode-selection">
+                <select name="fast_mode" id="fast_mode">
+                    <option value="false" selected>Standard Mode</option>
+                    <option value="true">Fast Mode (Lower Quality)</option>
                 </select>
             </div>
 
             <div class="action-buttons">
-                <button type="button" id="convertButton">Convert</button>
+                <button type="button" id="compressButton">Compress</button>
                 <button type="button" id="cancelButton">Cancel</button>
             </div>
         </form>
@@ -244,122 +249,92 @@
     <script>
         const dragDropBox = document.getElementById('dragDropBox');
         const fileInput = document.getElementById('fileInput');
-        let selectedFile = null;
-
+        let selectedFiles = [];
+    
         dragDropBox.addEventListener('click', function () {
-            fileInput.click();  // Trigger the file input when clicking on the drag-drop box
+            fileInput.click();
         });
-
+    
         dragDropBox.addEventListener('dragover', function (e) {
             e.preventDefault();
-            dragDropBox.classList.add('dragover');  // Optional: Add some visual feedback
+            dragDropBox.classList.add('dragover');
         });
-
+    
         dragDropBox.addEventListener('dragleave', function () {
             dragDropBox.classList.remove('dragover');
         });
-
+    
         dragDropBox.addEventListener('drop', function (e) {
             e.preventDefault();
             dragDropBox.classList.remove('dragover');
-            handleFileUpload(e.dataTransfer.files[0]);  // Handle the dropped file
+            handleFileUpload(e.dataTransfer.files);
         });
-
+    
         fileInput.addEventListener('change', function () {
-            handleFileUpload(fileInput.files[0]);  // Handle the file selected through input
+            handleFileUpload(fileInput.files);
         });
-
-        function handleFileUpload(file) {
-            if (file && file.type === 'application/pdf') {
-                selectedFile = file;
-                dragDropBox.querySelector('strong').textContent = file.name;
-
-                const formData = new FormData();
-                formData.append('file', selectedFile);
-
-                // Send the file to the server to get the total number of pages
-                fetch('{{ url_for("panoramic.get_total_pages") }}', {
-                    method: 'POST',
-                    body: formData,
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.total_pages) {
-                        populatePageCheckboxes(data.total_pages);
-                    } else {
-                        console.error('Failed to retrieve total pages');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+    
+        function handleFileUpload(files) {
+            if (files.length > 0) {
+                selectedFiles = files;
+                const fileNames = Array.from(files).map(file => file.name).join(', ');
+                dragDropBox.querySelector('strong').textContent = fileNames;
             } else {
-                alert('Please upload a valid PDF file.');
+                alert('Please upload valid PDF files.');
             }
         }
-
-        function populatePageCheckboxes(totalPages) {
-            const pageCheckboxes = document.querySelector('.page-selection');
-            pageCheckboxes.innerHTML = '';
-            const selectAll = document.createElement('label');
-            selectAll.innerHTML = `<input type="checkbox" id="selectAll" checked>Select All`;
-            pageCheckboxes.appendChild(selectAll);
-
-            for (let i = 1; i <= totalPages; i++) {
-                const label = document.createElement('label');
-                label.innerHTML = `<input type="checkbox" name="pages" value="${i}" checked> Page ${i}`;
-                pageCheckboxes.appendChild(label);
+    
+        document.getElementById('compressButton').addEventListener('click', function() {
+            if (selectedFiles.length === 0) {
+                alert('Please upload at least one PDF file.');
+                return;
             }
-
-            document.getElementById('selectAll').addEventListener('change', (e) => {
-                const checked = e.target.checked;
-                const checkboxes = pageCheckboxes.querySelectorAll('input[name="pages"]');
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = checked;
-                });
-            });
-        }
-
-        document.getElementById('convertButton').addEventListener('click', function() {
+    
             const formData = new FormData();
-            formData.append('file', selectedFile);
-
-            const checkboxes = document.querySelectorAll('input[name="pages"]:checked');
-            checkboxes.forEach(checkbox => {
-                formData.append('pages', checkbox.value);
-            });
-
-            formData.append('dpi', document.getElementById('dpi').value);
-            formData.append('format', document.getElementById('format').value);
-            formData.append('orientation', document.getElementById('orientation').value);
-
-            // Implement AJAX request to send the form data to the server
-            fetch('{{ url_for("panoramic.panoramic") }}', {  // Ensure this is the correct endpoint
+            formData.append('files', selectedFiles[0]);  // Handle one file for simplicity
+            formData.append('compression_level', document.getElementById('compression_level').value);
+            formData.append('retain_metadata', document.getElementById('retain_metadata').value);
+            formData.append('lossless', document.getElementById('lossless').value);
+            formData.append('resolution', document.getElementById('resolution').value);
+            formData.append('fast_mode', document.getElementById('fast_mode').value);
+    
+            fetch('{{ url_for("compress_bp.compress") }}', {
                 method: 'POST',
                 body: formData,
             })
-            .then(response => response.blob())
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.error);
+                    });
+                }
+            })
             .then(blob => {
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = url;
-                a.download = 'panoramic_image.' + document.getElementById('format').value;
+                a.download = 'compressed_file.pdf'; // Or use the original filename
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
             })
             .catch(error => console.error('Error:', error));
         });
-
+    
         document.getElementById('cancelButton').addEventListener('click', function() {
-            selectedFile = null;
-            dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
-            document.querySelector('.page-selection').innerHTML = '';
-            document.getElementById('dpi').value = '300';
-            document.getElementById('format').value = 'jpg';
-            document.getElementById('orientation').value = 'horizontal';
+            selectedFiles = [];
+            dragDropBox.querySelector('strong').textContent = 'Drag and drop PDF files here or click to upload';
+            document.getElementById('compression_level').value = 'medium';
+            document.getElementById('retain_metadata').value = 'true';
+            document.getElementById('lossless').value = 'false';
+            document.getElementById('resolution').value = '';
+            document.getElementById('fast_mode').value = 'false';
         });
     </script>
+    
+    
 </body>
 </html>

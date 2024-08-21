@@ -1,7 +1,6 @@
-from flask import Blueprint, request, send_file
+from flask import Blueprint, request, send_file, jsonify, url_for
 import fitz
 import os
-import zipfile
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
@@ -17,8 +16,13 @@ if not os.path.exists(STATIC_DIR):
 @merge_bp.route('/merge', methods=['POST'])
 def merge_pdfs():
     files = request.files.getlist('files')
-    output_path = os.path.join(STATIC_DIR, 'merged.pdf')
-    
+    output_filename = request.form.get('output_filename', 'merged.pdf')
+
+    if not output_filename.endswith('.pdf'):
+        output_filename += '.pdf'
+
+    output_path = os.path.join(STATIC_DIR, output_filename)
+
     if os.path.exists(output_path):
         os.remove(output_path)
     merged_document = fitz.open()
@@ -37,3 +41,4 @@ def merge_pdfs():
         return {"error": str(e)}, 500
 
     return send_file(output_path, as_attachment=True)
+

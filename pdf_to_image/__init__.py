@@ -39,6 +39,10 @@ def create_app():
     @app.route('/compress')
     def compress():
         return render_template('compress.html')
+        
+    @app.route('/merge')
+    def merge():
+        return render_template('merge.html')
 
     @app.errorhandler(Exception)
     def handle_exception(e):

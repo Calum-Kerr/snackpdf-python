@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SnackPDF</title>
+    <title>SnackPDF - Split PDF</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -52,7 +52,7 @@
         }
         .tool-form-container {
             margin: 30px auto;
-            max-width: 600px;
+            max-width: 800px;
             background-color: white;
             padding: 20px;
             border-radius: 8px;
@@ -80,30 +80,59 @@
             display: block;
             margin-top: 10px;
         }
-        .page-selection label {
-            display: inline-block;
-            margin-right: 10px;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-        .dpi-selection,
-        .format-selection,
-        .orientation-selection {
+        .range-input-container {
+            display: flex;
+            justify-content: space-between;
             margin-bottom: 20px;
         }
-        .dpi-selection select,
-        .format-selection select,
-        .orientation-selection select {
-            width: 100%;
-            padding: 10px;
+        .range-input-container > div {
+            flex: 1;
+            text-align: center;
+        }
+        .range-input-container input {
+            width: 50px;
+            padding: 8px;
             font-size: 14px;
             border-radius: 5px;
             border: 1px solid #d1d5db;
-            cursor: pointer;
+            text-align: center;
+            margin: 5px 0;
+        }
+        .page-selection-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .page-selection {
+            width: 48%;
+            padding: 10px;
+            background-color: #f1f5f9;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        }
+        .page-selection h4 {
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #374151;
+        }
+        .page-thumbnail {
+            margin: 5px;
+            text-align: center;
+            width: 80px;
+            font-size: 12px;
+            display: inline-block;
+        }
+        .page-thumbnail canvas {
+            width: 100%;
+            height: auto;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            margin-bottom: 5px;
         }
         .action-buttons {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            margin-top: 20px;
         }
         .action-buttons button {
             background-color: #1f2937;
@@ -113,6 +142,7 @@
             cursor: pointer;
             border-radius: 5px;
             font-size: 14px;
+            margin: 0 10px;
         }
         .action-buttons button:hover {
             background-color: #4b5563;
@@ -189,53 +219,45 @@
     </div>
 
     <div class="tool-form-container">
-        <h3>Convert PDF to Panoramic Image</h3>
-        <p>Create a panoramic image from your PDF pages with customisable resolution and format.</p>
+        <h3>Split PDF</h3>
+        <p>Select the pages you want to split from the PDF file.</p>
 
-        <form id="panoramicForm" enctype="multipart/form-data">
+        <form id="splitForm" enctype="multipart/form-data">
             <div id="dragDropBox" class="drag-drop">
                 <strong>Drag and drop a PDF file here or click to upload</strong>
                 <input type="file" id="fileInput" accept="application/pdf" style="display: none;">
             </div>
 
-            <!-- Page Range Selection -->
-            <div class="page-selection">
-                <label><input type="checkbox" id="selectAll" checked> Select All</label>
-                <!-- Dynamically generate checkboxes for pages -->
-                {% for i in range(1, total_pages + 1) %}
-                    <label><input type="checkbox" name="pages" value="{{ i }}" checked> Page {{ i }}</label>
-                {% endfor %}
+            <!-- Range Input Fields -->
+            <div class="range-input-container">
+                <div>
+                    <label for="range1From">Range 1: From</label>
+                    <input type="number" id="range1From" min="1">
+                    <label for="range1To">To</label>
+                    <input type="number" id="range1To" min="1">
+                </div>
+                <div>
+                    <label for="range2From">Range 2: From</label>
+                    <input type="number" id="range2From" min="1">
+                    <label for="range2To">To</label>
+                    <input type="number" id="range2To" min="1">
+                </div>
             </div>
 
-            <!-- Resolution (DPI) Selection -->
-            <div class="dpi-selection">
-                <select name="dpi" id="dpi">
-                    <option value="72" title="Lower image quality, smaller file size">72 DPI</option>
-                    <option value="150" title="Standard image quality">150 DPI</option>
-                    <option value="300" title="High image quality, larger file size" selected>300 DPI</option>
-                    <option value="600" title="Very high image quality, very large file size">600 DPI</option>
-                </select>
-            </div>
-
-            <!-- Output Format Selection -->
-            <div class="format-selection">
-                <select name="format" id="format">
-                    <option value="jpg" selected>JPG</option>
-                    <option value="png">PNG</option>
-                    <option value="tiff">TIFF</option>
-                </select>
-            </div>
-
-            <!-- Orientation Selection -->
-            <div class="orientation-selection">
-                <select name="orientation" id="orientation">
-                    <option value="horizontal" selected>Horizontal</option>
-                    <option value="vertical">Vertical</option>
-                </select>
+            <!-- Page Selection Thumbnails -->
+            <div class="page-selection-container">
+                <div class="page-selection" id="range1Thumbnails">
+                    <h4>Range 1 Thumbnails</h4>
+                    <!-- Thumbnails will be rendered here -->
+                </div>
+                <div class="page-selection" id="range2Thumbnails">
+                    <h4>Range 2 Thumbnails</h4>
+                    <!-- Thumbnails will be rendered here -->
+                </div>
             </div>
 
             <div class="action-buttons">
-                <button type="button" id="convertButton">Convert</button>
+                <button type="button" id="splitButton">Split</button>
                 <button type="button" id="cancelButton">Cancel</button>
             </div>
         </form>
@@ -247,12 +269,12 @@
         let selectedFile = null;
 
         dragDropBox.addEventListener('click', function () {
-            fileInput.click();  // Trigger the file input when clicking on the drag-drop box
+            fileInput.click();
         });
 
         dragDropBox.addEventListener('dragover', function (e) {
             e.preventDefault();
-            dragDropBox.classList.add('dragover');  // Optional: Add some visual feedback
+            dragDropBox.classList.add('dragover');
         });
 
         dragDropBox.addEventListener('dragleave', function () {
@@ -262,104 +284,139 @@
         dragDropBox.addEventListener('drop', function (e) {
             e.preventDefault();
             dragDropBox.classList.remove('dragover');
-            handleFileUpload(e.dataTransfer.files[0]);  // Handle the dropped file
+            handleFileUpload(e.dataTransfer.files[0]);
         });
 
         fileInput.addEventListener('change', function () {
-            handleFileUpload(fileInput.files[0]);  // Handle the file selected through input
+            handleFileUpload(fileInput.files[0]);
         });
 
         function handleFileUpload(file) {
             if (file && file.type === 'application/pdf') {
                 selectedFile = file;
                 dragDropBox.querySelector('strong').textContent = file.name;
-
-                const formData = new FormData();
-                formData.append('file', selectedFile);
-
-                // Send the file to the server to get the total number of pages
-                fetch('{{ url_for("panoramic.get_total_pages") }}', {
-                    method: 'POST',
-                    body: formData,
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.total_pages) {
-                        populatePageCheckboxes(data.total_pages);
-                    } else {
-                        console.error('Failed to retrieve total pages');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+                renderPdfThumbnails(file);
             } else {
                 alert('Please upload a valid PDF file.');
             }
         }
 
-        function populatePageCheckboxes(totalPages) {
-            const pageCheckboxes = document.querySelector('.page-selection');
-            pageCheckboxes.innerHTML = '';
-            const selectAll = document.createElement('label');
-            selectAll.innerHTML = `<input type="checkbox" id="selectAll" checked>Select All`;
-            pageCheckboxes.appendChild(selectAll);
+        function renderPdfThumbnails(file) {
+            const range1Thumbnails = document.getElementById('range1Thumbnails');
+            const range2Thumbnails = document.getElementById('range2Thumbnails');
+            range1Thumbnails.innerHTML = '';
+            range2Thumbnails.innerHTML = '';
 
-            for (let i = 1; i <= totalPages; i++) {
-                const label = document.createElement('label');
-                label.innerHTML = `<input type="checkbox" name="pages" value="${i}" checked> Page ${i}`;
-                pageCheckboxes.appendChild(label);
-            }
+            // Load PDF using PDF.js (you need to include PDF.js library)
+            pdfjsLib.getDocument(URL.createObjectURL(file)).promise.then(pdfDoc => {
+                const renderPage = (pageNum, container) => {
+                    pdfDoc.getPage(pageNum).then(page => {
+                        const viewport = page.getViewport({ scale: 0.2 });
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
 
-            document.getElementById('selectAll').addEventListener('change', (e) => {
-                const checked = e.target.checked;
-                const checkboxes = pageCheckboxes.querySelectorAll('input[name="pages"]');
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = checked;
-                });
+                        page.render({
+                            canvasContext: context,
+                            viewport: viewport
+                        }).promise.then(() => {
+                            const pageDiv = document.createElement('div');
+                            pageDiv.className = 'page-thumbnail';
+                            pageDiv.appendChild(canvas);
+                            pageDiv.appendChild(document.createTextNode(`Page ${pageNum}`));
+                            container.appendChild(pageDiv);
+                        });
+                    });
+                };
+
+                // Render thumbnails for Range 1
+                document.getElementById('range1From').addEventListener('input', updateThumbnails);
+                document.getElementById('range1To').addEventListener('input', updateThumbnails);
+
+                // Render thumbnails for Range 2
+                document.getElementById('range2From').addEventListener('input', updateThumbnails);
+                document.getElementById('range2To').addEventListener('input', updateThumbnails);
+
+                function updateThumbnails() {
+                    range1Thumbnails.innerHTML = '';
+                    range2Thumbnails.innerHTML = '';
+
+                    const range1From = parseInt(document.getElementById('range1From').value) || 1;
+                    const range1To = parseInt(document.getElementById('range1To').value) || 1;
+                    const range2From = parseInt(document.getElementById('range2From').value) || 1;
+                    const range2To = parseInt(document.getElementById('range2To').value) || 1;
+
+                    for (let i = range1From; i <= range1To; i++) {
+                        renderPage(i, range1Thumbnails);
+                    }
+                    for (let i = range2From; i <= range2To; i++) {
+                        renderPage(i, range2Thumbnails);
+                    }
+                }
             });
         }
 
-        document.getElementById('convertButton').addEventListener('click', function() {
+        document.getElementById('splitButton').addEventListener('click', function() {
+            if (!selectedFile) {
+                alert('Please upload a PDF file.');
+                return;
+            }
+
             const formData = new FormData();
             formData.append('file', selectedFile);
 
-            const checkboxes = document.querySelectorAll('input[name="pages"]:checked');
-            checkboxes.forEach(checkbox => {
-                formData.append('pages', checkbox.value);
-            });
+            const range1From = document.getElementById('range1From').value;
+            const range1To = document.getElementById('range1To').value;
+            const range2From = document.getElementById('range2From').value;
+            const range2To = document.getElementById('range2To').value;
 
-            formData.append('dpi', document.getElementById('dpi').value);
-            formData.append('format', document.getElementById('format').value);
-            formData.append('orientation', document.getElementById('orientation').value);
+            const selectedPages = [
+                `${range1From}-${range1To}`,
+                `${range2From}-${range2To}`
+            ];
 
-            // Implement AJAX request to send the form data to the server
-            fetch('{{ url_for("panoramic.panoramic") }}', {  // Ensure this is the correct endpoint
+            formData.append('page_ranges', selectedPages.join(','));
+
+            fetch('/split', {  // Replace with the correct endpoint URL
                 method: 'POST',
                 body: formData,
             })
-            .then(response => response.blob())
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.error);
+                    });
+                }
+            })
             .then(blob => {
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = url;
-                a.download = 'panoramic_image.' + document.getElementById('format').value;
+                a.download = 'split_files.zip';
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
+                console.log('File downloaded successfully');
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred: ' + error.message);
+            });
         });
 
         document.getElementById('cancelButton').addEventListener('click', function() {
             selectedFile = null;
             dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
-            document.querySelector('.page-selection').innerHTML = '';
-            document.getElementById('dpi').value = '300';
-            document.getElementById('format').value = 'jpg';
-            document.getElementById('orientation').value = 'horizontal';
+            document.getElementById('range1Thumbnails').innerHTML = '';
+            document.getElementById('range2Thumbnails').innerHTML = '';
         });
+
     </script>
+    <!-- Include the PDF.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
 </body>
 </html>

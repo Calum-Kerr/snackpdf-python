@@ -44,6 +44,10 @@ def create_app():
     def merge():
         return render_template('merge.html')
 
+    @app.route('/split')
+    def split():
+        return render_template('split.html')
+
     @app.errorhandler(Exception)
     def handle_exception(e):
         # Print the traceback to the console

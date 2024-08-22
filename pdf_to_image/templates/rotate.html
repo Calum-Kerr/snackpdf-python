@@ -52,7 +52,7 @@
         }
         .tool-form-container {
             margin: 30px auto;
-            max-width: 600px;
+            max-width: 800px;
             background-color: white;
             padding: 20px;
             border-radius: 8px;
@@ -80,20 +80,43 @@
             display: block;
             margin-top: 10px;
         }
-        .output-filename-selection {
+        .page-selection-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             margin-bottom: 20px;
         }
-        .output-filename-selection input {
+        .page-thumbnail {
+            margin: 5px;
+            text-align: center;
+            width: 80px;
+            font-size: 12px;
+            display: inline-block;
+        }
+        .page-thumbnail canvas {
             width: 100%;
-            padding: 10px;
+            height: auto;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        .rotate-options {
+            margin-bottom: 20px;
+        }
+        .rotate-options label {
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .rotate-options select {
+            padding: 5px 10px;
             font-size: 14px;
             border-radius: 5px;
             border: 1px solid #d1d5db;
-            box-sizing: border-box;
         }
         .action-buttons {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            margin-top: 20px;
         }
         .action-buttons button {
             background-color: #1f2937;
@@ -103,6 +126,7 @@
             cursor: pointer;
             border-radius: 5px;
             font-size: 14px;
+            margin: 0 10px;
         }
         .action-buttons button:hover {
             background-color: #4b5563;
@@ -179,30 +203,41 @@
     </div>
 
     <div class="tool-form-container">
-        <h3>Merge PDFs</h3>
-        <p>Combine multiple PDF files into one.</p>
+        <h3>Rotate Pages in PDF</h3>
+        <p>Select the pages you want to rotate and choose the rotation angle.</p>
 
-        <form id="mergeForm" enctype="multipart/form-data">
+        <form id="rotateForm" enctype="multipart/form-data" method="GET">
             <div id="dragDropBox" class="drag-drop">
-                <strong>Drag and drop PDF files here or click to upload</strong>
-                <input type="file" id="fileInput" accept="application/pdf" multiple style="display: none;">
+                <strong>Drag and drop a PDF file here or click to upload</strong>
+                <input type="file" id="fileInput" accept="application/pdf" style="display: none;">
             </div>
-
-            <div class="output-filename-selection">
-                <input type="text" id="outputFilename" placeholder="Enter output filename (e.g., merged)">
+        
+            <!-- Rotation Options -->
+            <div class="rotate-options">
+                <label for="rotationDegrees">Rotate:</label>
+                <select id="rotationDegrees">
+                    <option value="90">90 Degrees</option>
+                    <option value="180">180 Degrees</option>
+                    <option value="270">270 Degrees</option>
+                </select>
             </div>
-
+        
+            <!-- Page Selection Thumbnails -->
+            <div class="page-selection-container" id="pageContainer">
+                <!-- Thumbnails will be rendered here -->
+            </div>
+        
             <div class="action-buttons">
-                <button type="button" id="mergeButton">Merge</button>
+                <button type="submit" id="rotateButton">Rotate</button>
                 <button type="button" id="cancelButton">Cancel</button>
             </div>
-        </form>
+        </form>        
     </div>
 
     <script>
         const dragDropBox = document.getElementById('dragDropBox');
         const fileInput = document.getElementById('fileInput');
-        let selectedFiles = [];
+        let selectedFile = null;
 
         dragDropBox.addEventListener('click', function () {
             fileInput.click();
@@ -220,41 +255,104 @@
         dragDropBox.addEventListener('drop', function (e) {
             e.preventDefault();
             dragDropBox.classList.remove('dragover');
-            handleFileUpload(e.dataTransfer.files);
+            handleFileUpload(e.dataTransfer.files[0]);
         });
 
         fileInput.addEventListener('change', function () {
-            handleFileUpload(fileInput.files);
+            handleFileUpload(fileInput.files[0]);
         });
 
-        function handleFileUpload(files) {
-            if (files.length > 0) {
-                selectedFiles = files;
-                const fileNames = Array.from(files).map(file => file.name).join(', ');
-                dragDropBox.querySelector('strong').textContent = fileNames;
+        function handleFileUpload(file) {
+            if (file && file.type === 'application/pdf') {
+                selectedFile = file;
+                dragDropBox.querySelector('strong').textContent = file.name;
+                renderPdfThumbnails(file);
             } else {
-                alert('Please upload valid PDF files.');
+                alert('Please upload a valid PDF file.');
             }
         }
 
-        document.getElementById('mergeButton').addEventListener('click', function() {
-            if (selectedFiles.length === 0) {
-                alert('Please upload at least one PDF file.');
+        function renderPdfThumbnails(file) {
+            const pageContainer = document.getElementById('pageContainer');
+            pageContainer.innerHTML = ''; // Clear any existing thumbnails
+
+            // Load PDF using PDF.js
+            pdfjsLib.getDocument(URL.createObjectURL(file)).promise.then(pdfDoc => {
+                const pages = []; // Array to store pages
+
+                const renderPage = (pageNum) => {
+                    return pdfDoc.getPage(pageNum).then(page => {
+                        const viewport = page.getViewport({ scale: 0.2 });
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+
+                        return page.render({
+                            canvasContext: context,
+                            viewport: viewport
+                        }).promise.then(() => {
+                            return {
+                                pageNum,
+                                canvas
+                            };
+                        });
+                    });
+                };
+
+                const promises = [];
+                for (let i = 1; i <= pdfDoc.numPages; i++) {
+                    promises.push(renderPage(i));
+                }
+
+                Promise.all(promises).then(renderedPages => {
+                    renderedPages.sort((a, b) => a.pageNum - b.pageNum); // Sort pages by page number
+
+                    renderedPages.forEach(({ pageNum, canvas }) => {
+                        const pageDiv = document.createElement('div');
+                        pageDiv.className = 'page-thumbnail';
+
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.value = pageNum; // Page numbers are 1-indexed
+                        pageDiv.appendChild(checkbox);
+
+                        pageDiv.appendChild(canvas);
+                        pageDiv.appendChild(document.createTextNode(`Page ${pageNum}`));
+                        pageContainer.appendChild(pageDiv);
+                    });
+                });
+            });
+        }
+
+        document.getElementById('rotateButton').addEventListener('click', function(event) {
+            event.preventDefault();  // Prevent the default form submission
+
+            if (!selectedFile) {
+                alert('Please upload a PDF file.');
                 return;
             }
 
             const formData = new FormData();
-            Array.from(selectedFiles).forEach(file => formData.append('files', file));
-            let outputFilename = document.getElementById('outputFilename').value.trim();
+            formData.append('file', selectedFile);
 
-            // Add .pdf extension if not provided
-            if (!outputFilename.endsWith('.pdf')) {
-                outputFilename += '.pdf';
+            // Gather selected pages
+            const selectedPages = [];
+            const checkboxes = document.querySelectorAll('#pageContainer input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+                selectedPages.push(checkbox.value);
+            });
+
+            if (selectedPages.length === 0) {
+                alert('Please select at least one page.');
+                return;
             }
 
-            formData.append('output_filename', outputFilename);
+            const rotationDegrees = document.getElementById('rotationDegrees').value;
+            formData.append('degrees', rotationDegrees);
+            formData.append('page_numbers', selectedPages.join(','));
 
-            fetch('{{ url_for("merge.merge_pdfs") }}', {
+            fetch('/rotate', {  // Replace with the correct endpoint URL
                 method: 'POST',
                 body: formData,
             })
@@ -272,27 +370,26 @@
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = url;
-                a.download = outputFilename;
+                a.download = 'rotated_pages.pdf';
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
+                console.log('File downloaded successfully');
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred: ' + error.message);
+            });
         });
 
         document.getElementById('cancelButton').addEventListener('click', function() {
-            selectedFiles = [];
-            dragDropBox.querySelector('strong').textContent = 'Drag and drop PDF files here or click to upload';
-            document.getElementById('outputFilename').value = '';
-        });
-
-        document.getElementById('outputFilename').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault(); // Prevent the form from being submitted
-                document.getElementById('mergeButton').click(); // Trigger the merge button click instead
-            }
+            selectedFile = null;
+            dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
+            document.getElementById('pageContainer').innerHTML = '';
         });
 
     </script>
+    <!-- Include the PDF.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
 </body>
 </html>

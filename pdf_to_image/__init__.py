@@ -9,6 +9,7 @@ from .split import split_bp
 from .remove import remove_bp
 from .extract import extract_bp
 from .sort import sort_bp
+from .rotate import rotate_bp
 from .convert_to_pdf import convert_to_pdf_bp
 from .security import security_bp
 import traceback
@@ -29,6 +30,7 @@ def create_app():
     app.register_blueprint(remove_bp)
     app.register_blueprint(extract_bp)
     app.register_blueprint(sort_bp)
+    app.register_blueprint(rotate_bp)
 
     @app.route('/')
     def index():
@@ -65,6 +67,10 @@ def create_app():
     @app.route('/sort')
     def sort():
         return render_template('sort.html')
+
+    @app.route('/rotate')
+    def rotate():
+        return render_template('rotate.html')
 
 
     @app.errorhandler(Exception)

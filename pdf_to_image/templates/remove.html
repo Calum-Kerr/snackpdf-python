@@ -52,7 +52,7 @@
         }
         .tool-form-container {
             margin: 30px auto;
-            max-width: 600px;
+            max-width: 800px;
             background-color: white;
             padding: 20px;
             border-radius: 8px;
@@ -80,28 +80,30 @@
             display: block;
             margin-top: 10px;
         }
-        .page-selection label {
-            display: inline-block;
-            margin-right: 10px;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-        .dpi-selection,
-        .format-selection {
+        .page-selection-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             margin-bottom: 20px;
         }
-        .dpi-selection select,
-        .format-selection select {
+        .page-thumbnail {
+            margin: 5px;
+            text-align: center;
+            width: 80px;
+            font-size: 12px;
+            display: inline-block;
+        }
+        .page-thumbnail canvas {
             width: 100%;
-            padding: 10px;
-            font-size: 14px;
-            border-radius: 5px;
+            height: auto;
             border: 1px solid #d1d5db;
-            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 5px;
         }
         .action-buttons {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            margin-top: 20px;
         }
         .action-buttons button {
             background-color: #1f2937;
@@ -111,6 +113,7 @@
             cursor: pointer;
             border-radius: 5px;
             font-size: 14px;
+            margin: 0 10px;
         }
         .action-buttons button:hover {
             background-color: #4b5563;
@@ -187,41 +190,22 @@
     </div>
 
     <div class="tool-form-container">
-        <h3>Convert PDF to JPG</h3>
-        <p>Extract images from your PDFs into high-quality JPG or PNG format.</p>
+        <h3>Remove Pages from PDF</h3>
+        <p>Select the pages you want to remove from the PDF file.</p>
 
-        <!-- Form tag without action and method since we're using AJAX -->
-        <form id="convertForm" enctype="multipart/form-data">
+        <form id="removeForm" enctype="multipart/form-data">
             <div id="dragDropBox" class="drag-drop">
                 <strong>Drag and drop a PDF file here or click to upload</strong>
                 <input type="file" id="fileInput" accept="application/pdf" style="display: none;">
             </div>
-            <div class="page-selection">
-                <label><input type="checkbox" id="selectAll" checked> Select All</label>
-                <!-- Dynamically generate checkboxes for pages -->
-                {% for i in range(1, total_pages + 1) %}
-                    <label><input type="checkbox" name="pages" value="{{ i }}" checked> Page {{ i }}</label>
-                {% endfor %}
-            </div>
 
-            <div class="dpi-selection">
-                <select name="dpi" id="dpi">
-                    <option value="72" title="Lower image quality, smaller file size">72 DPI</option>
-                    <option value="150" title="Standard image quality">150 DPI</option>
-                    <option value="300" title="High image quality, larger file size">300 DPI</option>
-                    <option value="600" title="Very high image quality, very large file size">600 DPI</option>
-                </select>
-            </div>
-
-            <div class="format-selection">
-                <select name="format" id="format">
-                    <option value="jpg">JPG</option>
-                    <option value="png">PNG</option>
-                </select>
+            <!-- Page Selection Thumbnails -->
+            <div class="page-selection-container" id="pageContainer">
+                <!-- Thumbnails will be rendered here -->
             </div>
 
             <div class="action-buttons">
-                <button type="button" id="convertButton">Convert</button>
+                <button type="button" id="removeButton">Remove</button>
                 <button type="button" id="cancelButton">Cancel</button>
             </div>
         </form>
@@ -233,12 +217,12 @@
         let selectedFile = null;
 
         dragDropBox.addEventListener('click', function () {
-            fileInput.click();  // Trigger the file input when clicking on the drag-drop box
+            fileInput.click();
         });
 
         dragDropBox.addEventListener('dragover', function (e) {
             e.preventDefault();
-            dragDropBox.classList.add('dragover');  // Optional: Add some visual feedback
+            dragDropBox.classList.add('dragover');
         });
 
         dragDropBox.addEventListener('dragleave', function () {
@@ -248,102 +232,137 @@
         dragDropBox.addEventListener('drop', function (e) {
             e.preventDefault();
             dragDropBox.classList.remove('dragover');
-            handleFileUpload(e.dataTransfer.files[0]);  // Handle the dropped file
+            handleFileUpload(e.dataTransfer.files[0]);
         });
 
         fileInput.addEventListener('change', function () {
-            handleFileUpload(fileInput.files[0]);  // Handle the file selected through input
+            handleFileUpload(fileInput.files[0]);
         });
 
         function handleFileUpload(file) {
             if (file && file.type === 'application/pdf') {
                 selectedFile = file;
                 dragDropBox.querySelector('strong').textContent = file.name;
-
-                const formData = new FormData();
-                formData.append('file', selectedFile);
-
-                // Send the file to the server to get the total number of pages
-                fetch('{{ url_for("convert.get_total_pages") }}', {
-                    method: 'POST',
-                    body: formData,
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.total_pages) {
-                        populatePageCheckboxes(data.total_pages);
-                    } else {
-                        console.error('Failed to retrieve total pages');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+                renderPdfThumbnails(file);
             } else {
                 alert('Please upload a valid PDF file.');
             }
         }
 
-        function populatePageCheckboxes(totalPages) {
-            const pageCheckboxes = document.querySelector('.page-selection');
-            pageCheckboxes.innerHTML = '';
-            const selectAll = document.createElement('label');
-            selectAll.innerHTML = `<input type="checkbox" id="selectAll" checked>Select All`;
-            pageCheckboxes.appendChild(selectAll);
+        function renderPdfThumbnails(file) {
+            const pageContainer = document.getElementById('pageContainer');
+            pageContainer.innerHTML = ''; // Clear any existing thumbnails
 
-            for (let i = 1; i <= totalPages; i++) {
-                const label = document.createElement('label');
-                label.innerHTML = `<input type="checkbox" name="pages" value="${i}" checked> Page ${i}`;
-                pageCheckboxes.appendChild(label);
-            }
+            // Load PDF using PDF.js
+            pdfjsLib.getDocument(URL.createObjectURL(file)).promise.then(pdfDoc => {
+                const pages = []; // Array to store pages
 
-            document.getElementById('selectAll').addEventListener('change', (e) => {
-                const checked = e.target.checked;
-                const checkboxes = pageCheckboxes.querySelectorAll('input[name="pages"]');
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = checked;
+                const renderPage = (pageNum) => {
+                    return pdfDoc.getPage(pageNum).then(page => {
+                        const viewport = page.getViewport({ scale: 0.2 });
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+
+                        return page.render({
+                            canvasContext: context,
+                            viewport: viewport
+                        }).promise.then(() => {
+                            return {
+                                pageNum,
+                                canvas
+                            };
+                        });
+                    });
+                };
+
+                const promises = [];
+                for (let i = 1; i <= pdfDoc.numPages; i++) {
+                    promises.push(renderPage(i));
+                }
+
+                Promise.all(promises).then(renderedPages => {
+                    renderedPages.sort((a, b) => a.pageNum - b.pageNum); // Sort pages by page number
+
+                    renderedPages.forEach(({ pageNum, canvas }) => {
+                        const pageDiv = document.createElement('div');
+                        pageDiv.className = 'page-thumbnail';
+
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.value = pageNum; // Page numbers are 1-indexed
+                        pageDiv.appendChild(checkbox);
+
+                        pageDiv.appendChild(canvas);
+                        pageDiv.appendChild(document.createTextNode(`Page ${pageNum}`));
+                        pageContainer.appendChild(pageDiv);
+                    });
                 });
             });
         }
 
-        document.getElementById('convertButton').addEventListener('click', function() {
+        document.getElementById('removeButton').addEventListener('click', function() {
+            if (!selectedFile) {
+                alert('Please upload a PDF file.');
+                return;
+            }
+
             const formData = new FormData();
             formData.append('file', selectedFile);
 
-            const checkboxes = document.querySelectorAll('input[name="pages"]:checked');
+            // Gather selected pages
+            const selectedPages = [];
+            const checkboxes = document.querySelectorAll('#pageContainer input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
-                formData.append('pages', checkbox.value);
+                selectedPages.push(checkbox.value);
             });
 
-            formData.append('dpi', document.getElementById('dpi').value);
-            formData.append('format', document.getElementById('format').value);
+            if (selectedPages.length === 0) {
+                alert('Please select at least one page.');
+                return;
+            }
 
-            // Implement AJAX request to send the form data to the server
-            fetch('{{ url_for("convert.convert") }}', {  // Make sure this is the correct endpoint
+            formData.append('page_numbers', selectedPages.join(','));
+
+            fetch('/remove', {  // Replace with the correct endpoint URL
                 method: 'POST',
                 body: formData,
             })
-            .then(response => response.blob())
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.error);
+                    });
+                }
+            })
             .then(blob => {
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = url;
-                a.download = 'converted_images.zip';
+                a.download = 'removed_pages.pdf';
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
+                console.log('File downloaded successfully');
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred: ' + error.message);
+            });
         });
 
         document.getElementById('cancelButton').addEventListener('click', function() {
             selectedFile = null;
             dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
-            document.querySelector('.page-selection').innerHTML = '';
-            document.getElementById('dpi').value = '72';
-            document.getElementById('format').value = 'jpg';
+            document.getElementById('pageContainer').innerHTML = '';
         });
+
     </script>
+    <!-- Include the PDF.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
 </body>
 </html>

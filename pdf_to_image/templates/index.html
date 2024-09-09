@@ -8,63 +8,89 @@
     <style>
         body {
             margin: 0;
-            font-family: Inter, sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
             text-align: center;
         }
         header {
             background: #1f2937;
             color: white;
-            padding: 15px 20px;
+            padding: 20px;
         }
         header h1 {
             margin: 0;
-            font-size: 32px;
+            font-size: 36px;
+            font-weight: bold;
         }
+
         .tools-section {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 20px;
-            padding: 20px 40px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            padding: 40px 20px;
             margin: 0 auto;
-            max-width: 1100px;
+            max-width: 1200px;
             text-align: center;
+            background-color: #ffffff;
         }
-        .tools-section div {
-            text-align: center;
+        
+        .tool-card {
+            background-color: transparent;
+            padding: 20px;
         }
-        .tools-section div h2 {
-            font-size: 18px;
-            margin-bottom: 10px;
+
+        .tool-card h2 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #1f2937;
         }
-        .tools-section ul {
+
+        .tool-card ul {
             list-style-type: none;
             padding: 0;
             margin: 0;
         }
-        .tools-section ul li a {
-            text-decoration: none;
-            color: #000;
-            font-size: 14px;
+
+        .tool-card ul li {
+            margin: 10px 0;
         }
-        .tools-section ul li a:hover {
+
+        .tool-card ul li a {
+            text-decoration: none;
+            color: #1f2937;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .tool-card ul li a:hover {
             text-decoration: underline;
         }
+
+        /* Action section */
         .tool-action {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 50px auto;
             padding: 20px;
-            border-top: 1px solid #e5e7eb;
+            background-color: transparent;
             text-align: center;
             font-size: 18px;
+            font-weight: 500;
             color: #1f2937;
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
             .tools-section {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr;
+                gap: 20px;
             }
+
+            .tool-card {
+                margin: 0 auto;
+            }
+
             .tool-action {
                 font-size: 16px;
             }
@@ -73,68 +99,79 @@
 </head>
 <body>
     <header>
-        <h1>SnackPDF</h1>
+        <h1><a href="{{ url_for('index') }}" style="text-decoration: none; color: inherit;">SnackPDF</a></h1>
     </header>
+    
     <div class="tools-section">
-        <div>
+        <!-- OPTIMISE -->
+        <div class="tool-card">
             <h2>OPTIMISE</h2>
             <ul>
-                <li><a href="{{ url_for('compress') }}" style="font-weight: bold;">Compress</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Repair</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">OCR</a></li>
+                <li><a href="{{ url_for('compress') }}">Compress</a></li>
+                <li><a href="#">Repair</a></li>
+                <li><a href="#">OCR</a></li>
             </ul>
         </div>
-        <div>
+
+        <!-- CONVERT TO PDF -->
+        <div class="tool-card">
             <h2>CONVERT TO PDF</h2>
             <ul>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">JPG to PDF</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Word to PDF</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PowerPoint to PDF</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Excel to PDF</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">HTML to PDF</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Zip of Images to PDF</a></li>
+                <li><a href="#">JPG to PDF</a></li>
+                <li><a href="#">Word to PDF</a></li>
+                <li><a href="#">PowerPoint to PDF</a></li>
+                <li><a href="#">Excel to PDF</a></li>
+                <li><a href="#">HTML to PDF</a></li>
+                <li><a href="#">Zip of Images to PDF</a></li>
             </ul>
         </div>
-        <div>
-            <h2>CONVERT FROM PDF</h2>
-            <ul>
-                <li><a href="{{ url_for('pdf_to_jpg') }}" style="font-weight: bold;">PDF to JPG</a></li>
-                <li><a href="{{ url_for('pdf_to_panoramic') }}" style="font-weight: bold;">PDF to Panoramic</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to Word</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to PowerPoint</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to Excel</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to PDF/A</a></li>
-            </ul>
-        </div>
-        <div>
-            <h2>ORGANISE</h2>
-            <ul>
-                <li><a href="{{ url_for('merge') }}" style="font-weight: bold;">Merge</a></li>
-                <li><a href="{{ url_for('split') }}" style="font-weight: bold;">Split</a></li>
-                <li><a href="{{ url_for('remove') }}" style="font-weight: bold;">Remove</a></li>
-                <li><a href="{{ url_for('extract') }}" style="font-weight: bold;">Extract</a></li>
-                <li><a href="{{ url_for('sort') }}" style="font-weight: bold;">Sort</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Scan</a></li>
-                <li><a href="{{ url_for('rotate') }}" style="font-weight: bold;">Rotate</a></li>
-            </ul>
-        </div>
-        <div>
-            <h2>SECURITY</h2>
-            <ul>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Unlock</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Protect</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Sign</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Compare</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Redact</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Flatten</a></li>
-            </ul>
-        </div>
-        <div>
+
+        <!-- EDIT -->
+        <div class="tool-card">
             <h2>EDIT</h2>
             <ul>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Page Numbers</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Add Watermark</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Edit Content</a></li>
+                <li><a href="#">Page Numbers</a></li>
+                <li><a href="#">Add Watermark</a></li>
+                <li><a href="#">Edit Content</a></li>
+            </ul>
+        </div>
+
+        <!-- ORGANISE -->
+        <div class="tool-card">
+            <h2>ORGANISE</h2>
+            <ul>
+                <li><a href="{{ url_for('merge') }}">Merge</a></li>
+                <li><a href="{{ url_for('split') }}">Split</a></li>
+                <li><a href="{{ url_for('remove') }}">Remove</a></li>
+                <li><a href="{{ url_for('extract') }}">Extract</a></li>
+                <li><a href="{{ url_for('sort') }}">Sort</a></li>
+                <li><a href="{{ url_for('rotate') }}">Rotate</a></li>
+            </ul>
+        </div>
+
+        <!-- CONVERT FROM PDF -->
+        <div class="tool-card">
+            <h2>CONVERT FROM PDF</h2>
+            <ul>
+                <li><a href="{{ url_for('pdf_to_jpg') }}">PDF to JPG</a></li>
+                <li><a href="{{ url_for('pdf_to_panoramic') }}">PDF to Panoramic</a></li>
+                <li><a href="#">PDF to Word</a></li>
+                <li><a href="#">PDF to PowerPoint</a></li>
+                <li><a href="#">PDF to Excel</a></li>
+                <li><a href="#">PDF to PDF/A</a></li>
+            </ul>
+        </div>
+
+        <!-- SECURITY -->
+        <div class="tool-card">
+            <h2>SECURITY</h2>
+            <ul>
+                <li><a href="#">Unlock</a></li>
+                <li><a href="#">Protect</a></li>
+                <li><a href="#">Sign</a></li>
+                <li><a href="#">Compare</a></li>
+                <li><a href="#">Redact</a></li>
+                <li><a href="#">Flatten</a></li>
             </ul>
         </div>
     </div>

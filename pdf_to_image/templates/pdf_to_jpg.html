@@ -9,54 +9,83 @@
         body {
             margin: 0;
             font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
-            text-align: center;
+            background-color: #ffffff;
+            color: #1f2937;
         }
         header {
-            background: #1f2937;
+            background-color: #1f2937;
+            padding: 20px;
             color: white;
-            padding: 15px 20px;
+            text-align: center;
         }
         header h1 {
             margin: 0;
-            font-size: 32px;
+            font-size: 36px;
         }
-        .tools-section {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 20px;
-            padding: 20px 40px;
-            margin: 0 auto;
-            max-width: 1100px;
-            text-align: center;
+
+        /* Navigation Bar Styles */
+        .navbar {
+            background-color: #ffffff;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .tools-section div {
-            text-align: center;
-        }
-        .tools-section div h2 {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-        .tools-section ul {
+        .navbar ul {
             list-style-type: none;
             padding: 0;
             margin: 0;
+            display: flex;
+            justify-content: space-around;
         }
-        .tools-section ul li a {
+        .navbar ul li {
+            position: relative;
+            font-size: 16px;
+        }
+        .navbar ul li a {
             text-decoration: none;
-            color: #000;
-            font-size: 14px;
+            color: #1f2937;
+            font-weight: 600;
         }
-        .tools-section ul li a:hover {
-            text-decoration: underline;
+        .navbar ul li:hover ul {
+            display: block;
+            opacity: 1;
+            visibility: visible;
         }
+        .navbar ul li ul {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            list-style-type: none;
+            padding: 10px 0;
+            min-width: 150px;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+        .navbar ul li ul li {
+            padding: 10px 20px;
+        }
+        .navbar ul li ul li a {
+            color: #1f2937;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.2s ease;
+        }
+        .navbar ul li ul li a:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Flush Tool Form Card */
         .tool-form-container {
-            margin: 30px auto;
-            max-width: 800px;
+            margin: 40px auto;
+            max-width: 600px;
             background-color: white;
-            padding: 20px;
+            padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: none;
         }
         .tool-form-container h3 {
             font-size: 24px;
@@ -80,6 +109,8 @@
             display: block;
             margin-top: 10px;
         }
+
+        /* Tabs */
         .tabs {
             display: flex;
             border-bottom: 1px solid #d1d5db;
@@ -100,6 +131,8 @@
         .tab-content.active {
             display: block;
         }
+
+        /* Form Elements */
         .form-group {
             margin-bottom: 20px;
         }
@@ -115,6 +148,8 @@
             border-radius: 5px;
             border: 1px solid #d1d5db;
         }
+
+        /* Toggle Switches */
         .switch {
             position: relative;
             display: inline-block;
@@ -154,6 +189,7 @@
         input:checked + .slider:before {
             transform: translateX(26px);
         }
+
         .action-buttons {
             display: flex;
             justify-content: flex-end;
@@ -171,6 +207,7 @@
         .action-buttons button:hover {
             background-color: #4b5563;
         }
+
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -179,303 +216,302 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1>SnackPDF</h1>
-    </header>
 
-    <div class="tools-section">
-        <div>
-            <h2>OPTIMISE</h2>
+<header>
+    <h1><a href="{{ url_for('index') }}" style="text-decoration: none; color: inherit;">SnackPDF</a></h1>
+</header>
+
+<!-- Navigation Bar -->
+<div class="navbar">
+    <ul>
+        <li><a href="#">OPTIMISE</a>
             <ul>
-                <li><a href="{{ url_for('compress') }}" style="font-weight: bold;">Compress</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Repair</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">OCR</a></li>
+                <li><a href="{{ url_for('compress') }}">Compress</a></li>
+                <li><a href="#">Repair</a></li>
+                <li><a href="#">OCR</a></li>
             </ul>
-        </div>
-        <div>
-            <h2>CONVERT TO PDF</h2>
+        </li>
+        <li><a href="#">CONVERT TO PDF</a>
             <ul>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">JPG to PDF</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Word to PDF</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PowerPoint to PDF</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Excel to PDF</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">HTML to PDF</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Zip of Images to PDF</a></li>
+                <li><a href="#">JPG to PDF</a></li>
+                <li><a href="#">Word to PDF</a></li>
+                <li><a href="#">PowerPoint to PDF</a></li>
+                <li><a href="#">Excel to PDF</a></li>
+                <li><a href="#">HTML to PDF</a></li>
+                <li><a href="#">Zip of Images to PDF</a></li>
             </ul>
-        </div>
-        <div>
-            <h2>CONVERT FROM PDF</h2>
+        </li>
+        <li><a href="#">CONVERT FROM PDF</a>
             <ul>
-                <li><a href="{{ url_for('pdf_to_jpg') }}" style="font-weight: bold;">PDF to JPG</a></li>
-                <li><a href="{{ url_for('pdf_to_panoramic') }}" style="font-weight: bold;">PDF to Panoramic</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to Word</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to PowerPoint</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to Excel</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to PDF/A</a></li>
+                <li><a href="{{ url_for('pdf_to_jpg') }}">PDF to JPG</a></li>
+                <li><a href="{{ url_for('pdf_to_panoramic') }}">PDF to Panoramic</a></li>
+                <li><a href="#">PDF to Word</a></li>
+                <li><a href="#">PDF to PowerPoint</a></li>
+                <li><a href="#">PDF to Excel</a></li>
+                <li><a href="#">PDF to PDF/A</a></li>
             </ul>
-        </div>
-        <div>
-            <h2>ORGANISE</h2>
+        </li>
+        <li><a href="#">ORGANISE</a>
             <ul>
-                <li><a href="{{ url_for('merge') }}" style="font-weight: bold;">Merge</a></li>
-                <li><a href="{{ url_for('split') }}" style="font-weight: bold;">Split</a></li>
-                <li><a href="{{ url_for('remove') }}" style="font-weight: bold;">Remove</a></li>
-                <li><a href="{{ url_for('extract') }}" style="font-weight: bold;">Extract</a></li>
-                <li><a href="{{ url_for('sort') }}" style="font-weight: bold;">Sort</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Scan</a></li>
-                <li><a href="{{ url_for('rotate') }}" style="font-weight: bold;">Rotate</a></li>
+                <li><a href="{{ url_for('merge') }}">Merge</a></li>
+                <li><a href="{{ url_for('split') }}">Split</a></li>
+                <li><a href="{{ url_for('remove') }}">Remove</a></li>
+                <li><a href="{{ url_for('extract') }}">Extract</a></li>
+                <li><a href="{{ url_for('sort') }}">Sort</a></li>
+                <li><a href="{{ url_for('rotate') }}">Rotate</a></li>
             </ul>
-        </div>
-        <div>
-            <h2>SECURITY</h2>
+        </li>
+        <li><a href="#">SECURITY</a>
             <ul>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Unlock</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Protect</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Sign</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Compare</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Redact</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Flatten</a></li>
+                <li><a href="#">Unlock</a></li>
+                <li><a href="#">Protect</a></li>
+                <li><a href="#">Sign</a></li>
+                <li><a href="#">Compare</a></li>
+                <li><a href="#">Redact</a></li>
+                <li><a href="#">Flatten</a></li>
             </ul>
-        </div>
-        <div>
-            <h2>EDIT</h2>
+        </li>
+        <li><a href="#">EDIT</a>
             <ul>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Page Numbers</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Add Watermark</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Edit Content</a></li>
+                <li><a href="#">Page Numbers</a></li>
+                <li><a href="#">Add Watermark</a></li>
+                <li><a href="#">Edit Content</a></li>
             </ul>
-        </div>
+        </li>
+    </ul>
+</div>
+
+<!-- Flush Tool Card -->
+<div class="tool-form-container">
+    <h3>Convert PDF to Image</h3>
+    <p>Extract high-quality images from your PDFs with advanced customisation options</p>
+
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop a PDF file here or click to upload</strong>
+        <input type="file" id="fileInput" accept="application/pdf" style="display: none;">
     </div>
 
-    <div class="tool-form-container">
-        <h3>Convert PDF to Image</h3>
-        <p>Extract high-quality images from your PDFs with advanced customisation options</p>
-
-        <div id="dragDropBox" class="drag-drop">
-            <strong>Drag and drop a PDF file here or click to upload</strong>
-            <input type="file" id="fileInput" accept="application/pdf" style="display: none;">
-        </div>
-
-        <div class="tabs">
-            <div class="tab active" data-tab="basic">Basic Options</div>
-            <div class="tab" data-tab="advanced">Advanced Options</div>
-        </div>
-
-        <form id="convertForm">
-            <div id="basic-options" class="tab-content active">
-                <div class="grid">
-                    <div class="form-group">
-                        <label for="file-format-basic">File Format</label>
-                        <select id="file-format-basic">
-                            <option value="jpg">JPG</option>
-                            <option value="png">PNG</option>
-                            <option value="tiff">TIFF</option>
-                            <option value="webp">WebP</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="dpi-basic">DPI</label>
-                        <select id="dpi-basic">
-                            <option value="72">72 DPI</option>
-                            <option value="150">150 DPI</option>
-                            <option value="300">300 DPI</option>
-                            <option value="600">600 DPI</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div id="advanced-options" class="tab-content">
-                <div class="grid">
-                    <div class="form-group">
-                        <label for="file-format-advanced">File Format</label>
-                        <select id="file-format-advanced">
-                            <option value="jpg">JPG</option>
-                            <option value="png">PNG</option>
-                            <option value="tiff">TIFF</option>
-                            <option value="webp">WebP</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="dpi-advanced">DPI</label>
-                        <select id="dpi-advanced">
-                            <option value="72">72 DPI</option>
-                            <option value="150">150 DPI</option>
-                            <option value="300">300 DPI</option>
-                            <option value="600">600 DPI</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="color-mode">Color Mode</label>
-                        <select id="color-mode">
-                            <option value="rgb">RGB</option>
-                            <option value="grayscale">Grayscale</option>
-                            <option value="bw">Black & White</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="page-size">Page Size</label>
-                        <select id="page-size">
-                            <option value="a4">A4</option>
-                            <option value="a5">A5</option>
-                            <option value="letter">Letter</option>
-                            <option value="legal">Legal</option>
-                            <option value="custom">Custom</option>
-                        </select>
-                    </div>
-                </div>
-                <div id="custom-dimensions" style="display: none;">
-                    <div class="grid">
-                        <div class="form-group">
-                            <label for="custom-width">Custom Width (px)</label>
-                            <input type="number" id="custom-width" min="1">
-                        </div>
-                        <div class="form-group">
-                            <label for="custom-height">Custom Height (px)</label>
-                            <input type="number" id="custom-height" min="1">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="switch">
-                        <input type="checkbox" id="maintain-aspect-ratio">
-                        <span class="slider"></span>
-                    </label>
-                    <label for="maintain-aspect-ratio">Maintain aspect ratio</label>
-                </div>
-                <div class="form-group">
-                    <label class="switch">
-                        <input type="checkbox" id="extract-text">
-                        <span class="slider"></span>
-                    </label>
-                    <label for="extract-text">Extract text (OCR)</label>
-                </div>
-                <div class="form-group">
-                    <label class="switch">
-                        <input type="checkbox" id="compress-output">
-                        <span class="slider"></span>
-                    </label>
-                    <label for="compress-output">Compress output</label>
-                </div>
-            </div>
-
-            <div class="action-buttons">
-                <button type="button" id="cancelButton">Cancel</button>
-                <button type="button" id="convertButton">Convert</button>
-            </div>
-        </form>
+    <div class="tabs">
+        <div class="tab active" data-tab="basic">Basic Options</div>
+        <div class="tab" data-tab="advanced">Advanced Options</div>
     </div>
 
-    <script>
-        // File upload handling
-        const dragDropBox = document.getElementById('dragDropBox');
-        const fileInput = document.getElementById('fileInput');
-        let selectedFile = null;
+    <form id="convertForm">
+        <div id="basic-options" class="tab-content active">
+            <div class="grid">
+                <div class="form-group">
+                    <label for="file-format-basic">File Format</label>
+                    <select id="file-format-basic">
+                        <option value="jpg">JPG</option>
+                        <option value="png">PNG</option>
+                        <option value="tiff">TIFF</option>
+                        <option value="webp">WebP</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dpi-basic">DPI</label>
+                    <select id="dpi-basic">
+                        <option value="72">72 DPI</option>
+                        <option value="150">150 DPI</option>
+                        <option value="300">300 DPI</option>
+                        <option value="600">600 DPI</option>
+                    </select>
+                </div>
+            </div>
+        </div>
 
-        dragDropBox.addEventListener('click', () => fileInput.click());
+        <div id="advanced-options" class="tab-content">
+            <div class="grid">
+                <div class="form-group">
+                    <label for="file-format-advanced">File Format</label>
+                    <select id="file-format-advanced">
+                        <option value="jpg">JPG</option>
+                        <option value="png">PNG</option>
+                        <option value="tiff">TIFF</option>
+                        <option value="webp">WebP</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dpi-advanced">DPI</label>
+                    <select id="dpi-advanced">
+                        <option value="72">72 DPI</option>
+                        <option value="150">150 DPI</option>
+                        <option value="300">300 DPI</option>
+                        <option value="600">600 DPI</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="color-mode">Color Mode</label>
+                    <select id="color-mode">
+                        <option value="rgb">RGB</option>
+                        <option value="grayscale">Grayscale</option>
+                        <option value="bw">Black & White</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="page-size">Page Size</label>
+                    <select id="page-size">
+                        <option value="a4">A4</option>
+                        <option value="a5">A5</option>
+                        <option value="letter">Letter</option>
+                        <option value="legal">Legal</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+            </div>
+            <div id="custom-dimensions" style="display: none;">
+                <div class="grid">
+                    <div class="form-group">
+                        <label for="custom-width">Custom Width (px)</label>
+                        <input type="number" id="custom-width" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="custom-height">Custom Height (px)</label>
+                        <input type="number" id="custom-height" min="1">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="switch">
+                    <input type="checkbox" id="maintain-aspect-ratio">
+                    <span class="slider"></span>
+                </label>
+                <label for="maintain-aspect-ratio">Maintain aspect ratio</label>
+            </div>
+            <div class="form-group">
+                <label class="switch">
+                    <input type="checkbox" id="extract-text">
+                    <span class="slider"></span>
+                </label>
+                <label for="extract-text">Extract text (OCR)</label>
+            </div>
+            <div class="form-group">
+                <label class="switch">
+                    <input type="checkbox" id="compress-output">
+                    <span class="slider"></span>
+                </label>
+                <label for="compress-output">Compress output</label>
+            </div>
+        </div>
 
-        dragDropBox.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dragDropBox.style.borderColor = '#2196F3';
+        <div class="action-buttons">
+            <button type="button" id="cancelButton">Cancel</button>
+            <button type="button" id="convertButton">Convert</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // File upload handling
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+    let selectedFile = null;
+
+    dragDropBox.addEventListener('click', () => fileInput.click());
+
+    dragDropBox.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', () => {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files[0]);
+    });
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files[0]);
+        }
+    });
+
+    function handleFileUpload(file) {
+        if (file && file.type === 'application/pdf') {
+            selectedFile = file;
+            dragDropBox.querySelector('strong').textContent = file.name;
+            console.log('File selected:', file.name);
+        } else {
+            alert('Please upload a valid PDF file.');
+        }
+    }
+
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById(`${tab.dataset.tab}-options`).classList.add('active');
         });
+    });
 
-        dragDropBox.addEventListener('dragleave', () => {
-            dragDropBox.style.borderColor = '#d1d5db';
-        });
+    // Custom dimensions toggle
+    document.getElementById('page-size').addEventListener('change', (e) => {
+        document.getElementById('custom-dimensions').style.display = e.target.value === 'custom' ? 'block' : 'none';
+    });
 
-        dragDropBox.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dragDropBox.style.borderColor = '#d1d5db';
-            handleFileUpload(e.dataTransfer.files[0]);
-        });
+    document.getElementById('convertButton').addEventListener('click', () => {
+        const activeTab = document.querySelector('.tab.active').dataset.tab;
+        const options = {
+            fileFormat: document.getElementById(`file-format-${activeTab}`).value,
+            dpi: document.getElementById(`dpi-${activeTab}`).value,
+        };
 
-        fileInput.addEventListener('change', () => {
-            if (fileInput.files.length) {
-                handleFileUpload(fileInput.files[0]);
+        if (activeTab === 'advanced') {
+            options.colorMode = document.getElementById('color-mode').value;
+            options.pageSize = document.getElementById('page-size').value;
+            if (options.pageSize === 'custom') {
+                options.customWidth = document.getElementById('custom-width').value;
+                options.customHeight = document.getElementById('custom-height').value;
             }
-        });
-
-        function handleFileUpload(file) {
-            if (file && file.type === 'application/pdf') {
-                selectedFile = file;
-                dragDropBox.querySelector('strong').textContent = file.name;
-                console.log('File selected:', file.name);
-            } else {
-                alert('Please upload a valid PDF file.');
-            }
+            options.maintainAspectRatio = document.getElementById('maintain-aspect-ratio').checked;
+            options.extractText = document.getElementById('extract-text').checked;
+            options.compressOutput = document.getElementById('compress-output').checked;
         }
 
-        // Tab switching
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
-                tab.classList.add('active');
-                document.getElementById(`${tab.dataset.tab}-options`).classList.add('active');
+        if (selectedFile) {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('options', JSON.stringify(options));
+
+            fetch('/convert', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                // Create a link to download the returned ZIP file
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${selectedFile.name.replace('.pdf', '')}.zip`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            })
+            .catch(error => {
+                console.error('Conversion failed:', error);
+                alert('An error occurred during conversion. Please try again.');
             });
-        });
+        } else {
+            alert('Please upload a PDF file.');
+        }
+    });
 
-        // Custom dimensions toggle
-        document.getElementById('page-size').addEventListener('change', (e) => {
-            document.getElementById('custom-dimensions').style.display = e.target.value === 'custom' ? 'block' : 'none';
-        });
+    // Cancel button action
+    document.getElementById('cancelButton').addEventListener('click', () => {
+        console.log('Conversion cancelled');
+        // Reset the form
+        selectedFile = null;
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
+        document.getElementById('convertForm').reset();
+        document.getElementById('custom-dimensions').style.display = 'none';
+    });
+</script>
 
-        document.getElementById('convertButton').addEventListener('click', () => {
-            const activeTab = document.querySelector('.tab.active').dataset.tab;
-            const options = {
-                fileFormat: document.getElementById(`file-format-${activeTab}`).value,
-                dpi: document.getElementById(`dpi-${activeTab}`).value,
-            };
-
-            if (activeTab === 'advanced') {
-                options.colorMode = document.getElementById('color-mode').value;
-                options.pageSize = document.getElementById('page-size').value;
-                if (options.pageSize === 'custom') {
-                    options.customWidth = document.getElementById('custom-width').value;
-                    options.customHeight = document.getElementById('custom-height').value;
-                }
-                options.maintainAspectRatio = document.getElementById('maintain-aspect-ratio').checked;
-                options.extractText = document.getElementById('extract-text').checked;
-                options.compressOutput = document.getElementById('compress-output').checked;
-            }
-
-            if (selectedFile) {
-                const formData = new FormData();
-                formData.append('file', selectedFile);
-                formData.append('options', JSON.stringify(options));
-
-                fetch('/convert', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.blob())
-                .then(blob => {
-                    // Create a link to download the returned ZIP file
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `${selectedFile.name.replace('.pdf', '')}.zip`;
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                })
-                .catch(error => {
-                    console.error('Conversion failed:', error);
-                    alert('An error occurred during conversion. Please try again.');
-                });
-            } else {
-                alert('Please upload a PDF file.');
-            }
-        });
-
-        // Cancel button action
-        document.getElementById('cancelButton').addEventListener('click', () => {
-            console.log('Conversion cancelled');
-            // Reset the form
-            selectedFile = null;
-            dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
-            document.getElementById('convertForm').reset();
-            document.getElementById('custom-dimensions').style.display = 'none';
-        });
-    </script>
 </body>
 </html>

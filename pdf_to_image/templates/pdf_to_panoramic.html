@@ -3,60 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SnackPDF</title>
+    <title>SnackPDF - Convert PDF to Panoramic Image</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
             font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
-            text-align: center;
+            background-color: #ffffff;
+            color: #1f2937;
         }
         header {
-            background: #1f2937;
+            background-color: #1f2937;
+            padding: 20px;
             color: white;
-            padding: 15px 20px;
+            text-align: center;
         }
         header h1 {
             margin: 0;
-            font-size: 32px;
+            font-size: 36px;
         }
-        .tools-section {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 20px;
-            padding: 20px 40px;
-            margin: 0 auto;
-            max-width: 1100px;
-            text-align: center;
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: #ffffff;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .tools-section div {
-            text-align: center;
-        }
-        .tools-section div h2 {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-        .tools-section ul {
+        .navbar ul {
             list-style-type: none;
             padding: 0;
             margin: 0;
+            display: flex;
+            justify-content: space-around;
         }
-        .tools-section ul li a {
+        .navbar ul li {
+            position: relative;
+            font-size: 16px;
+        }
+        .navbar ul li a {
             text-decoration: none;
-            color: #000;
-            font-size: 14px;
+            color: #1f2937;
+            font-weight: 600;
         }
-        .tools-section ul li a:hover {
-            text-decoration: underline;
+        .navbar ul li:hover ul {
+            display: block; 
+            opacity: 1;
+            visibility: visible;
         }
+        .navbar ul li ul {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%; 
+            transform: translateX(-50%);
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            list-style-type: none;
+            padding: 10px 0;
+            min-width: 150px;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+        .navbar ul li ul li {
+            padding: 10px 20px;
+        }
+        .navbar ul li ul li a {
+            color: #1f2937;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.2s ease;
+        }
+        .navbar ul li ul li a:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Flush Tool Card */
         .tool-form-container {
-            margin: 30px auto;
+            margin: 40px auto;
             max-width: 600px;
             background-color: white;
-            padding: 20px;
+            padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: none;
         }
         .tool-form-container h3 {
             font-size: 24px;
@@ -80,27 +109,21 @@
             display: block;
             margin-top: 10px;
         }
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #d1d5db;
+            margin-bottom: 20px;
+        }
         .page-selection label {
             display: inline-block;
             margin-right: 10px;
             font-size: 14px;
             margin-bottom: 10px;
         }
-        .dpi-selection,
-        .format-selection,
-        .orientation-selection {
-            margin-bottom: 20px;
-        }
-        .dpi-selection select,
-        .format-selection select,
-        .orientation-selection select {
-            width: 100%;
-            padding: 10px;
-            font-size: 14px;
-            border-radius: 5px;
-            border: 1px solid #d1d5db;
-            cursor: pointer;
-        }
+
         .action-buttons {
             display: flex;
             justify-content: space-between;
@@ -120,246 +143,222 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1>SnackPDF</h1>
-    </header>
 
-    <div class="tools-section">
-        <div>
-            <h2>OPTIMISE</h2>
+<header>
+    <h1><a href="{{ url_for('index') }}" style="text-decoration: none; color: inherit;">SnackPDF</a></h1>
+</header>
+
+<!-- Navigation Bar -->
+<div class="navbar">
+    <ul>
+        <li><a href="#">OPTIMISE</a>
             <ul>
-                <li><a href="{{ url_for('compress') }}" style="font-weight: bold;">Compress</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Repair</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">OCR</a></li>
+                <li><a href="{{ url_for('compress') }}">Compress</a></li>
+                <li><a href="#">Repair</a></li>
+                <li><a href="#">OCR</a></li>
             </ul>
-        </div>
-        <div>
-            <h2>CONVERT TO PDF</h2>
+        </li>
+        <li><a href="#">CONVERT TO PDF</a>
             <ul>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">JPG to PDF</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Word to PDF</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PowerPoint to PDF</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Excel to PDF</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">HTML to PDF</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Zip of Images to PDF</a></li>
+                <li><a href="#">JPG to PDF</a></li>
+                <li><a href="#">Word to PDF</a></li>
+                <li><a href="#">PowerPoint to PDF</a></li>
+                <li><a href="#">Excel to PDF</a></li>
+                <li><a href="#">HTML to PDF</a></li>
+                <li><a href="#">Zip of Images to PDF</a></li>
             </ul>
-        </div>
-        <div>
-            <h2>CONVERT FROM PDF</h2>
+        </li>
+        <li><a href="#">CONVERT FROM PDF</a>
             <ul>
-                <li><a href="{{ url_for('pdf_to_jpg') }}" style="font-weight: bold;">PDF to JPG</a></li>
-                <li><a href="{{ url_for('pdf_to_panoramic') }}" style="font-weight: bold;">PDF to Panoramic</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to Word</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to PowerPoint</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to Excel</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">PDF to PDF/A</a></li>
+                <li><a href="{{ url_for('pdf_to_jpg') }}">PDF to JPG</a></li>
+                <li><a href="{{ url_for('pdf_to_panoramic') }}">PDF to Panoramic</a></li>
+                <li><a href="#">PDF to Word</a></li>
+                <li><a href="#">PDF to PowerPoint</a></li>
+                <li><a href="#">PDF to Excel</a></li>
+                <li><a href="#">PDF to PDF/A</a></li>
             </ul>
-        </div>
-        <div>
-            <h2>ORGANISE</h2>
+        </li>
+        <li><a href="#">ORGANISE</a>
             <ul>
-                <li><a href="{{ url_for('merge') }}" style="font-weight: bold;">Merge</a></li>
-                <li><a href="{{ url_for('split') }}" style="font-weight: bold;">Split</a></li>
-                <li><a href="{{ url_for('remove') }}" style="font-weight: bold;">Remove</a></li>
-                <li><a href="{{ url_for('extract') }}" style="font-weight: bold;">Extract</a></li>
-                <li><a href="{{ url_for('sort') }}" style="font-weight: bold;">Sort</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Scan</a></li>
-                <li><a href="{{ url_for('rotate') }}" style="font-weight: bold;">Rotate</a></li>
+                <li><a href="{{ url_for('merge') }}">Merge</a></li>
+                <li><a href="{{ url_for('split') }}">Split</a></li>
+                <li><a href="{{ url_for('remove') }}">Remove</a></li>
+                <li><a href="{{ url_for('extract') }}">Extract</a></li>
+                <li><a href="{{ url_for('sort') }}">Sort</a></li>
+                <li><a href="{{ url_for('rotate') }}">Rotate</a></li>
             </ul>
-        </div>
-        <div>
-            <h2>SECURITY</h2>
+        </li>
+        <li><a href="#">SECURITY</a>
             <ul>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Unlock</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Protect</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Sign</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Compare</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Redact</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Flatten</a></li>
+                <li><a href="#">Unlock</a></li>
+                <li><a href="#">Protect</a></li>
+                <li><a href="#">Sign</a></li>
+                <li><a href="#">Compare</a></li>
+                <li><a href="#">Redact</a></li>
+                <li><a href="#">Flatten</a></li>
             </ul>
-        </div>
-        <div>
-            <h2>EDIT</h2>
+        </li>
+        <li><a href="#">EDIT</a>
             <ul>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Page Numbers</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Add Watermark</a></li>
-                <li><a href="#" style="color: rgba(0, 0, 0, 0.3);">Edit Content</a></li>
+                <li><a href="#">Page Numbers</a></li>
+                <li><a href="#">Add Watermark</a></li>
+                <li><a href="#">Edit Content</a></li>
             </ul>
-        </div>
+        </li>
+    </ul>
+</div>
+
+<!-- Flush Tool Card -->
+<div class="tool-form-container">
+    <h3>Convert PDF to Panoramic Image</h3>
+    <p>Create a panoramic image from your PDF pages with customisable resolution and format.</p>
+
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop a PDF file here or click to upload</strong>
+        <input type="file" id="fileInput" accept="application/pdf" style="display: none;">
     </div>
 
-    <div class="tool-form-container">
-        <h3>Convert PDF to Panoramic Image</h3>
-        <p>Create a panoramic image from your PDF pages with customisable resolution and format.</p>
-
-        <form id="panoramicForm" enctype="multipart/form-data">
-            <div id="dragDropBox" class="drag-drop">
-                <strong>Drag and drop a PDF file here or click to upload</strong>
-                <input type="file" id="fileInput" accept="application/pdf" style="display: none;">
-            </div>
-
-            <!-- Page Range Selection -->
-            <div class="page-selection">
-                <label><input type="checkbox" id="selectAll" checked> Select All</label>
-                <!-- Dynamically generate checkboxes for pages -->
-                {% for i in range(1, total_pages + 1) %}
-                    <label><input type="checkbox" name="pages" value="{{ i }}" checked> Page {{ i }}</label>
-                {% endfor %}
-            </div>
-
-            <!-- Resolution (DPI) Selection -->
-            <div class="dpi-selection">
-                <select name="dpi" id="dpi">
-                    <option value="72" title="Lower image quality, smaller file size">72 DPI</option>
-                    <option value="150" title="Standard image quality">150 DPI</option>
-                    <option value="300" title="High image quality, larger file size" selected>300 DPI</option>
-                    <option value="600" title="Very high image quality, very large file size">600 DPI</option>
-                </select>
-            </div>
-
-            <!-- Output Format Selection -->
-            <div class="format-selection">
-                <select name="format" id="format">
-                    <option value="jpg" selected>JPG</option>
-                    <option value="png">PNG</option>
-                    <option value="tiff">TIFF</option>
-                </select>
-            </div>
-
-            <!-- Orientation Selection -->
-            <div class="orientation-selection">
-                <select name="orientation" id="orientation">
-                    <option value="horizontal" selected>Horizontal</option>
-                    <option value="vertical">Vertical</option>
-                </select>
-            </div>
-
-            <div class="action-buttons">
-                <button type="button" id="convertButton">Convert</button>
-                <button type="button" id="cancelButton">Cancel</button>
-            </div>
-        </form>
+    <!-- Page Range Selection -->
+    <div class="page-selection">
+        <label><input type="checkbox" id="selectAll" checked> Select All</label>
+        <!-- Dynamically generate checkboxes for pages -->
+        <!-- Page checkboxes will be dynamically generated using JavaScript or Jinja templating -->
     </div>
 
-    <script>
-        const dragDropBox = document.getElementById('dragDropBox');
-        const fileInput = document.getElementById('fileInput');
-        let selectedFile = null;
+    <!-- Resolution (DPI) Selection -->
+    <select name="dpi" id="dpi">
+        <option value="72" title="Lower image quality, smaller file size">72 DPI</option>
+        <option value="150" title="Standard image quality">150 DPI</option>
+        <option value="300" title="High image quality, larger file size" selected>300 DPI</option>
+        <option value="600" title="Very high image quality, very large file size">600 DPI</option>
+    </select>
 
-        dragDropBox.addEventListener('click', function () {
-            fileInput.click();  // Trigger the file input when clicking on the drag-drop box
-        });
+    <!-- Output Format Selection -->
+    <select name="format" id="format">
+        <option value="jpg" selected>JPG</option>
+        <option value="png">PNG</option>
+        <option value="tiff">TIFF</option>
+    </select>
 
-        dragDropBox.addEventListener('dragover', function (e) {
-            e.preventDefault();
-            dragDropBox.classList.add('dragover');  // Optional: Add some visual feedback
-        });
+    <!-- Orientation Selection -->
+    <select name="orientation" id="orientation">
+        <option value="horizontal" selected>Horizontal</option>
+        <option value="vertical">Vertical</option>
+    </select>
 
-        dragDropBox.addEventListener('dragleave', function () {
-            dragDropBox.classList.remove('dragover');
-        });
+    <div class="action-buttons">
+        <button type="button" id="convertButton">Convert</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</div>
 
-        dragDropBox.addEventListener('drop', function (e) {
-            e.preventDefault();
-            dragDropBox.classList.remove('dragover');
-            handleFileUpload(e.dataTransfer.files[0]);  // Handle the dropped file
-        });
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+    let selectedFile = null;
 
-        fileInput.addEventListener('change', function () {
-            handleFileUpload(fileInput.files[0]);  // Handle the file selected through input
-        });
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
 
-        function handleFileUpload(file) {
-            if (file && file.type === 'application/pdf') {
-                selectedFile = file;
-                dragDropBox.querySelector('strong').textContent = file.name;
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.classList.add('dragover');
+    });
 
-                const formData = new FormData();
-                formData.append('file', selectedFile);
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.classList.remove('dragover');
+    });
 
-                // Send the file to the server to get the total number of pages
-                fetch('{{ url_for("panoramic.get_total_pages") }}', {
-                    method: 'POST',
-                    body: formData,
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.total_pages) {
-                        populatePageCheckboxes(data.total_pages);
-                    } else {
-                        console.error('Failed to retrieve total pages');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            } else {
-                alert('Please upload a valid PDF file.');
-            }
-        }
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.classList.remove('dragover');
+        handleFileUpload(e.dataTransfer.files[0]);
+    });
 
-        function populatePageCheckboxes(totalPages) {
-            const pageCheckboxes = document.querySelector('.page-selection');
-            pageCheckboxes.innerHTML = '';
-            const selectAll = document.createElement('label');
-            selectAll.innerHTML = `<input type="checkbox" id="selectAll" checked>Select All`;
-            pageCheckboxes.appendChild(selectAll);
+    fileInput.addEventListener('change', function () {
+        handleFileUpload(fileInput.files[0]);
+    });
 
-            for (let i = 1; i <= totalPages; i++) {
-                const label = document.createElement('label');
-                label.innerHTML = `<input type="checkbox" name="pages" value="${i}" checked> Page ${i}`;
-                pageCheckboxes.appendChild(label);
-            }
+    function handleFileUpload(file) {
+        if (file && file.type === 'application/pdf') {
+            selectedFile = file;
+            dragDropBox.querySelector('strong').textContent = file.name;
 
-            document.getElementById('selectAll').addEventListener('change', (e) => {
-                const checked = e.target.checked;
-                const checkboxes = pageCheckboxes.querySelectorAll('input[name="pages"]');
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = checked;
-                });
-            });
-        }
-
-        document.getElementById('convertButton').addEventListener('click', function() {
             const formData = new FormData();
             formData.append('file', selectedFile);
 
-            const checkboxes = document.querySelectorAll('input[name="pages"]:checked');
+            // Simulate fetching total pages and dynamically generating page checkboxes
+            // This section would be handled via AJAX or server-side templating in production
+            populatePageCheckboxes(10);  // Example total page number
+        } else {
+            alert('Please upload a valid PDF file.');
+        }
+    }
+
+    function populatePageCheckboxes(totalPages) {
+        const pageCheckboxes = document.querySelector('.page-selection');
+        pageCheckboxes.innerHTML = '';
+        const selectAll = document.createElement('label');
+        selectAll.innerHTML = `<input type="checkbox" id="selectAll" checked>Select All`;
+        pageCheckboxes.appendChild(selectAll);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const label = document.createElement('label');
+            label.innerHTML = `<input type="checkbox" name="pages" value="${i}" checked> Page ${i}`;
+            pageCheckboxes.appendChild(label);
+        }
+
+        document.getElementById('selectAll').addEventListener('change', (e) => {
+            const checked = e.target.checked;
+            const checkboxes = pageCheckboxes.querySelectorAll('input[name="pages"]');
             checkboxes.forEach(checkbox => {
-                formData.append('pages', checkbox.value);
+                checkbox.checked = checked;
             });
+        });
+    }
 
-            formData.append('dpi', document.getElementById('dpi').value);
-            formData.append('format', document.getElementById('format').value);
-            formData.append('orientation', document.getElementById('orientation').value);
+    document.getElementById('convertButton').addEventListener('click', function() {
+        const formData = new FormData();
+        formData.append('file', selectedFile);
 
-            // Implement AJAX request to send the form data to the server
-            fetch('{{ url_for("panoramic.panoramic") }}', {  // Ensure this is the correct endpoint
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.blob())
-            .then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                a.download = 'panoramic_image.' + document.getElementById('format').value;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-            })
-            .catch(error => console.error('Error:', error));
+        const checkboxes = document.querySelectorAll('input[name="pages"]:checked');
+        checkboxes.forEach(checkbox => {
+            formData.append('pages', checkbox.value);
         });
 
-        document.getElementById('cancelButton').addEventListener('click', function() {
-            selectedFile = null;
-            dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
-            document.querySelector('.page-selection').innerHTML = '';
-            document.getElementById('dpi').value = '300';
-            document.getElementById('format').value = 'jpg';
-            document.getElementById('orientation').value = 'horizontal';
-        });
-    </script>
+        formData.append('dpi', document.getElementById('dpi').value);
+        formData.append('format', document.getElementById('format').value);
+        formData.append('orientation', document.getElementById('orientation').value);
+
+        // Send form data to the server to generate panoramic image
+        fetch('{{ url_for("panoramic.panoramic") }}', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'panoramic_image.' + document.getElementById('format').value;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        selectedFile = null;
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
+        document.querySelector('.page-selection').innerHTML = '';
+        document.getElementById('dpi').value = '300';
+        document.getElementById('format').value = 'jpg';
+        document.getElementById('orientation').value = 'horizontal';
+    });
+</script>
+
 </body>
 </html>

@@ -1,214 +1,115 @@
-from flask import Flask, Blueprint, request, send_file
-import fitz  # PyMuPDF
+from flask import Blueprint, request, send_file, jsonify, render_template
+from pdf2docx import Converter
 import os
+import tempfile
+import json
 from docx import Document
-from docx.shared import Pt, RGBColor, Inches
-from docx.enum.text import WD_PARAGRAPH_ALIGNMENT, WD_LINE_SPACING
-from docx.oxml import OxmlElement
-from docx.oxml.ns import qn
-from PIL import Image
-import io
+import pytesseract
+from pdf2image import convert_from_path
+import traceback  # Import for detailed error reporting
 
-app = Flask(__name__)
 pdf_to_word_bp = Blueprint('pdf_to_word', __name__)
 
-STATIC_DIR = os.path.join(os.getcwd(), 'static')
+STATIC_DIR = os.path.join(os.getcwd(), 'pdf_to_image', 'static')
 
-# Ensure the static directory exists
-if not os.path.exists(STATIC_DIR):
-    os.makedirs(STATIC_DIR)
+def sanitize_options(options):
+    """Ensures all options are of the correct type."""
+    sanitized = {}
+    sanitized['default_font_size'] = int(options.get('default_font_size', 11))  # Ensure this is int
+    sanitized['line_height'] = float(options.get('line_height', 1.15))  # Ensure this is float
+    sanitized['default_font'] = options.get('default_font', 'Arial')
+    sanitized['css_path'] = options.get('css_path', None)
+    return sanitized
 
-def set_run_style(run, font_name, font_size, font_color, bold, italic, underline):
-    run.font.name = font_name
-    run.font.size = Pt(font_size)
-    run.font.color.rgb = RGBColor(font_color[0], font_color[1], font_color[2])
-    run.bold = bold
-    run.italic = italic
-    run.underline = underline
+def convert_pdf_to_word(pdf_path, docx_path, options=None):
+    if options is None:
+        options = {}
+    
+    sanitized_options = sanitize_options(options)  # Use sanitized options
+    
+    # Log all layout_analysis_settings and docx_settings for debugging
+    print("layout_analysis_settings:", {
+        'debug': False,
+        'curve_path_ratio': 0.7,
+        'line_overlap_threshold': 0.9,
+        'line_break_width_ratio': 0.1,
+        'line_break_free_space_ratio': 0.3,
+        'line_separate_threshold': int(5.0),
+        'line_separate_length_ratio': 0.5,
+        'line_separate_free_space_ratio': 0.1,
+        'line_separate_free_space_factor': int(1.5),
+    })
 
-def add_paragraph_with_formatting(doc, text, font_name='Arial', font_size=12, bold=False, italic=False, underline=False, color=(0, 0, 0), alignment=WD_PARAGRAPH_ALIGNMENT.LEFT):
-    paragraph = doc.add_paragraph()
-    run = paragraph.add_run(text)
-    set_run_style(run, font_name, font_size, color, bold, italic, underline)
-    paragraph.alignment = alignment
-    paragraph_format = paragraph.paragraph_format
-    paragraph_format.space_after = Pt(0)
-    paragraph_format.space_before = Pt(0)
-    paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
+    print("docx_settings:", {
+        'default_font': options.get('default_font', 'Arial'),
+        'default_font_size': int(options.get('default_font_size', 11)),
+        'line_height': float(options.get('line_height', 1.15)),  # Keeping this as float
+        'css_path': options.get('css_path', None),
+    })
 
-def add_table(doc, table_data):
     try:
-        if not table_data:
-            return
-        table = doc.add_table(rows=len(table_data), cols=max(len(row) for row in table_data))
-        table.style = 'Table Grid'
-        for row_idx, row_data in enumerate(table_data):
-            for col_idx, cell_data in enumerate(row_data):
-                cell = table.cell(row_idx, col_idx)
-                cell.text = cell_data
-                for paragraph in cell.paragraphs:
-                    for run in paragraph.runs:
-                        run.font.size = Pt(12)
-                        run.font.name = 'Calibri'
-    except Exception as e:
-        print(f"Error adding table: {e}")
-
-def add_hyperlink(paragraph, url, text):
-    part = paragraph.part
-    r_id = part.relate_to(url, "hyperlink", is_external=True)
-    hyperlink = OxmlElement("w:hyperlink")
-    hyperlink.set(qn("r:id"), r_id)
-    new_run = OxmlElement("w:r")
-    r_pr = OxmlElement("w:rPr")
-    r_style = OxmlElement("w:rStyle")
-    r_style.set(qn("w:val"), "Hyperlink")
-    r_pr.append(r_style)
-    new_run.append(r_pr)
-    text_run = OxmlElement("w:t")
-    text_run.text = text
-    new_run.append(text_run)
-    hyperlink.append(new_run)
-    paragraph._p.append(hyperlink)
-
-def add_image(doc, image_stream, width, height):
-    try:
-        image = Image.open(image_stream)
-        image_stream.seek(0)
-        doc.add_picture(image_stream, width=Inches(width / 96), height=Inches(height / 96))
-    except Exception as e:
-        print(f"Error adding image: {e}")
-
-def extract_text_and_styles(page):
-    text_elements = []
-    blocks = page.get_text("dict")["blocks"]
-    for block in blocks:
-        if block["type"] == 0:  # Text block
-            for line in block["lines"]:
-                for span in line["spans"]:
-                    text_elements.append({
-                        "text": span["text"],
-                        "font": span["font"],
-                        "size": span["size"],
-                        "color": [(span["color"] >> 16) & 0xff, (span["color"] >> 8) & 0xff, span["color"] & 0xff],
-                        "flags": span["flags"],
-                        "bbox": span["bbox"]
-                    })
-    return text_elements
-
-def extract_images(page):
-    images = []
-    image_list = page.get_images(full=True)
-    for img in image_list:
-        xref = img[0]
-        try:
-            base_image = fitz.Pixmap(page.parent, xref)
-            if base_image.n > 4:  # Convert CMYK and other modes to RGB first
-                base_image = fitz.Pixmap(fitz.csRGB, base_image)
-            image_bytes = base_image.tobytes("png")
-            bbox = img[3] if isinstance(img[3], (list, tuple)) else [0, 0, base_image.width, base_image.height]
-            images.append({
-                "image": image_bytes,
-                "bbox": bbox
+        cv = Converter(pdf_path)
+        cv.convert(docx_path, 
+            layout_analysis_settings={
+                'curve_path_ratio': float(0.7),
+                'line_overlap_threshold': float(0.9),
+                'line_break_width_ratio': float(0.1),
+                'line_break_free_space_ratio': float(0.3),
+                'line_separate_threshold': int(5),  # Ensure this is int
+                'line_separate_length_ratio': float(0.5),
+                'line_separate_free_space_ratio': float(0.1),
+                'line_separate_free_space_factor': int(1),  # Cast float to int if necessary
+            },
+            docx_settings={
+                'default_font': sanitized_options['default_font'],
+                'default_font_size': sanitized_options['default_font_size'],
+                'line_height': sanitized_options['line_height'],  # Ensured to be float
+                'css_path': sanitized_options['css_path'],
             })
-        except Exception as e:
-            print(f"Error extracting image {xref}: {e}")
-    return images
+        cv.close()
 
-def extract_tables(page):
-    tables = []
-    blocks = page.get_text("dict")["blocks"]
-    current_table = []
-    previous_bottom = None
-    
-    for block in blocks:
-        if block["type"] == 0:  # Text block
-            block_top = block['bbox'][1]
-            block_bottom = block['bbox'][3]
-            if previous_bottom is not None and block_top - previous_bottom > 10:  # Arbitrary gap to detect new table
-                if current_table:
-                    tables.append(current_table)
-                    current_table = []
-            row = []
-            for line in block["lines"]:
-                row_text = " ".join([span["text"] for span in line["spans"]])
-                row.append(row_text)
-            current_table.append(row)
-            previous_bottom = block_bottom
-    
-    if current_table:
-        tables.append(current_table)
-    
-    # Normalize table row lengths
-    max_columns = max(len(row) for table in tables for row in table)
-    for table in tables:
-        for row in table:
-            while len(row) < max_columns:
-                row.append("")  # Fill missing cells with empty strings
+    except Exception as e:
+        # Capture and print the full traceback for more details
+        print("Error during PDF to Word conversion:")
+        traceback.print_exc()  # Prints the full traceback
+        raise e  # Re-raise the exception to let it propagate
 
-    return tables
+def ocr_pdf(pdf_path):
+    pages = convert_from_path(pdf_path)
+    text = ""
+    for page in pages:
+        text += pytesseract.image_to_string(page)
+    return text
 
 @pdf_to_word_bp.route('/pdf_to_word', methods=['POST'])
 def pdf_to_word():
     try:
+        print("Received request to /pdf_to_word")  # Log request receipt
         file = request.files['file']
-        file_path = os.path.join(STATIC_DIR, file.filename)
-        file.save(file_path)
+        options = json.loads(request.form.get('options', '{}'))
+        print(f"Options received: {options}")  # Log options
 
-        doc = fitz.open(file_path)
-        word_doc = Document()
+        with tempfile.TemporaryDirectory() as temp_dir:
+            pdf_path = os.path.join(temp_dir, file.filename)
+            file.save(pdf_path)
+            print(f"PDF saved to {pdf_path}")  # Log saved PDF location
+            
+            docx_path = os.path.splitext(pdf_path)[0] + '.docx'
+            
+            if options.get('use_ocr', False):
+                ocr_text = ocr_pdf(pdf_path)
+                print(f"OCR text generated: {ocr_text[:100]}...")  # Log partial OCR result
+            
+            convert_pdf_to_word(pdf_path, docx_path, options)
+            print(f"PDF converted to Word at {docx_path}")  # Log conversion success
+            
+            return send_file(docx_path, as_attachment=True, download_name=f'{os.path.splitext(file.filename)[0]}.docx', mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
 
-        # Add a header and footer
-        section = word_doc.sections[0]
-        header = section.header
-        footer = section.footer
-
-        for page_num in range(len(doc)):
-            page = doc.load_page(page_num)
-
-            # Extract and add text elements
-            text_elements = extract_text_and_styles(page)
-            for elem in text_elements:
-                add_paragraph_with_formatting(
-                    word_doc,
-                    elem["text"],
-                    font_size=elem["size"],
-                    color=elem["color"],
-                    bold=bool(elem["flags"] & 2),
-                    italic=bool(elem["flags"] & 1),
-                    underline=bool(elem["flags"] & 4),
-                    alignment=WD_PARAGRAPH_ALIGNMENT.LEFT  # Customize alignment as needed
-                )
-
-            # Extract and add images
-            images = extract_images(page)
-            for img in images:
-                image_stream = io.BytesIO(img["image"])
-                bbox = img["bbox"]
-                if isinstance(bbox, (list, tuple)) and len(bbox) == 4:
-                    width = bbox[2] - bbox[0]
-                    height = bbox[3] - bbox[1]
-                    add_image(word_doc, image_stream, width, height)
-                else:
-                    # Handle unexpected bbox format
-                    print(f"Unexpected bbox format: {bbox}")
-
-            # Extract and add tables
-            tables = extract_tables(page)
-            for table in tables:
-                add_table(word_doc, table)
-
-            if page_num < len(doc) - 1:
-                word_doc.add_page_break()
-
-        word_doc_path = os.path.join(STATIC_DIR, f'{os.path.splitext(file.filename)[0]}.docx')
-        word_doc.save(word_doc_path)
-
-        return send_file(word_doc_path, as_attachment=True)
     except Exception as e:
-        print(f"Error during PDF to Word conversion: {e}")
-        return {"error": str(e)}, 500
+        print("Error occurred during /pdf_to_word request:")
+        traceback.print_exc()  # Print the full traceback for debugging
+        return jsonify({"error": str(e)}), 500
 
-app.register_blueprint(pdf_to_word_bp)
-
-if __name__ == '__main__':
-    app.run(debug=True)
+@pdf_to_word_bp.route('/pdf_to_word_page')
+def pdf_to_word_page():
+    return render_template('pdf_to_word.html')

@@ -72,6 +72,20 @@ def create_app():
     def rotate():
         return render_template('rotate.html')
 
+    @app.route('/word')
+    def word():
+        return render_template('word.html')
+
+    @app.route('/powerpoint')
+    def powerpoint():
+        return render_template('powerpoint.html')
+
+
+    @app.route('/excel')
+    def excel():
+        return render_template('excel.html')
+
+
 
     @app.errorhandler(Exception)
     def handle_exception(e):

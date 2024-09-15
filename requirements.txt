@@ -10,7 +10,7 @@ pdf2image==1.17.0
 pillow==10.3.0
 Werkzeug==3.0.3
 pdfplumber==0.7.5
-PyMuPDF==1.23.9
+PyMuPDF==1.23.8
 python-docx==0.8.11
 python-pptx==0.6.21
 pdf2docx

@@ -1,53 +1,74 @@
-from flask import Blueprint, request, send_file
-import fitz  # PyMuPDF
+from flask import Blueprint, request, send_file, jsonify, render_template
+from pdf2pptx import convert_pdf2pptx
 import os
-from pptx import Presentation
-from pptx.util import Inches, Pt
-from PIL import Image
+import tempfile
+import json
+import traceback
+from pdf2image import convert_from_path
+import pytesseract
 
-pdf_to_powerpoint_bp = Blueprint('pdf_to_powerpoint', __name__)
+pdf_to_pptx_bp = Blueprint('pdf_to_pptx', __name__)
 
 STATIC_DIR = os.path.join(os.getcwd(), 'pdf_to_image', 'static')
 
-# Ensure the static directory exists
-if not os.path.exists(STATIC_DIR):
-    os.makedirs(STATIC_DIR)
+def sanitize_options(options):
+    """Ensures all options are of the correct type."""
+    sanitized = {}
+    sanitized['dpi'] = int(options.get('dpi', 300))
+    sanitized['output_format'] = options.get('output_format', 'pptx')
+    return sanitized
 
-@pdf_to_powerpoint_bp.route('/pdf_to_powerpoint', methods=['POST'])
-def pdf_to_powerpoint():
-    file = request.files['file']
-    file_path = os.path.join(STATIC_DIR, file.filename)
-    file.save(file_path)
+def convert_pdf_to_pptx(pdf_path, pptx_path, options=None):
+    if options is None:
+        options = {}
+    
+    sanitized_options = sanitize_options(options)
+    
+    print("PDF to PowerPoint conversion options:", sanitized_options)
 
-    doc = fitz.open(file_path)
-    presentation = Presentation()
+    try:
+        convert_pdf2pptx(pdf_path, pptx_path, dpi=sanitized_options['dpi'])
+    except Exception as e:
+        print("Error during PDF to PowerPoint conversion:")
+        traceback.print_exc()
+        raise e
 
-    # Set slide dimensions to match PDF page dimensions
-    first_page = doc.load_page(0)
-    page_rect = first_page.rect
-    pdf_width = Inches(page_rect.width / 72)  # Convert points to inches
-    pdf_height = Inches(page_rect.height / 72)  # Convert points to inches
-    presentation.slide_width = pdf_width
-    presentation.slide_height = pdf_height
+def ocr_pdf(pdf_path):
+    pages = convert_from_path(pdf_path)
+    text = ""
+    for page in pages:
+        text += pytesseract.image_to_string(page)
+    return text
 
-    # Set desired resolution (e.g., 300 DPI)
-    zoom = 3.0  # 3.0 corresponds to 300 DPI
+@pdf_to_pptx_bp.route('/pdf_to_pptx', methods=['POST'])
+def pdf_to_pptx():
+    try:
+        print("Received request to /pdf_to_pptx")
+        file = request.files['file']
+        options = json.loads(request.form.get('options', '{}'))
+        print(f"Options received: {options}")
 
-    for page_number in range(len(doc)):
-        page = doc.load_page(page_number)
-        mat = fitz.Matrix(zoom, zoom)  # Use the matrix to scale the image
-        pix = page.get_pixmap(matrix=mat)
-        image_path = os.path.join(STATIC_DIR, f'{file.filename}_page_{page_number + 1}.jpg')
-        pix.save(image_path)
-        
-        # Add a slide to the presentation
-        slide_layout = presentation.slide_layouts[5]  # Using a blank slide layout
-        slide = presentation.slides.add_slide(slide_layout)
-        
-        # Add image to the slide
-        slide.shapes.add_picture(image_path, 0, 0, width=pdf_width, height=pdf_height)
+        with tempfile.TemporaryDirectory() as temp_dir:
+            pdf_path = os.path.join(temp_dir, file.filename)
+            file.save(pdf_path)
+            print(f"PDF saved to {pdf_path}")
+            
+            pptx_path = os.path.splitext(pdf_path)[0] + '.pptx'
+            
+            if options.get('use_ocr', False):
+                ocr_text = ocr_pdf(pdf_path)
+                print(f"OCR text generated: {ocr_text[:100]}...")
+            
+            convert_pdf_to_pptx(pdf_path, pptx_path, options)
+            print(f"PDF converted to PowerPoint at {pptx_path}")
+            
+            return send_file(pptx_path, as_attachment=True, download_name=f'{os.path.splitext(file.filename)[0]}.pptx', mimetype='application/vnd.openxmlformats-officedocument.presentationml.presentation')
 
-    pptx_path = os.path.join(STATIC_DIR, f'{os.path.splitext(file.filename)[0]}.pptx')
-    presentation.save(pptx_path)
+    except Exception as e:
+        print("Error occurred during /pdf_to_pptx request:")
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
 
-    return send_file(pptx_path, as_attachment=True)
+@pdf_to_pptx_bp.route('/pdf_to_pptx_page')
+def pdf_to_pptx_page():
+    return render_template('pdf_to_pptx.html')

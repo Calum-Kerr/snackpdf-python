@@ -219,11 +219,11 @@
     </div>
 
     <!-- Page Range Selection -->
-    <div class="page-selection">
-        <label><input type="checkbox" id="selectAll" checked> Select All</label>
+    <!-- <div class="page-selection"> -->
+        <!--<label><input type="checkbox" id="selectAll" checked> Select All</label> -->
         <!-- Dynamically generate checkboxes for pages -->
         <!-- Page checkboxes will be dynamically generated using JavaScript or Jinja templating -->
-    </div>
+    <!-- </div> -->
 
     <!-- Resolution (DPI) Selection -->
     <select name="dpi" id="dpi">
@@ -296,7 +296,7 @@
         }
     }
 
-    function populatePageCheckboxes(totalPages) {
+    /*function populatePageCheckboxes(totalPages) {
         const pageCheckboxes = document.querySelector('.page-selection');
         pageCheckboxes.innerHTML = '';
         const selectAll = document.createElement('label');
@@ -316,7 +316,7 @@
                 checkbox.checked = checked;
             });
         });
-    }
+    }*/
 
     document.getElementById('convertButton').addEventListener('click', function() {
         const formData = new FormData();

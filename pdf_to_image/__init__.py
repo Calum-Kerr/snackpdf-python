@@ -13,6 +13,7 @@ from .convert_to_pdf import convert_to_pdf_bp
 from .security import security_bp
 from .repair import repair_bp
 from .ocr import ocr_bp
+from .page_numbers import page_numbers_bp
 import traceback
 
 def create_app():
@@ -33,6 +34,8 @@ def create_app():
     app.register_blueprint(rotate_bp)
     app.register_blueprint(repair_bp)
     app.register_blueprint(ocr_bp)
+    app.register_blueprint(page_numbers_bp)
+
 
     @app.route('/')
     def index():
@@ -89,6 +92,10 @@ def create_app():
     @app.route('/ocr')
     def ocr():
         return render_template('ocr.html')
+
+    @app.route('/page_numbers')
+    def page_numbers():
+        return render_template('page_numbers.html')
 
     
 

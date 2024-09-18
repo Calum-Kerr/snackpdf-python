@@ -108,8 +108,8 @@
             <h2>OPTIMISE</h2>
             <ul>
                 <li><a href="{{ url_for('compress') }}">Compress</a></li>
-                <li><a href="#">Repair</a></li>
-                <li><a href="#">OCR</a></li>
+                <li><a href="{{ url_for('repair') }}">Repair</a></li>
+                <li><a href="{{ url_for('ocr') }}">OCR</a></li>
             </ul>
         </div>
 
@@ -156,7 +156,7 @@
                 <li><a href="{{ url_for('pdf_to_jpg') }}">PDF to JPG</a></li>
                 <li><a href="{{ url_for('pdf_to_panoramic') }}">PDF to Panoramic</a></li>
                 <li><a href="{{ url_for('word') }}">PDF to Word</a></li>
-                <li><a href="#">PDF to PowerPoint</a></li>
+                <li><a href="{{ url_for('powerpoint') }}">PDF to PowerPoint</a></li>
                 <li><a href="#">PDF to Excel</a></li>
                 <li><a href="#">PDF to PDF/A</a></li>
             </ul>

@@ -19,3 +19,4 @@ pdf2pptx
 tabula-py
 pandas
 openpyxl
+swig

@@ -14,6 +14,7 @@ from .security import security_bp
 from .repair import repair_bp
 from .ocr import ocr_bp
 from .page_numbers import page_numbers_bp
+from .watermark import watermark_bp
 import traceback
 
 def create_app():
@@ -35,6 +36,7 @@ def create_app():
     app.register_blueprint(repair_bp)
     app.register_blueprint(ocr_bp)
     app.register_blueprint(page_numbers_bp)
+    app.register_blueprint(watermark_bp)
 
 
     @app.route('/')
@@ -96,6 +98,10 @@ def create_app():
     @app.route('/page_numbers')
     def page_numbers():
         return render_template('page_numbers.html')
+
+    @app.route('/watermark')
+    def watermark():
+        return render_template('watermark.html')
 
     
 

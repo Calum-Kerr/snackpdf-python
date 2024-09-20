@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Watermark to PDF</title>
+</head>
+<body>
+    <h1>Add Watermark to PDF</h1>
+    <form action="{{ url_for('watermark.add_watermark') }}" method="post" enctype="multipart/form-data">
+        <label for="file">Upload a PDF:</label>
+        <input type="file" id="file" name="file" required><br><br>
+        
+        <label for="watermark_type">Watermark Type:</label>
+        <select id="watermark_type" name="watermark_type">
+            <option value="text">Text</option>
+            <option value="image">Image</option>
+        </select><br><br>
+        
+        <div id="text_watermark_section">
+            <label for="watermark_text">Watermark Text:</label>
+            <input type="text" id="watermark_text" name="watermark_text" value="Watermark"><br><br>
+            <label for="font_size">Font Size:</label>
+            <input type="number" id="font_size" name="font_size" value="36"><br><br>
+        </div>
+
+        <div id="image_watermark_section" style="display: none;">
+            <label for="watermark_image">Upload Watermark Image:</label>
+            <input type="file" id="watermark_image" name="watermark_image"><br><br>
+        </div>
+        
+        <label for="position">Position:</label>
+        <select id="position" name="position">
+            <option value="center">Center</option>
+            <option value="top">Top</option>
+            <option value="bottom">Bottom</option>
+        </select><br><br>
+        
+        <button type="submit">Add Watermark</button>
+    </form>
+
+    <script>
+        document.getElementById('watermark_type').addEventListener('change', function() {
+            if (this.value === 'image') {
+                document.getElementById('text_watermark_section').style.display = 'none';
+                document.getElementById('image_watermark_section').style.display = 'block';
+            } else {
+                document.getElementById('text_watermark_section').style.display = 'block';
+                document.getElementById('image_watermark_section').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

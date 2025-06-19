@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - PDF to PDF/A{% endblock %}
+
+{% block page_title %}Convert PDF to PDF/A (Archival Format){% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Convert PDF files to PDF/A format for long-term archival and compliance requirements.</p>
+
+<form id="pdfToPdfAForm" action="/pdf_to_pdfa" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop PDF files here or click to upload</strong>
+        <input type="file" id="fileInput" name="files" accept=".pdf" multiple style="display: none;" required>
+    </div>
+
+    <div class="form-group">
+        <label for="pdfa_level">PDF/A Level:</label>
+        <select id="pdfa_level" name="pdfa_level">
+            <option value="pdfa-1b" selected>PDF/A-1b (Basic)</option>
+            <option value="pdfa-1a">PDF/A-1a (Accessible)</option>
+            <option value="pdfa-2b">PDF/A-2b (Enhanced)</option>
+            <option value="pdfa-2a">PDF/A-2a (Accessible Enhanced)</option>
+            <option value="pdfa-3b">PDF/A-3b (With Attachments)</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="color_profile">Color Profile:</label>
+        <select id="color_profile" name="color_profile">
+            <option value="srgb" selected>sRGB (Standard)</option>
+            <option value="cmyk">CMYK (Print)</option>
+            <option value="grayscale">Grayscale</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="font_embedding">Font Embedding:</label>
+        <select id="font_embedding" name="font_embedding">
+            <option value="embed_all" selected>Embed All Fonts</option>
+            <option value="embed_subset">Embed Font Subsets</option>
+            <option value="standard_only">Standard Fonts Only</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="image_compression">Image Compression:</label>
+        <select id="image_compression" name="image_compression">
+            <option value="lossless" selected>Lossless (Best Quality)</option>
+            <option value="jpeg">JPEG (Smaller Size)</option>
+            <option value="mixed">Mixed (Optimal)</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="metadata_preservation">Metadata Preservation:</label>
+        <select id="metadata_preservation" name="metadata_preservation">
+            <option value="preserve" selected>Preserve Metadata</option>
+            <option value="clean">Clean Metadata</option>
+            <option value="minimal">Minimal Metadata</option>
+        </select>
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Convert to PDF/A</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const validFiles = Array.from(files).filter(file => 
+                file.type === 'application/pdf'
+            );
+            
+            if (validFiles.length > 0) {
+                dragDropBox.querySelector('strong').textContent = 
+                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} PDF files selected`;
+            } else {
+                alert('Please upload valid PDF files.');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop PDF files here or click to upload';
+        document.getElementById('pdfa_level').value = 'pdfa-1b';
+        document.getElementById('color_profile').value = 'srgb';
+        document.getElementById('font_embedding').value = 'embed_all';
+        document.getElementById('image_compression').value = 'lossless';
+        document.getElementById('metadata_preservation').value = 'preserve';
+    });
+</script>
+{% endblock %}

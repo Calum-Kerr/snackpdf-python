@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - Remove PDF Pages{% endblock %}
+
+{% block page_title %}Remove PDF Pages{% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Remove specific pages from PDF documents to create cleaner, more focused files.</p>
+
+<form id="removeForm" action="/remove" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop a PDF file here or click to upload</strong>
+        <input type="file" id="fileInput" name="file" accept=".pdf" style="display: none;" required>
+    </div>
+
+    <div class="form-group">
+        <label for="removal_method">Removal Method:</label>
+        <select id="removal_method" name="removal_method">
+            <option value="specific_pages" selected>Specific Pages</option>
+            <option value="page_range">Page Range</option>
+            <option value="odd_pages">Odd Pages</option>
+            <option value="even_pages">Even Pages</option>
+            <option value="blank_pages">Blank Pages</option>
+        </select>
+    </div>
+
+    <div class="form-group" id="specific_pages_input">
+        <label for="pages_to_remove">Pages to Remove (comma-separated):</label>
+        <input type="text" id="pages_to_remove" name="pages_to_remove" placeholder="e.g., 1,3,5-7,10">
+    </div>
+
+    <div class="form-group" id="range_input" style="display: none;">
+        <label for="start_page">Start Page:</label>
+        <input type="number" id="start_page" name="start_page" min="1" placeholder="1">
+        <label for="end_page">End Page:</label>
+        <input type="number" id="end_page" name="end_page" min="1" placeholder="5">
+    </div>
+
+    <div class="form-group">
+        <label for="preview_mode">Preview Mode:</label>
+        <select id="preview_mode" name="preview_mode">
+            <option value="show_remaining" selected>Show Remaining Pages</option>
+            <option value="show_removed">Show Removed Pages</option>
+            <option value="no_preview">No Preview</option>
+        </select>
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Remove Pages</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+    const removalMethod = document.getElementById('removal_method');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    removalMethod.addEventListener('change', function() {
+        const method = this.value;
+        document.getElementById('specific_pages_input').style.display = 
+            (method === 'specific_pages') ? 'block' : 'none';
+        document.getElementById('range_input').style.display = 
+            (method === 'page_range') ? 'block' : 'none';
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type === 'application/pdf') {
+                dragDropBox.querySelector('strong').textContent = file.name;
+            } else {
+                alert('Please upload a valid PDF file.');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
+        document.getElementById('removal_method').value = 'specific_pages';
+        document.getElementById('pages_to_remove').value = '';
+        document.getElementById('start_page').value = '';
+        document.getElementById('end_page').value = '';
+        document.getElementById('preview_mode').value = 'show_remaining';
+        removalMethod.dispatchEvent(new Event('change'));
+    });
+</script>
+{% endblock %}

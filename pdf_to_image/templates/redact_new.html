@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - Redact PDF{% endblock %}
+
+{% block page_title %}Redact Sensitive Information{% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Remove or black out sensitive information from PDF documents for privacy and compliance.</p>
+
+<form id="redactForm" action="/redact" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop a PDF file here or click to upload</strong>
+        <input type="file" id="fileInput" name="file" accept=".pdf" style="display: none;" required>
+    </div>
+
+    <div class="form-group">
+        <label for="redaction_method">Redaction Method:</label>
+        <select id="redaction_method" name="redaction_method">
+            <option value="manual" selected>Manual Selection</option>
+            <option value="text_search">Text Search</option>
+            <option value="pattern_matching">Pattern Matching</option>
+            <option value="ai_detection">AI Detection</option>
+        </select>
+    </div>
+
+    <div class="form-group" id="text_search_input" style="display: none;">
+        <label for="search_terms">Text to Redact (comma-separated):</label>
+        <input type="text" id="search_terms" name="search_terms" placeholder="e.g., John Doe, 123-45-6789, confidential">
+    </div>
+
+    <div class="form-group" id="pattern_input" style="display: none;">
+        <label for="pattern_type">Pattern Type:</label>
+        <select id="pattern_type" name="pattern_type">
+            <option value="ssn">Social Security Numbers</option>
+            <option value="credit_card">Credit Card Numbers</option>
+            <option value="phone">Phone Numbers</option>
+            <option value="email">Email Addresses</option>
+            <option value="custom">Custom Pattern</option>
+        </select>
+    </div>
+
+    <div class="form-group" id="ai_detection_input" style="display: none;">
+        <label for="detection_types">AI Detection Types:</label>
+        <div style="margin-top: 10px;">
+            <label><input type="checkbox" name="detect_names" value="yes" checked> Personal Names</label><br>
+            <label><input type="checkbox" name="detect_addresses" value="yes"> Addresses</label><br>
+            <label><input type="checkbox" name="detect_financial" value="yes"> Financial Information</label><br>
+            <label><input type="checkbox" name="detect_medical" value="yes"> Medical Information</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="redaction_style">Redaction Style:</label>
+        <select id="redaction_style" name="redaction_style">
+            <option value="black_box" selected>Black Box</option>
+            <option value="white_box">White Box</option>
+            <option value="strikethrough">Strikethrough</option>
+            <option value="blur">Blur Effect</option>
+            <option value="custom_text">Custom Text</option>
+        </select>
+    </div>
+
+    <div class="form-group" id="custom_text_input" style="display: none;">
+        <label for="replacement_text">Replacement Text:</label>
+        <input type="text" id="replacement_text" name="replacement_text" placeholder="[REDACTED]">
+    </div>
+
+    <div class="form-group">
+        <label for="case_sensitive">Case Sensitive:</label>
+        <select id="case_sensitive" name="case_sensitive">
+            <option value="no" selected>No</option>
+            <option value="yes">Yes</option>
+        </select>
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Redact PDF</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+    const redactionMethod = document.getElementById('redaction_method');
+    const redactionStyle = document.getElementById('redaction_style');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    redactionMethod.addEventListener('change', function() {
+        const method = this.value;
+        document.getElementById('text_search_input').style.display = 
+            method === 'text_search' ? 'block' : 'none';
+        document.getElementById('pattern_input').style.display = 
+            method === 'pattern_matching' ? 'block' : 'none';
+        document.getElementById('ai_detection_input').style.display = 
+            method === 'ai_detection' ? 'block' : 'none';
+    });
+
+    redactionStyle.addEventListener('change', function() {
+        const customTextInput = document.getElementById('custom_text_input');
+        customTextInput.style.display = this.value === 'custom_text' ? 'block' : 'none';
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type === 'application/pdf') {
+                dragDropBox.querySelector('strong').textContent = file.name;
+            } else {
+                alert('Please upload a valid PDF file.');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
+        document.getElementById('redaction_method').value = 'manual';
+        document.getElementById('search_terms').value = '';
+        document.getElementById('pattern_type').value = 'ssn';
+        document.getElementById('redaction_style').value = 'black_box';
+        document.getElementById('replacement_text').value = '';
+        document.getElementById('case_sensitive').value = 'no';
+        
+        // Reset checkboxes
+        document.querySelector('input[name="detect_names"]').checked = true;
+        document.querySelector('input[name="detect_addresses"]').checked = false;
+        document.querySelector('input[name="detect_financial"]').checked = false;
+        document.querySelector('input[name="detect_medical"]').checked = false;
+        
+        redactionMethod.dispatchEvent(new Event('change'));
+        redactionStyle.dispatchEvent(new Event('change'));
+    });
+</script>
+{% endblock %}

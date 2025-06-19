@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - Excel to PDF{% endblock %}
+
+{% block page_title %}Convert Excel to PDF{% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Convert Excel spreadsheets to PDF with perfect formatting and layout preservation.</p>
+
+<form id="excelToPdfForm" action="/excel_to_pdf" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop Excel files here or click to upload</strong>
+        <input type="file" id="fileInput" name="files" accept=".xls,.xlsx" multiple style="display: none;" required>
+    </div>
+
+    <div class="form-group">
+        <label for="worksheet_selection">Worksheet Selection:</label>
+        <select id="worksheet_selection" name="worksheet_selection">
+            <option value="all" selected>All Worksheets</option>
+            <option value="active">Active Worksheet Only</option>
+            <option value="first">First Worksheet Only</option>
+            <option value="custom">Custom Selection</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="page_orientation">Page Orientation:</label>
+        <select id="page_orientation" name="page_orientation">
+            <option value="auto" selected>Auto (Best Fit)</option>
+            <option value="portrait">Portrait</option>
+            <option value="landscape">Landscape</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="scaling">Scaling:</label>
+        <select id="scaling" name="scaling">
+            <option value="fit_to_page" selected>Fit to Page</option>
+            <option value="actual_size">Actual Size</option>
+            <option value="fit_to_width">Fit to Width</option>
+            <option value="custom">Custom Scale</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="grid_lines">Grid Lines:</label>
+        <select id="grid_lines" name="grid_lines">
+            <option value="show" selected>Show Grid Lines</option>
+            <option value="hide">Hide Grid Lines</option>
+        </select>
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Convert to PDF</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const validFiles = Array.from(files).filter(file => 
+                file.name.endsWith('.xls') || file.name.endsWith('.xlsx')
+            );
+            
+            if (validFiles.length > 0) {
+                dragDropBox.querySelector('strong').textContent = 
+                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} Excel files selected`;
+            } else {
+                alert('Please upload valid Excel files (.xls or .xlsx).');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop Excel files here or click to upload';
+        document.getElementById('worksheet_selection').value = 'all';
+        document.getElementById('page_orientation').value = 'auto';
+        document.getElementById('scaling').value = 'fit_to_page';
+        document.getElementById('grid_lines').value = 'show';
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - PDF to Excel{% endblock %}
+
+{% block page_title %}Convert PDF to Excel{% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Convert PDF tables and data to Excel spreadsheets with intelligent table detection.</p>
+
+<form id="pdfToExcelForm" action="/pdf_to_excel" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop a PDF file here or click to upload</strong>
+        <input type="file" id="fileInput" name="file" accept=".pdf" style="display: none;" required>
+    </div>
+
+    <div class="form-group">
+        <label for="extraction_mode">Extraction Mode:</label>
+        <select id="extraction_mode" name="extraction_mode">
+            <option value="auto_detect" selected>Auto-Detect Tables</option>
+            <option value="all_text">All Text to Cells</option>
+            <option value="structured_data">Structured Data Only</option>
+            <option value="manual_selection">Manual Selection</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="output_format">Output Format:</label>
+        <select id="output_format" name="output_format">
+            <option value="xlsx" selected>Excel (.xlsx)</option>
+            <option value="xls">Excel 97-2003 (.xls)</option>
+            <option value="csv">CSV</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="pages">Pages to Convert:</label>
+        <select id="pages" name="pages">
+            <option value="all" selected>All Pages</option>
+            <option value="first">First Page Only</option>
+            <option value="range">Page Range</option>
+        </select>
+    </div>
+
+    <div class="form-group" id="page_range_input" style="display: none;">
+        <label for="page_range">Page Range (e.g., 1-5):</label>
+        <input type="text" id="page_range" name="page_range" placeholder="e.g., 1-5 or 2,4,6">
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Convert to Excel</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+    const pagesSelect = document.getElementById('pages');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    pagesSelect.addEventListener('change', function() {
+        const pageRangeInput = document.getElementById('page_range_input');
+        pageRangeInput.style.display = this.value === 'range' ? 'block' : 'none';
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type === 'application/pdf') {
+                dragDropBox.querySelector('strong').textContent = file.name;
+            } else {
+                alert('Please upload a valid PDF file.');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
+        document.getElementById('extraction_mode').value = 'auto_detect';
+        document.getElementById('output_format').value = 'xlsx';
+        document.getElementById('pages').value = 'all';
+        document.getElementById('page_range').value = '';
+        document.getElementById('page_range_input').style.display = 'none';
+    });
+</script>
+{% endblock %}

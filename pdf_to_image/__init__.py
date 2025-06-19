@@ -14,124 +14,124 @@ def create_app():
 
     @app.route('/pdf_to_jpg')
     def pdf_to_jpg():
-        return render_template('pdf_to_jpg.html')
+        return render_template('pdf_to_jpg_new.html')
 
     @app.route('/pdf_to_panoramic')
     def pdf_to_panoramic():
-        return render_template('pdf_to_panoramic.html')
+        return render_template('pdf_to_panoramic_new.html')
 
     @app.route('/compress')
     def compress():
-        return render_template('compress.html')
+        return render_template('compress_new.html')
         
     @app.route('/merge')
     def merge():
-        return render_template('merge.html')
+        return render_template('merge_new.html')
 
     @app.route('/split')
     def split():
-        return render_template('split.html')
+        return render_template('split_new.html')
 
     @app.route('/remove')
     def remove():
-        return render_template('remove.html')
+        return render_template('remove_new.html')
 
     @app.route('/extract')
     def extract():
-        return render_template('extract.html')
+        return render_template('extract_new.html')
 
     @app.route('/sort')
     def sort():
-        return render_template('sort.html')
+        return render_template('sort_new.html')
 
     @app.route('/rotate')
     def rotate():
-        return render_template('rotate.html')
+        return render_template('rotate_new.html')
 
     @app.route('/word')
     def word():
-        return render_template('word.html')
+        return render_template('word_new.html')
 
     @app.route('/powerpoint')
     def powerpoint():
-        return render_template('powerpoint.html')
+        return render_template('powerpoint_new.html')
 
     @app.route('/repair')
     def repair():
-        return render_template('repair.html')
+        return render_template('repair_new.html')
 
     @app.route('/ocr')
     def ocr():
-        return render_template('ocr.html')
+        return render_template('ocr_new.html')
 
     @app.route('/page_numbers')
     def page_numbers():
-        return render_template('page_numbers.html')
+        return render_template('page_numbers_new.html')
 
     @app.route('/watermark')
     def watermark():
-        return render_template('watermark.html')
+        return render_template('watermark_new.html')
 
     # New pages routes
     @app.route('/jpg_to_pdf')
     def jpg_to_pdf():
-        return render_template('jpg_to_pdf.html')
+        return render_template('jpg_to_pdf_new.html')
 
     @app.route('/word_to_pdf')
     def word_to_pdf():
-        return render_template('word_to_pdf.html')
+        return render_template('word_to_pdf_new.html')
 
     @app.route('/powerpoint_to_pdf')
     def powerpoint_to_pdf():
-        return render_template('powerpoint_to_pdf.html')
+        return render_template('powerpoint_to_pdf_new.html')
 
     @app.route('/excel_to_pdf')
     def excel_to_pdf():
-        return render_template('excel_to_pdf.html')
+        return render_template('excel_to_pdf_new.html')
 
     @app.route('/html_to_pdf')
     def html_to_pdf():
-        return render_template('html_to_pdf.html')
+        return render_template('html_to_pdf_new.html')
 
     @app.route('/zip_to_pdf')
     def zip_to_pdf():
-        return render_template('zip_to_pdf.html')
+        return render_template('zip_to_pdf_new.html')
 
     @app.route('/edit_content')
     def edit_content():
-        return render_template('edit_content.html')
+        return render_template('edit_content_new.html')
 
     @app.route('/pdf_to_excel')
     def pdf_to_excel():
-        return render_template('pdf_to_excel.html')
+        return render_template('pdf_to_excel_new.html')
 
     @app.route('/pdf_to_pdfa')
     def pdf_to_pdfa():
-        return render_template('pdf_to_pdfa.html')
+        return render_template('pdf_to_pdfa_new.html')
 
     @app.route('/unlock')
     def unlock():
-        return render_template('unlock.html')
+        return render_template('unlock_new.html')
 
     @app.route('/protect')
     def protect():
-        return render_template('protect.html')
+        return render_template('protect_new.html')
 
     @app.route('/sign')
     def sign():
-        return render_template('sign.html')
+        return render_template('sign_new.html')
 
     @app.route('/compare')
     def compare():
-        return render_template('compare.html')
+        return render_template('compare_new.html')
 
     @app.route('/redact')
     def redact():
-        return render_template('redact.html')
+        return render_template('redact_new.html')
 
     @app.route('/flatten')
     def flatten():
-        return render_template('flatten.html')
+        return render_template('flatten_new.html')
 
 
 

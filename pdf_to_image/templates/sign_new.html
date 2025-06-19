@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - Sign PDF{% endblock %}
+
+{% block page_title %}Add Digital Signature to PDF{% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Add digital signatures to PDF documents for authentication and legal compliance.</p>
+
+<form id="signForm" action="/sign" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop a PDF file here or click to upload</strong>
+        <input type="file" id="fileInput" name="file" accept=".pdf" style="display: none;" required>
+    </div>
+
+    <div class="form-group">
+        <label for="signature_type">Signature Type:</label>
+        <select id="signature_type" name="signature_type">
+            <option value="digital" selected>Digital Signature (Certificate)</option>
+            <option value="electronic">Electronic Signature (Image)</option>
+            <option value="text">Text Signature</option>
+            <option value="draw">Draw Signature</option>
+        </select>
+    </div>
+
+    <div class="form-group" id="certificate_input">
+        <label for="certificate_file">Certificate File (.p12/.pfx):</label>
+        <input type="file" id="certificate_file" name="certificate_file" accept=".p12,.pfx">
+        <label for="certificate_password">Certificate Password:</label>
+        <input type="password" id="certificate_password" name="certificate_password" placeholder="Certificate password">
+    </div>
+
+    <div class="form-group" id="image_input" style="display: none;">
+        <label for="signature_image">Signature Image:</label>
+        <input type="file" id="signature_image" name="signature_image" accept="image/*">
+    </div>
+
+    <div class="form-group" id="text_input" style="display: none;">
+        <label for="signature_text">Signature Text:</label>
+        <input type="text" id="signature_text" name="signature_text" placeholder="Your Name">
+        <label for="font_style">Font Style:</label>
+        <select id="font_style" name="font_style">
+            <option value="script">Script</option>
+            <option value="cursive">Cursive</option>
+            <option value="elegant">Elegant</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="signature_position">Signature Position:</label>
+        <select id="signature_position" name="signature_position">
+            <option value="bottom_right" selected>Bottom Right</option>
+            <option value="bottom_left">Bottom Left</option>
+            <option value="top_right">Top Right</option>
+            <option value="top_left">Top Left</option>
+            <option value="center">Center</option>
+            <option value="custom">Custom Position</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="signature_page">Page to Sign:</label>
+        <select id="signature_page" name="signature_page">
+            <option value="last" selected>Last Page</option>
+            <option value="first">First Page</option>
+            <option value="all">All Pages</option>
+            <option value="specific">Specific Page</option>
+        </select>
+    </div>
+
+    <div class="form-group" id="specific_page_input" style="display: none;">
+        <label for="page_number">Page Number:</label>
+        <input type="number" id="page_number" name="page_number" min="1" placeholder="1">
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Sign PDF</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+    const signatureType = document.getElementById('signature_type');
+    const signaturePage = document.getElementById('signature_page');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    signatureType.addEventListener('change', function() {
+        const type = this.value;
+        document.getElementById('certificate_input').style.display = 
+            type === 'digital' ? 'block' : 'none';
+        document.getElementById('image_input').style.display = 
+            type === 'electronic' ? 'block' : 'none';
+        document.getElementById('text_input').style.display = 
+            type === 'text' ? 'block' : 'none';
+    });
+
+    signaturePage.addEventListener('change', function() {
+        const specificPageInput = document.getElementById('specific_page_input');
+        specificPageInput.style.display = this.value === 'specific' ? 'block' : 'none';
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type === 'application/pdf') {
+                dragDropBox.querySelector('strong').textContent = file.name;
+            } else {
+                alert('Please upload a valid PDF file.');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
+        document.getElementById('signature_type').value = 'digital';
+        document.getElementById('certificate_file').value = '';
+        document.getElementById('certificate_password').value = '';
+        document.getElementById('signature_image').value = '';
+        document.getElementById('signature_text').value = '';
+        document.getElementById('font_style').value = 'script';
+        document.getElementById('signature_position').value = 'bottom_right';
+        document.getElementById('signature_page').value = 'last';
+        document.getElementById('page_number').value = '';
+        signatureType.dispatchEvent(new Event('change'));
+        signaturePage.dispatchEvent(new Event('change'));
+    });
+</script>
+{% endblock %}

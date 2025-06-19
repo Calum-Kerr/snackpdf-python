@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - Zip to PDF{% endblock %}
+
+{% block page_title %}Convert Zip of Images to PDF{% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Convert a ZIP file containing images to a single PDF document with customizable layout.</p>
+
+<form id="zipToPdfForm" action="/zip_to_pdf" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop a ZIP file containing images here or click to upload</strong>
+        <input type="file" id="fileInput" name="file" accept=".zip" style="display: none;" required>
+    </div>
+
+    <div class="form-group">
+        <label for="page_size">Page Size:</label>
+        <select id="page_size" name="page_size">
+            <option value="A4" selected>A4</option>
+            <option value="Letter">Letter</option>
+            <option value="Legal">Legal</option>
+            <option value="A3">A3</option>
+            <option value="A5">A5</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="orientation">Orientation:</label>
+        <select id="orientation" name="orientation">
+            <option value="auto" selected>Auto (Best Fit)</option>
+            <option value="portrait">Portrait</option>
+            <option value="landscape">Landscape</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="images_per_page">Images per Page:</label>
+        <select id="images_per_page" name="images_per_page">
+            <option value="1" selected>1 Image per Page</option>
+            <option value="2">2 Images per Page</option>
+            <option value="4">4 Images per Page</option>
+            <option value="6">6 Images per Page</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="sort_order">Sort Order:</label>
+        <select id="sort_order" name="sort_order">
+            <option value="filename" selected>By Filename</option>
+            <option value="date_modified">By Date Modified</option>
+            <option value="file_size">By File Size</option>
+            <option value="random">Random</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="image_quality">Image Quality:</label>
+        <select id="image_quality" name="image_quality">
+            <option value="high" selected>High Quality</option>
+            <option value="medium">Medium Quality</option>
+            <option value="low">Low Quality (Smaller File)</option>
+        </select>
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Convert to PDF</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.name.endsWith('.zip')) {
+                dragDropBox.querySelector('strong').textContent = file.name;
+            } else {
+                alert('Please upload a valid ZIP file.');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop a ZIP file containing images here or click to upload';
+        document.getElementById('page_size').value = 'A4';
+        document.getElementById('orientation').value = 'auto';
+        document.getElementById('images_per_page').value = '1';
+        document.getElementById('sort_order').value = 'filename';
+        document.getElementById('image_quality').value = 'high';
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - OCR PDF{% endblock %}
+
+{% block page_title %}OCR - Extract Text from Scanned PDFs{% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Extract text from scanned PDFs and images using advanced OCR (Optical Character Recognition) technology.</p>
+
+<form id="ocrForm" action="/ocr" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop scanned PDF files here or click to upload</strong>
+        <input type="file" id="fileInput" name="files" accept=".pdf" multiple style="display: none;" required>
+    </div>
+
+    <div class="form-group">
+        <label for="ocr_language">OCR Language:</label>
+        <select id="ocr_language" name="ocr_language">
+            <option value="eng" selected>English</option>
+            <option value="spa">Spanish</option>
+            <option value="fra">French</option>
+            <option value="deu">German</option>
+            <option value="ita">Italian</option>
+            <option value="por">Portuguese</option>
+            <option value="rus">Russian</option>
+            <option value="chi_sim">Chinese (Simplified)</option>
+            <option value="jpn">Japanese</option>
+            <option value="auto">Auto-Detect</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="ocr_accuracy">OCR Accuracy:</label>
+        <select id="ocr_accuracy" name="ocr_accuracy">
+            <option value="fast">Fast (Lower Accuracy)</option>
+            <option value="balanced" selected>Balanced</option>
+            <option value="accurate">High Accuracy (Slower)</option>
+            <option value="best">Best Quality (Slowest)</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="output_format">Output Format:</label>
+        <select id="output_format" name="output_format">
+            <option value="searchable_pdf" selected>Searchable PDF</option>
+            <option value="text_file">Text File (.txt)</option>
+            <option value="word_doc">Word Document (.docx)</option>
+            <option value="excel">Excel Spreadsheet (.xlsx)</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="image_preprocessing">Image Preprocessing:</label>
+        <select id="image_preprocessing" name="image_preprocessing">
+            <option value="auto" selected>Auto Enhancement</option>
+            <option value="none">No Preprocessing</option>
+            <option value="deskew">Deskew Only</option>
+            <option value="enhance">Enhance Contrast</option>
+            <option value="denoise">Remove Noise</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="preserve_layout">Preserve Layout:</label>
+        <select id="preserve_layout" name="preserve_layout">
+            <option value="yes" selected>Yes</option>
+            <option value="no">No (Plain Text)</option>
+            <option value="columns">Detect Columns</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="confidence_threshold">Confidence Threshold:</label>
+        <select id="confidence_threshold" name="confidence_threshold">
+            <option value="low">Low (Include Uncertain Text)</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High (Only Confident Text)</option>
+        </select>
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Extract Text (OCR)</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const validFiles = Array.from(files).filter(file => 
+                file.type === 'application/pdf'
+            );
+            
+            if (validFiles.length > 0) {
+                dragDropBox.querySelector('strong').textContent = 
+                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} PDF files selected`;
+            } else {
+                alert('Please upload valid PDF files.');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop scanned PDF files here or click to upload';
+        document.getElementById('ocr_language').value = 'eng';
+        document.getElementById('ocr_accuracy').value = 'balanced';
+        document.getElementById('output_format').value = 'searchable_pdf';
+        document.getElementById('image_preprocessing').value = 'auto';
+        document.getElementById('preserve_layout').value = 'yes';
+        document.getElementById('confidence_threshold').value = 'medium';
+    });
+</script>
+{% endblock %}

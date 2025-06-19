@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - Protect PDF{% endblock %}
+
+{% block page_title %}Protect PDF with Password{% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Add password protection and security restrictions to PDF files to control access and usage.</p>
+
+<form id="protectForm" action="/protect" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop PDF files here or click to upload</strong>
+        <input type="file" id="fileInput" name="files" accept=".pdf" multiple style="display: none;" required>
+    </div>
+
+    <div class="form-group">
+        <label for="user_password">User Password (to open the PDF):</label>
+        <input type="password" id="user_password" name="user_password" placeholder="Enter password to open PDF">
+    </div>
+
+    <div class="form-group">
+        <label for="owner_password">Owner Password (for permissions):</label>
+        <input type="password" id="owner_password" name="owner_password" placeholder="Enter password for editing permissions">
+    </div>
+
+    <div class="form-group">
+        <label for="encryption_level">Encryption Level:</label>
+        <select id="encryption_level" name="encryption_level">
+            <option value="128_rc4">128-bit RC4 (Compatible)</option>
+            <option value="128_aes" selected>128-bit AES (Recommended)</option>
+            <option value="256_aes">256-bit AES (High Security)</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Permissions:</label>
+        <div style="margin-top: 10px;">
+            <label><input type="checkbox" name="allow_printing" value="yes" checked> Allow Printing</label><br>
+            <label><input type="checkbox" name="allow_copying" value="yes"> Allow Text Copying</label><br>
+            <label><input type="checkbox" name="allow_editing" value="yes"> Allow Content Editing</label><br>
+            <label><input type="checkbox" name="allow_annotations" value="yes" checked> Allow Annotations</label><br>
+            <label><input type="checkbox" name="allow_form_filling" value="yes" checked> Allow Form Filling</label><br>
+            <label><input type="checkbox" name="allow_assembly" value="yes"> Allow Document Assembly</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="print_quality">Print Quality Restriction:</label>
+        <select id="print_quality" name="print_quality">
+            <option value="none" selected>No Restriction</option>
+            <option value="low_resolution">Low Resolution Only</option>
+            <option value="no_printing">No Printing</option>
+        </select>
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Protect PDF</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const validFiles = Array.from(files).filter(file => 
+                file.type === 'application/pdf'
+            );
+            
+            if (validFiles.length > 0) {
+                dragDropBox.querySelector('strong').textContent = 
+                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} PDF files selected`;
+            } else {
+                alert('Please upload valid PDF files.');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop PDF files here or click to upload';
+        document.getElementById('user_password').value = '';
+        document.getElementById('owner_password').value = '';
+        document.getElementById('encryption_level').value = '128_aes';
+        document.getElementById('print_quality').value = 'none';
+        
+        // Reset checkboxes
+        document.querySelector('input[name="allow_printing"]').checked = true;
+        document.querySelector('input[name="allow_copying"]').checked = false;
+        document.querySelector('input[name="allow_editing"]').checked = false;
+        document.querySelector('input[name="allow_annotations"]').checked = true;
+        document.querySelector('input[name="allow_form_filling"]').checked = true;
+        document.querySelector('input[name="allow_assembly"]').checked = false;
+    });
+</script>
+{% endblock %}

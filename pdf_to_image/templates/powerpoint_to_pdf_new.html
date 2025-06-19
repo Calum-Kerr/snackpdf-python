@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - PowerPoint to PDF{% endblock %}
+
+{% block page_title %}Convert PowerPoint to PDF{% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Convert PowerPoint presentations to PDF with high-quality output.</p>
+
+<form id="powerPointToPdfForm" action="/powerpoint_to_pdf" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop PowerPoint files here or click to upload</strong>
+        <input type="file" id="fileInput" name="files" accept=".ppt,.pptx" multiple style="display: none;" required>
+    </div>
+
+    <div class="form-group">
+        <label for="quality">PDF Quality:</label>
+        <select id="quality" name="quality">
+            <option value="high" selected>High Quality</option>
+            <option value="medium">Medium Quality</option>
+            <option value="web">Web Optimized</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="slides_per_page">Slides per Page:</label>
+        <select id="slides_per_page" name="slides_per_page">
+            <option value="1" selected>1 Slide per Page</option>
+            <option value="2">2 Slides per Page</option>
+            <option value="4">4 Slides per Page</option>
+            <option value="6">6 Slides per Page</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="include_notes">Include Speaker Notes:</label>
+        <select id="include_notes" name="include_notes">
+            <option value="no" selected>No</option>
+            <option value="yes">Yes</option>
+            <option value="notes_only">Notes Only</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="page_orientation">Page Orientation:</label>
+        <select id="page_orientation" name="page_orientation">
+            <option value="landscape" selected>Landscape</option>
+            <option value="portrait">Portrait</option>
+        </select>
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Convert to PDF</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const validFiles = Array.from(files).filter(file => 
+                file.name.endsWith('.ppt') || file.name.endsWith('.pptx')
+            );
+            
+            if (validFiles.length > 0) {
+                dragDropBox.querySelector('strong').textContent = 
+                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} PowerPoint files selected`;
+            } else {
+                alert('Please upload valid PowerPoint files (.ppt or .pptx).');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop PowerPoint files here or click to upload';
+        document.getElementById('quality').value = 'high';
+        document.getElementById('slides_per_page').value = '1';
+        document.getElementById('include_notes').value = 'no';
+        document.getElementById('page_orientation').value = 'landscape';
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - Unlock PDF{% endblock %}
+
+{% block page_title %}Unlock PDF{% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Remove password protection from PDF files to make them accessible.</p>
+
+<form id="unlockForm" action="/unlock" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop a password-protected PDF here or click to upload</strong>
+        <input type="file" id="fileInput" name="file" accept=".pdf" style="display: none;" required>
+    </div>
+
+    <div class="form-group">
+        <label for="password">PDF Password:</label>
+        <input type="password" id="password" name="password" placeholder="Enter the PDF password" required>
+    </div>
+
+    <div class="form-group">
+        <label for="remove_restrictions">Remove Restrictions:</label>
+        <select id="remove_restrictions" name="remove_restrictions">
+            <option value="all" selected>Remove All Restrictions</option>
+            <option value="printing">Allow Printing Only</option>
+            <option value="editing">Allow Editing Only</option>
+            <option value="copying">Allow Copying Only</option>
+        </select>
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Unlock PDF</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type === 'application/pdf') {
+                dragDropBox.querySelector('strong').textContent = file.name;
+            } else {
+                alert('Please upload a valid PDF file.');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop a password-protected PDF here or click to upload';
+        document.getElementById('password').value = '';
+        document.getElementById('remove_restrictions').value = 'all';
+    });
+</script>
+{% endblock %}

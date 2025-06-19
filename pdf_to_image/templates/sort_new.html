@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - Sort PDF Pages{% endblock %}
+
+{% block page_title %}Sort PDF Pages{% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Reorder and sort PDF pages to create better organized documents with custom page arrangements.</p>
+
+<form id="sortForm" action="/sort" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop a PDF file here or click to upload</strong>
+        <input type="file" id="fileInput" name="file" accept=".pdf" style="display: none;" required>
+    </div>
+
+    <div class="form-group">
+        <label for="sort_method">Sort Method:</label>
+        <select id="sort_method" name="sort_method">
+            <option value="custom_order" selected>Custom Order</option>
+            <option value="reverse_order">Reverse Order</option>
+            <option value="odd_even">Odd Pages First, Then Even</option>
+            <option value="even_odd">Even Pages First, Then Odd</option>
+            <option value="interleave">Interleave (1,3,5...2,4,6)</option>
+            <option value="booklet">Booklet Order</option>
+        </select>
+    </div>
+
+    <div class="form-group" id="custom_order_input">
+        <label for="page_order">Custom Page Order (comma-separated):</label>
+        <input type="text" id="page_order" name="page_order" placeholder="e.g., 3,1,4,2,5">
+        <small>Enter the desired order of pages. Example: 3,1,4,2,5 will reorder pages to 3rd, 1st, 4th, 2nd, 5th</small>
+    </div>
+
+    <div class="form-group">
+        <label for="duplicate_handling">Duplicate Pages:</label>
+        <select id="duplicate_handling" name="duplicate_handling">
+            <option value="allow" selected>Allow Duplicates</option>
+            <option value="remove">Remove Duplicates</option>
+            <option value="mark">Mark Duplicates</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="missing_pages">Missing Pages:</label>
+        <select id="missing_pages" name="missing_pages">
+            <option value="skip" selected>Skip Missing Pages</option>
+            <option value="blank">Insert Blank Pages</option>
+            <option value="error">Show Error</option>
+        </select>
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Sort Pages</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+    const sortMethod = document.getElementById('sort_method');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    sortMethod.addEventListener('change', function() {
+        const customOrderInput = document.getElementById('custom_order_input');
+        customOrderInput.style.display = this.value === 'custom_order' ? 'block' : 'none';
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type === 'application/pdf') {
+                dragDropBox.querySelector('strong').textContent = file.name;
+            } else {
+                alert('Please upload a valid PDF file.');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
+        document.getElementById('sort_method').value = 'custom_order';
+        document.getElementById('page_order').value = '';
+        document.getElementById('duplicate_handling').value = 'allow';
+        document.getElementById('missing_pages').value = 'skip';
+        sortMethod.dispatchEvent(new Event('change'));
+    });
+</script>
+{% endblock %}

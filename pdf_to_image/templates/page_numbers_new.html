@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - Add Page Numbers{% endblock %}
+
+{% block page_title %}Add Page Numbers to PDF{% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Add professional page numbers to PDF documents with customizable positioning and formatting.</p>
+
+<form id="pageNumbersForm" action="/page_numbers" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop PDF files here or click to upload</strong>
+        <input type="file" id="fileInput" name="files" accept=".pdf" multiple style="display: none;" required>
+    </div>
+
+    <div class="form-group">
+        <label for="position">Position:</label>
+        <select id="position" name="position">
+            <option value="bottom_center" selected>Bottom Center</option>
+            <option value="bottom_right">Bottom Right</option>
+            <option value="bottom_left">Bottom Left</option>
+            <option value="top_center">Top Center</option>
+            <option value="top_right">Top Right</option>
+            <option value="top_left">Top Left</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="number_format">Number Format:</label>
+        <select id="number_format" name="number_format">
+            <option value="1" selected>1, 2, 3...</option>
+            <option value="i">i, ii, iii...</option>
+            <option value="I">I, II, III...</option>
+            <option value="a">a, b, c...</option>
+            <option value="A">A, B, C...</option>
+            <option value="page_of_total">Page 1 of 10</option>
+            <option value="custom">Custom Format</option>
+        </select>
+    </div>
+
+    <div class="form-group" id="custom_format_input" style="display: none;">
+        <label for="custom_format">Custom Format:</label>
+        <input type="text" id="custom_format" name="custom_format" placeholder="e.g., Page {n} of {total}">
+        <small>Use {n} for page number and {total} for total pages</small>
+    </div>
+
+    <div class="form-group">
+        <label for="start_number">Start Number:</label>
+        <input type="number" id="start_number" name="start_number" min="1" value="1">
+    </div>
+
+    <div class="form-group">
+        <label for="font_size">Font Size:</label>
+        <select id="font_size" name="font_size">
+            <option value="8">8pt</option>
+            <option value="10">10pt</option>
+            <option value="12" selected>12pt</option>
+            <option value="14">14pt</option>
+            <option value="16">16pt</option>
+            <option value="18">18pt</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="font_color">Font Color:</label>
+        <select id="font_color" name="font_color">
+            <option value="black" selected>Black</option>
+            <option value="gray">Gray</option>
+            <option value="blue">Blue</option>
+            <option value="red">Red</option>
+            <option value="custom">Custom Color</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="margin">Margin from Edge:</label>
+        <select id="margin" name="margin">
+            <option value="small">Small (10pt)</option>
+            <option value="medium" selected>Medium (20pt)</option>
+            <option value="large">Large (30pt)</option>
+            <option value="custom">Custom</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="pages_to_number">Pages to Number:</label>
+        <select id="pages_to_number" name="pages_to_number">
+            <option value="all" selected>All Pages</option>
+            <option value="odd">Odd Pages Only</option>
+            <option value="even">Even Pages Only</option>
+            <option value="range">Page Range</option>
+            <option value="exclude_first">All Except First</option>
+        </select>
+    </div>
+
+    <div class="form-group" id="page_range_input" style="display: none;">
+        <label for="start_page">Start Page:</label>
+        <input type="number" id="start_page" name="start_page" min="1" placeholder="1">
+        <label for="end_page">End Page:</label>
+        <input type="number" id="end_page" name="end_page" min="1" placeholder="10">
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Add Page Numbers</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+    const numberFormat = document.getElementById('number_format');
+    const pagesToNumber = document.getElementById('pages_to_number');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    numberFormat.addEventListener('change', function() {
+        const customFormatInput = document.getElementById('custom_format_input');
+        customFormatInput.style.display = this.value === 'custom' ? 'block' : 'none';
+    });
+
+    pagesToNumber.addEventListener('change', function() {
+        const pageRangeInput = document.getElementById('page_range_input');
+        pageRangeInput.style.display = this.value === 'range' ? 'block' : 'none';
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const validFiles = Array.from(files).filter(file => 
+                file.type === 'application/pdf'
+            );
+            
+            if (validFiles.length > 0) {
+                dragDropBox.querySelector('strong').textContent = 
+                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} PDF files selected`;
+            } else {
+                alert('Please upload valid PDF files.');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop PDF files here or click to upload';
+        document.getElementById('position').value = 'bottom_center';
+        document.getElementById('number_format').value = '1';
+        document.getElementById('custom_format').value = '';
+        document.getElementById('start_number').value = '1';
+        document.getElementById('font_size').value = '12';
+        document.getElementById('font_color').value = 'black';
+        document.getElementById('margin').value = 'medium';
+        document.getElementById('pages_to_number').value = 'all';
+        document.getElementById('start_page').value = '';
+        document.getElementById('end_page').value = '';
+        numberFormat.dispatchEvent(new Event('change'));
+        pagesToNumber.dispatchEvent(new Event('change'));
+    });
+</script>
+{% endblock %}

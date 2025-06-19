@@ -1,314 +1,160 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SnackPDF</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3309044253592353"
-     crossorigin="anonymous"></script>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: #ffffff;
-            color: #1f2937;
-            text-align: center;
-        }
-        header {
-            background: #1f2937;
-            color: white;
-            padding: 20px;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 36px;
-            font-weight: bold;
-        }
+{% extends "base.html" %}
 
-        .tools-section {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            padding: 40px 20px;
-            margin: 0 auto;
-            max-width: 1200px;
-            text-align: center;
-            background-color: #ffffff;
-        }
-        
-        .tool-card {
-            background-color: transparent;
-            padding: 20px;
-        }
+{% block title %}SnackPDF - Free PDF Tools{% endblock %}
 
-        .tool-card h2 {
-            font-size: 22px;
-            margin-bottom: 15px;
-            font-weight: 600;
-            color: #1f2937;
-        }
+{% block content %}
+<style>
+    .homepage-tools-section {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        padding: 40px 20px;
+        margin: 0 auto;
+        max-width: 800px;
+        text-align: center;
+        background-color: #ffffff;
+    }
 
-        .tool-card ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
+    .homepage-tool-card {
+        background-color: transparent;
+        padding: 20px;
+    }
 
-        .tool-card ul li {
-            margin: 10px 0;
-        }
+    .homepage-tool-card h2 {
+        font-size: 22px;
+        margin-bottom: 15px;
+        font-weight: 600;
+        color: #1f2937;
+    }
 
-        .tool-card ul li a {
-            text-decoration: none;
-            color: #1f2937;
-            font-size: 16px;
-            font-weight: 400;
-        }
+    .homepage-tool-card ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
 
-        .tool-card ul li a:hover {
-            text-decoration: underline;
-        }
+    .homepage-tool-card ul li {
+        margin: 10px 0;
+    }
 
-        /* Action section */
-        .tool-action {
-            max-width: 1200px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: transparent;
-            text-align: center;
-            font-size: 18px;
-            font-weight: 500;
-            color: #1f2937;
-        }
+    .homepage-tool-card ul li a {
+        text-decoration: none;
+        color: #1f2937;
+        font-size: 16px;
+        font-weight: 400;
+        transition: color 0.3s ease;
+    }
 
-        /* Main Layout with Sidebars */
-        .main-container {
-            display: flex;
-            max-width: 1400px;
-            margin: 0 auto;
+    .homepage-tool-card ul li a:hover {
+        color: #667eea;
+        text-decoration: underline;
+    }
+
+    /* Action section */
+    .homepage-tool-action {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: transparent;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 500;
+        color: #1f2937;
+    }
+
+    /* Responsive Design for Homepage */
+    @media (max-width: 768px) {
+        .homepage-tools-section {
+            grid-template-columns: 1fr;
             gap: 20px;
-            padding: 20px;
+            padding: 20px 0;
         }
 
-        .content-area {
-            flex: 1;
-            min-width: 0;
+        .homepage-tool-card {
+            margin: 0 auto;
         }
 
-        .sidebar {
-            width: 160px;
-            flex-shrink: 0;
+        .homepage-tool-action {
+            font-size: 16px;
         }
+    }
+</style>
 
-        .left-sidebar {
-            order: -1;
-        }
-
-        .right-sidebar {
-            order: 1;
-        }
-
-        /* Sidebar Banner Ad Styles */
-        .sidebar-ad {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            font-size: 12px;
-        }
-
-        .sidebar-ad:hover {
-            transform: translateY(-2px);
-        }
-
-        .sidebar-ad h4 {
-            margin: 0 0 8px 0;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .sidebar-ad p {
-            margin: 0;
-            font-size: 11px;
-            opacity: 0.9;
-            line-height: 1.3;
-        }
-
-        .sidebar-ad.ad-style-2 {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .sidebar-ad.ad-style-3 {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-
-        .sidebar-ad.ad-style-4 {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .main-container {
-                flex-direction: column;
-                padding: 10px;
-            }
-
-            .sidebar {
-                width: 100%;
-                order: 0;
-            }
-
-            .left-sidebar, .right-sidebar {
-                display: flex;
-                gap: 10px;
-                overflow-x: auto;
-            }
-
-            .sidebar-ad {
-                min-width: 140px;
-                flex-shrink: 0;
-            }
-
-            .tools-section {
-                grid-template-columns: 1fr;
-                gap: 20px;
-                padding: 20px 0;
-            }
-
-            .tool-card {
-                margin: 0 auto;
-            }
-
-            .tool-action {
-                font-size: 16px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1><a href="{{ url_for('index') }}" style="text-decoration: none; color: inherit;">SnackPDF</a></h1>
-    </header>
-
-    <div class="main-container">
-        <!-- Left Sidebar Ads -->
-        <div class="sidebar left-sidebar">
-            <div class="sidebar-ad" onclick="window.open('https://example.com/premium-pdf-tools', '_blank')">
-                <h4>🚀 Premium Tools</h4>
-                <p>Unlimited conversions & advanced features</p>
-            </div>
-            <div class="sidebar-ad ad-style-2" onclick="window.open('https://example.com/cloud-storage', '_blank')">
-                <h4>☁️ Cloud Storage</h4>
-                <p>Store & sync your PDFs securely</p>
-            </div>
-            <div class="sidebar-ad ad-style-3" onclick="window.open('https://example.com/pdf-editor', '_blank')">
-                <h4>📝 PDF Editor</h4>
-                <p>Edit text, images & forms</p>
-            </div>
-        </div>
-
-        <!-- Main Content Area -->
-        <div class="content-area">
-            <div class="tools-section">
-                <!-- OPTIMISE -->
-                <div class="tool-card">
-                    <h2>OPTIMISE</h2>
-                    <ul>
-                        <li><a href="{{ url_for('compress') }}">Compress</a></li>
-                        <li><a href="{{ url_for('repair') }}">Repair</a></li>
-                        <li><a href="{{ url_for('ocr') }}">OCR</a></li>
-                    </ul>
-                </div>
-
-                <!-- CONVERT TO PDF -->
-                <div class="tool-card">
-                    <h2>CONVERT TO PDF</h2>
-                    <ul>
-                        <li><a href="{{ url_for('jpg_to_pdf') }}">JPG to PDF</a></li>
-                        <li><a href="{{ url_for('word_to_pdf') }}">Word to PDF</a></li>
-                        <li><a href="{{ url_for('powerpoint_to_pdf') }}">PowerPoint to PDF</a></li>
-                        <li><a href="{{ url_for('excel_to_pdf') }}">Excel to PDF</a></li>
-                        <li><a href="{{ url_for('html_to_pdf') }}">HTML to PDF</a></li>
-                        <li><a href="{{ url_for('zip_to_pdf') }}">Zip of Images to PDF</a></li>
-                    </ul>
-                </div>
-
-                <!-- EDIT -->
-                <div class="tool-card">
-                    <h2>EDIT</h2>
-                    <ul>
-                        <li><a href="{{ url_for('page_numbers') }}">Page Numbers</a></li>
-                        <li><a href="{{ url_for('watermark') }}">Add Watermark</a></li>
-                        <li><a href="{{ url_for('edit_content') }}">Edit Content</a></li>
-                    </ul>
-                </div>
-
-                <!-- ORGANISE -->
-                <div class="tool-card">
-                    <h2>ORGANISE</h2>
-                    <ul>
-                        <li><a href="{{ url_for('merge') }}">Merge</a></li>
-                        <li><a href="{{ url_for('split') }}">Split</a></li>
-                        <li><a href="{{ url_for('remove') }}">Remove</a></li>
-                        <li><a href="{{ url_for('extract') }}">Extract</a></li>
-                        <li><a href="{{ url_for('sort') }}">Sort</a></li>
-                        <li><a href="{{ url_for('rotate') }}">Rotate</a></li>
-                    </ul>
-                </div>
-
-                <!-- CONVERT FROM PDF -->
-                <div class="tool-card">
-                    <h2>CONVERT FROM PDF</h2>
-                    <ul>
-                        <li><a href="{{ url_for('pdf_to_jpg') }}">PDF to JPG</a></li>
-                        <li><a href="{{ url_for('pdf_to_panoramic') }}">PDF to Panoramic</a></li>
-                        <li><a href="{{ url_for('word') }}">PDF to Word</a></li>
-                        <li><a href="{{ url_for('powerpoint') }}">PDF to PowerPoint</a></li>
-                        <li><a href="{{ url_for('pdf_to_excel') }}">PDF to Excel</a></li>
-                        <li><a href="{{ url_for('pdf_to_pdfa') }}">PDF to PDF/A</a></li>
-                    </ul>
-                </div>
-
-                <!-- SECURITY -->
-                <div class="tool-card">
-                    <h2>SECURITY</h2>
-                    <ul>
-                        <li><a href="{{ url_for('unlock') }}">Unlock</a></li>
-                        <li><a href="{{ url_for('protect') }}">Protect</a></li>
-                        <li><a href="{{ url_for('sign') }}">Sign</a></li>
-                        <li><a href="{{ url_for('compare') }}">Compare</a></li>
-                        <li><a href="{{ url_for('redact') }}">Redact</a></li>
-                        <li><a href="{{ url_for('flatten') }}">Flatten</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="tool-action">
-                Pick your tool above.
-            </div>
-        </div>
-
-        <!-- Right Sidebar Ads -->
-        <div class="sidebar right-sidebar">
-            <div class="sidebar-ad ad-style-4" onclick="window.open('https://example.com/business-solutions', '_blank')">
-                <h4>💼 Business Solutions</h4>
-                <p>Enterprise PDF processing</p>
-            </div>
-            <div class="sidebar-ad" onclick="window.open('https://example.com/batch-converter', '_blank')">
-                <h4>⚡ Batch Converter</h4>
-                <p>Convert hundreds of files at once</p>
-            </div>
-            <div class="sidebar-ad ad-style-2" onclick="window.open('https://example.com/api-access', '_blank')">
-                <h4>🔌 API Access</h4>
-                <p>Integrate PDF tools into your app</p>
-            </div>
-        </div>
+<div class="homepage-tools-section">
+    <!-- OPTIMISE -->
+    <div class="homepage-tool-card">
+        <h2>OPTIMISE</h2>
+        <ul>
+            <li><a href="{{ url_for('compress') }}">Compress</a></li>
+            <li><a href="{{ url_for('repair') }}">Repair</a></li>
+            <li><a href="{{ url_for('ocr') }}">OCR</a></li>
+        </ul>
     </div>
-</body>
-</html>
+
+    <!-- CONVERT TO PDF -->
+    <div class="homepage-tool-card">
+        <h2>CONVERT TO PDF</h2>
+        <ul>
+            <li><a href="{{ url_for('jpg_to_pdf') }}">JPG to PDF</a></li>
+            <li><a href="{{ url_for('word_to_pdf') }}">Word to PDF</a></li>
+            <li><a href="{{ url_for('powerpoint_to_pdf') }}">PowerPoint to PDF</a></li>
+            <li><a href="{{ url_for('excel_to_pdf') }}">Excel to PDF</a></li>
+            <li><a href="{{ url_for('html_to_pdf') }}">HTML to PDF</a></li>
+            <li><a href="{{ url_for('zip_to_pdf') }}">Zip of Images to PDF</a></li>
+        </ul>
+    </div>
+
+    <!-- EDIT -->
+    <div class="homepage-tool-card">
+        <h2>EDIT</h2>
+        <ul>
+            <li><a href="{{ url_for('page_numbers') }}">Page Numbers</a></li>
+            <li><a href="{{ url_for('watermark') }}">Add Watermark</a></li>
+            <li><a href="{{ url_for('edit_content') }}">Edit Content</a></li>
+        </ul>
+    </div>
+
+    <!-- ORGANISE -->
+    <div class="homepage-tool-card">
+        <h2>ORGANISE</h2>
+        <ul>
+            <li><a href="{{ url_for('merge') }}">Merge</a></li>
+            <li><a href="{{ url_for('split') }}">Split</a></li>
+            <li><a href="{{ url_for('remove') }}">Remove</a></li>
+            <li><a href="{{ url_for('extract') }}">Extract</a></li>
+            <li><a href="{{ url_for('sort') }}">Sort</a></li>
+            <li><a href="{{ url_for('rotate') }}">Rotate</a></li>
+        </ul>
+    </div>
+
+    <!-- CONVERT FROM PDF -->
+    <div class="homepage-tool-card">
+        <h2>CONVERT FROM PDF</h2>
+        <ul>
+            <li><a href="{{ url_for('pdf_to_jpg') }}">PDF to JPG</a></li>
+            <li><a href="{{ url_for('pdf_to_panoramic') }}">PDF to Panoramic</a></li>
+            <li><a href="{{ url_for('word') }}">PDF to Word</a></li>
+            <li><a href="{{ url_for('powerpoint') }}">PDF to PowerPoint</a></li>
+            <li><a href="{{ url_for('pdf_to_excel') }}">PDF to Excel</a></li>
+            <li><a href="{{ url_for('pdf_to_pdfa') }}">PDF to PDF/A</a></li>
+        </ul>
+    </div>
+
+    <!-- SECURITY -->
+    <div class="homepage-tool-card">
+        <h2>SECURITY</h2>
+        <ul>
+            <li><a href="{{ url_for('unlock') }}">Unlock</a></li>
+            <li><a href="{{ url_for('protect') }}">Protect</a></li>
+            <li><a href="{{ url_for('sign') }}">Sign</a></li>
+            <li><a href="{{ url_for('compare') }}">Compare</a></li>
+            <li><a href="{{ url_for('redact') }}">Redact</a></li>
+            <li><a href="{{ url_for('flatten') }}">Flatten</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="homepage-tool-action">
+    Pick your tool above.
+</div>
+{% endblock %}

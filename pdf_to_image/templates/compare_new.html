@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - Compare PDFs{% endblock %}
+
+{% block page_title %}Compare PDF Documents{% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Compare two PDF documents to identify differences, changes, and modifications between versions.</p>
+
+<form id="compareForm" action="/compare" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="original_file">Original PDF (Version 1):</label>
+        <div id="dragDropBox1" class="drag-drop">
+            <strong>Drag and drop the original PDF here or click to upload</strong>
+            <input type="file" id="originalFile" name="original_file" accept=".pdf" style="display: none;" required>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="modified_file">Modified PDF (Version 2):</label>
+        <div id="dragDropBox2" class="drag-drop">
+            <strong>Drag and drop the modified PDF here or click to upload</strong>
+            <input type="file" id="modifiedFile" name="modified_file" accept=".pdf" style="display: none;" required>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="comparison_type">Comparison Type:</label>
+        <select id="comparison_type" name="comparison_type">
+            <option value="visual" selected>Visual Comparison</option>
+            <option value="text">Text Comparison</option>
+            <option value="both">Both Visual and Text</option>
+            <option value="metadata">Metadata Only</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="sensitivity">Sensitivity Level:</label>
+        <select id="sensitivity" name="sensitivity">
+            <option value="low">Low (Major Changes Only)</option>
+            <option value="medium" selected>Medium (Standard)</option>
+            <option value="high">High (All Changes)</option>
+            <option value="pixel">Pixel Perfect</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="output_format">Output Format:</label>
+        <select id="output_format" name="output_format">
+            <option value="highlighted_pdf" selected>Highlighted PDF</option>
+            <option value="side_by_side">Side-by-Side PDF</option>
+            <option value="report">Comparison Report</option>
+            <option value="overlay">Overlay View</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="ignore_options">Ignore:</label>
+        <div style="margin-top: 10px;">
+            <label><input type="checkbox" name="ignore_formatting" value="yes"> Formatting Changes</label><br>
+            <label><input type="checkbox" name="ignore_whitespace" value="yes"> Whitespace</label><br>
+            <label><input type="checkbox" name="ignore_images" value="yes"> Images</label><br>
+            <label><input type="checkbox" name="ignore_headers_footers" value="yes"> Headers/Footers</label>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Compare Documents</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox1 = document.getElementById('dragDropBox1');
+    const dragDropBox2 = document.getElementById('dragDropBox2');
+    const originalFile = document.getElementById('originalFile');
+    const modifiedFile = document.getElementById('modifiedFile');
+
+    // Setup for original file
+    dragDropBox1.addEventListener('click', function () {
+        originalFile.click();
+    });
+
+    dragDropBox1.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox1.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox1.addEventListener('dragleave', function () {
+        dragDropBox1.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox1.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox1.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files, dragDropBox1, 'original');
+    });
+
+    originalFile.addEventListener('change', function () {
+        if (originalFile.files.length) {
+            handleFileUpload(originalFile.files, dragDropBox1, 'original');
+        }
+    });
+
+    // Setup for modified file
+    dragDropBox2.addEventListener('click', function () {
+        modifiedFile.click();
+    });
+
+    dragDropBox2.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox2.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox2.addEventListener('dragleave', function () {
+        dragDropBox2.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox2.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox2.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files, dragDropBox2, 'modified');
+    });
+
+    modifiedFile.addEventListener('change', function () {
+        if (modifiedFile.files.length) {
+            handleFileUpload(modifiedFile.files, dragDropBox2, 'modified');
+        }
+    });
+
+    function handleFileUpload(files, dropBox, type) {
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type === 'application/pdf') {
+                dropBox.querySelector('strong').textContent = file.name;
+            } else {
+                alert('Please upload a valid PDF file.');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        originalFile.value = '';
+        modifiedFile.value = '';
+        dragDropBox1.querySelector('strong').textContent = 'Drag and drop the original PDF here or click to upload';
+        dragDropBox2.querySelector('strong').textContent = 'Drag and drop the modified PDF here or click to upload';
+        document.getElementById('comparison_type').value = 'visual';
+        document.getElementById('sensitivity').value = 'medium';
+        document.getElementById('output_format').value = 'highlighted_pdf';
+        
+        // Reset checkboxes
+        document.querySelector('input[name="ignore_formatting"]').checked = false;
+        document.querySelector('input[name="ignore_whitespace"]').checked = false;
+        document.querySelector('input[name="ignore_images"]').checked = false;
+        document.querySelector('input[name="ignore_headers_footers"]').checked = false;
+    });
+</script>
+{% endblock %}

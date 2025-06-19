@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - PDF to PowerPoint Converter (1:1 Conversion){% endblock %}
+
+{% block page_title %}Convert PDF to PowerPoint (Identical Layout){% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Convert PDF pages to PowerPoint slides with identical layout preservation.</p>
+
+<form id="pdfToPowerPointForm" action="/powerpoint" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop a PDF file here or click to upload</strong>
+        <input type="file" id="fileInput" name="file" accept=".pdf" style="display: none;" required>
+    </div>
+
+    <div class="form-group">
+        <label for="slide_size">Slide Size:</label>
+        <select id="slide_size" name="slide_size">
+            <option value="standard" selected>Standard (4:3)</option>
+            <option value="widescreen">Widescreen (16:9)</option>
+            <option value="custom">Custom Size</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="conversion_mode">Conversion Mode:</label>
+        <select id="conversion_mode" name="conversion_mode">
+            <option value="layout_preserve" selected>Preserve Layout</option>
+            <option value="editable_text">Editable Text</option>
+            <option value="image_slides">Image Slides</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="pages_per_slide">Pages per Slide:</label>
+        <select id="pages_per_slide" name="pages_per_slide">
+            <option value="1" selected>1 Page per Slide</option>
+            <option value="2">2 Pages per Slide</option>
+            <option value="4">4 Pages per Slide</option>
+        </select>
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Convert to PowerPoint</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type === 'application/pdf') {
+                dragDropBox.querySelector('strong').textContent = file.name;
+            } else {
+                alert('Please upload a valid PDF file.');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
+        document.getElementById('slide_size').value = 'standard';
+        document.getElementById('conversion_mode').value = 'layout_preserve';
+        document.getElementById('pages_per_slide').value = '1';
+    });
+</script>
+{% endblock %}

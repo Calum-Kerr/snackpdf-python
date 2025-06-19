@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - JPG to PDF{% endblock %}
+
+{% block page_title %}Convert JPG to PDF{% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Convert your JPG images to PDF documents with customizable settings.</p>
+
+<form id="jpgToPdfForm" action="/jpg_to_pdf" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop JPG files here or click to upload</strong>
+        <input type="file" id="fileInput" name="files" accept="image/jpeg,image/jpg" multiple style="display: none;" required>
+    </div>
+
+    <div class="form-group">
+        <label for="page_size">Page Size:</label>
+        <select id="page_size" name="page_size">
+            <option value="A4" selected>A4</option>
+            <option value="Letter">Letter</option>
+            <option value="Legal">Legal</option>
+            <option value="A3">A3</option>
+            <option value="A5">A5</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="orientation">Orientation:</label>
+        <select id="orientation" name="orientation">
+            <option value="portrait" selected>Portrait</option>
+            <option value="landscape">Landscape</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="quality">Image Quality:</label>
+        <select id="quality" name="quality">
+            <option value="high" selected>High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+        </select>
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Convert to PDF</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const validFiles = Array.from(files).filter(file => 
+                file.type === 'image/jpeg' || file.type === 'image/jpg'
+            );
+            
+            if (validFiles.length > 0) {
+                dragDropBox.querySelector('strong').textContent = 
+                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} JPG files selected`;
+            } else {
+                alert('Please upload valid JPG files.');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop JPG files here or click to upload';
+        document.getElementById('page_size').value = 'A4';
+        document.getElementById('orientation').value = 'portrait';
+        document.getElementById('quality').value = 'high';
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - Edit PDF Content{% endblock %}
+
+{% block page_title %}Edit PDF Content{% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Edit text, images, and other content in PDF documents with professional editing tools.</p>
+
+<form id="editContentForm" action="/edit_content" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop a PDF file here or click to upload</strong>
+        <input type="file" id="fileInput" name="file" accept=".pdf" style="display: none;" required>
+    </div>
+
+    <div class="form-group">
+        <label for="edit_mode">Edit Mode:</label>
+        <select id="edit_mode" name="edit_mode">
+            <option value="interactive" selected>Interactive Editor</option>
+            <option value="text_replacement">Text Replacement</option>
+            <option value="image_replacement">Image Replacement</option>
+            <option value="annotation">Add Annotations</option>
+        </select>
+    </div>
+
+    <div class="form-group" id="text_replacement_input" style="display: none;">
+        <label for="find_text">Find Text:</label>
+        <input type="text" id="find_text" name="find_text" placeholder="Text to find">
+        <label for="replace_text">Replace With:</label>
+        <input type="text" id="replace_text" name="replace_text" placeholder="Replacement text">
+    </div>
+
+    <div class="form-group" id="image_replacement_input" style="display: none;">
+        <label for="replacement_image">Replacement Image:</label>
+        <input type="file" id="replacement_image" name="replacement_image" accept="image/*">
+    </div>
+
+    <div class="form-group" id="annotation_input" style="display: none;">
+        <label for="annotation_type">Annotation Type:</label>
+        <select id="annotation_type" name="annotation_type">
+            <option value="highlight">Highlight</option>
+            <option value="note">Sticky Note</option>
+            <option value="comment">Comment</option>
+            <option value="arrow">Arrow</option>
+            <option value="rectangle">Rectangle</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="pages_to_edit">Pages to Edit:</label>
+        <select id="pages_to_edit" name="pages_to_edit">
+            <option value="all" selected>All Pages</option>
+            <option value="current">Current Page Only</option>
+            <option value="range">Page Range</option>
+            <option value="specific">Specific Pages</option>
+        </select>
+    </div>
+
+    <div class="form-group" id="page_range_input" style="display: none;">
+        <label for="start_page">Start Page:</label>
+        <input type="number" id="start_page" name="start_page" min="1" placeholder="1">
+        <label for="end_page">End Page:</label>
+        <input type="number" id="end_page" name="end_page" min="1" placeholder="10">
+    </div>
+
+    <div class="form-group" id="specific_pages_input" style="display: none;">
+        <label for="specific_pages">Specific Pages (comma-separated):</label>
+        <input type="text" id="specific_pages" name="specific_pages" placeholder="e.g., 1,3,5-7,10">
+    </div>
+
+    <div class="form-group">
+        <label for="preserve_formatting">Preserve Formatting:</label>
+        <select id="preserve_formatting" name="preserve_formatting">
+            <option value="yes" selected>Yes</option>
+            <option value="no">No</option>
+            <option value="minimal">Minimal Changes</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="font_matching">Font Matching:</label>
+        <select id="font_matching" name="font_matching">
+            <option value="auto" selected>Auto-Match Fonts</option>
+            <option value="preserve">Preserve Original Fonts</option>
+            <option value="substitute">Use Substitute Fonts</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="quality_level">Output Quality:</label>
+        <select id="quality_level" name="quality_level">
+            <option value="high" selected>High Quality</option>
+            <option value="medium">Medium Quality</option>
+            <option value="optimized">Optimized for Size</option>
+        </select>
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Edit PDF Content</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+    const editMode = document.getElementById('edit_mode');
+    const pagesToEdit = document.getElementById('pages_to_edit');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    editMode.addEventListener('change', function() {
+        const mode = this.value;
+        document.getElementById('text_replacement_input').style.display = 
+            mode === 'text_replacement' ? 'block' : 'none';
+        document.getElementById('image_replacement_input').style.display = 
+            mode === 'image_replacement' ? 'block' : 'none';
+        document.getElementById('annotation_input').style.display = 
+            mode === 'annotation' ? 'block' : 'none';
+    });
+
+    pagesToEdit.addEventListener('change', function() {
+        const value = this.value;
+        document.getElementById('page_range_input').style.display = 
+            value === 'range' ? 'block' : 'none';
+        document.getElementById('specific_pages_input').style.display = 
+            value === 'specific' ? 'block' : 'none';
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type === 'application/pdf') {
+                dragDropBox.querySelector('strong').textContent = file.name;
+            } else {
+                alert('Please upload a valid PDF file.');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
+        document.getElementById('edit_mode').value = 'interactive';
+        document.getElementById('find_text').value = '';
+        document.getElementById('replace_text').value = '';
+        document.getElementById('replacement_image').value = '';
+        document.getElementById('annotation_type').value = 'highlight';
+        document.getElementById('pages_to_edit').value = 'all';
+        document.getElementById('start_page').value = '';
+        document.getElementById('end_page').value = '';
+        document.getElementById('specific_pages').value = '';
+        document.getElementById('preserve_formatting').value = 'yes';
+        document.getElementById('font_matching').value = 'auto';
+        document.getElementById('quality_level').value = 'high';
+        editMode.dispatchEvent(new Event('change'));
+        pagesToEdit.dispatchEvent(new Event('change'));
+    });
+</script>
+{% endblock %}

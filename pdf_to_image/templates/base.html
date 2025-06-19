@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SnackPDF{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3309044253592353"
+     crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #1a202c;
+        }
+
+        .page-wrapper {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 4s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        header h1 {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -1px;
+        }
+
+        header h1 a {
+            text-decoration: none;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Navigation Bar Styles */
+        .navbar {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            padding: 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .navbar ul li {
+            position: relative;
+            margin: 0 5px;
+        }
+
+        .navbar ul li > a {
+            display: block;
+            padding: 20px 24px;
+            color: #e2e8f0;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .navbar ul li > a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 12px;
+        }
+
+        .navbar ul li > a:hover::before {
+            opacity: 1;
+        }
+
+        .navbar ul li > a:hover {
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .navbar ul li > a span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .navbar ul li:hover ul {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .navbar ul li ul {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: white;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border-radius: 16px;
+            padding: 20px 0;
+            min-width: 240px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(20px);
+        }
+
+        .navbar ul li ul::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid white;
+        }
+
+        .navbar ul li ul li a {
+            display: block;
+            padding: 14px 28px;
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            border-radius: 0;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .navbar ul li ul li a:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding-left: 36px;
+            border-radius: 8px;
+            margin: 0 12px;
+        }
+        
+        /* Tool Form Container */
+        .tool-form-container {
+            margin: 40px auto;
+            max-width: 700px;
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .tool-form-container h3 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #1a202c, #2d3748);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tool-form-container p {
+            margin-bottom: 32px;
+            font-size: 16px;
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        .drag-drop {
+            border: 3px dashed #e2e8f0;
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 32px;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .drag-drop::before {
+            content: '📁';
+            font-size: 48px;
+            display: block;
+            margin-bottom: 16px;
+            opacity: 0.6;
+        }
+
+        .drag-drop:hover {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .drag-drop strong {
+            font-weight: 600;
+            font-size: 18px;
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        select, input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .action-buttons button {
+            flex: 1;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-buttons button[type="submit"] {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        }
+
+        .action-buttons button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
+        }
+
+        .action-buttons button[type="button"] {
+            background: #f7fafc;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .action-buttons button[type="button"]:hover {
+            background: #edf2f7;
+            transform: translateY(-1px);
+        }
+        
+        /* Main Layout with Sidebars */
+        .main-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 24px;
+            padding: 40px 20px;
+        }
+
+        .content-area {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sidebar {
+            width: 200px;
+            flex-shrink: 0;
+        }
+
+        .left-sidebar {
+            order: -1;
+        }
+
+        .right-sidebar {
+            order: 1;
+        }
+
+        /* Sidebar Banner Ad Styles */
+        .sidebar-ad {
+            background: white;
+            padding: 24px;
+            margin-bottom: 24px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-ad::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .sidebar-ad:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+        }
+
+        .sidebar-ad h4 {
+            margin: 0 0 12px 0;
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .sidebar-ad p {
+            margin: 0;
+            font-size: 14px;
+            color: #718096;
+            line-height: 1.4;
+        }
+
+        .sidebar-ad.ad-style-2::before {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+
+        .sidebar-ad.ad-style-3::before {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+        }
+
+        .sidebar-ad.ad-style-4::before {
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-container {
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .sidebar {
+                width: 180px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .navbar ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .navbar ul li {
+                margin: 5px;
+            }
+
+            .navbar ul li > a {
+                padding: 16px 20px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 36px;
+            }
+
+            .navbar ul {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .navbar ul li {
+                margin: 2px 0;
+                width: 100%;
+            }
+
+            .navbar ul li > a {
+                text-align: center;
+                padding: 14px;
+            }
+
+            .navbar ul li ul {
+                position: static;
+                transform: none;
+                opacity: 1;
+                visibility: visible;
+                box-shadow: none;
+                background: rgba(255, 255, 255, 0.95);
+                margin-top: 8px;
+                border-radius: 12px;
+            }
+
+            .main-container {
+                flex-direction: column;
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .sidebar {
+                width: 100%;
+                order: 0;
+            }
+
+            .left-sidebar, .right-sidebar {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 16px;
+            }
+
+            .tool-form-container {
+                margin: 20px 0;
+                padding: 32px 24px;
+            }
+
+            .tool-form-container h3 {
+                font-size: 28px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+    <header>
+        <h1><a href="{{ url_for('index') }}">SnackPDF</a></h1>
+    </header>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <ul>
+            <li><a href="#"><span>OPTIMISE</span></a>
+                <ul>
+                    <li><a href="{{ url_for('compress') }}">Compress</a></li>
+                    <li><a href="{{ url_for('repair') }}">Repair</a></li>
+                    <li><a href="{{ url_for('ocr') }}">OCR</a></li>
+                </ul>
+            </li>
+            <li><a href="#"><span>CONVERT TO PDF</span></a>
+                <ul>
+                    <li><a href="{{ url_for('jpg_to_pdf') }}">JPG to PDF</a></li>
+                    <li><a href="{{ url_for('word_to_pdf') }}">Word to PDF</a></li>
+                    <li><a href="{{ url_for('powerpoint_to_pdf') }}">PowerPoint to PDF</a></li>
+                    <li><a href="{{ url_for('excel_to_pdf') }}">Excel to PDF</a></li>
+                    <li><a href="{{ url_for('html_to_pdf') }}">HTML to PDF</a></li>
+                    <li><a href="{{ url_for('zip_to_pdf') }}">Zip of Images to PDF</a></li>
+                </ul>
+            </li>
+            <li><a href="#"><span>CONVERT FROM PDF</span></a>
+                <ul>
+                    <li><a href="{{ url_for('pdf_to_jpg') }}">PDF to JPG</a></li>
+                    <li><a href="{{ url_for('pdf_to_panoramic') }}">PDF to Panoramic</a></li>
+                    <li><a href="{{ url_for('word') }}">PDF to Word</a></li>
+                    <li><a href="{{ url_for('powerpoint') }}">PDF to PowerPoint</a></li>
+                    <li><a href="{{ url_for('pdf_to_excel') }}">PDF to Excel</a></li>
+                    <li><a href="{{ url_for('pdf_to_pdfa') }}">PDF to PDF/A</a></li>
+                </ul>
+            </li>
+            <li><a href="#"><span>ORGANISE</span></a>
+                <ul>
+                    <li><a href="{{ url_for('merge') }}">Merge</a></li>
+                    <li><a href="{{ url_for('split') }}">Split</a></li>
+                    <li><a href="{{ url_for('remove') }}">Remove</a></li>
+                    <li><a href="{{ url_for('extract') }}">Extract</a></li>
+                    <li><a href="{{ url_for('sort') }}">Sort</a></li>
+                    <li><a href="{{ url_for('rotate') }}">Rotate</a></li>
+                </ul>
+            </li>
+            <li><a href="#"><span>SECURITY</span></a>
+                <ul>
+                    <li><a href="{{ url_for('unlock') }}">Unlock</a></li>
+                    <li><a href="{{ url_for('protect') }}">Protect</a></li>
+                    <li><a href="{{ url_for('sign') }}">Sign</a></li>
+                    <li><a href="{{ url_for('compare') }}">Compare</a></li>
+                    <li><a href="{{ url_for('redact') }}">Redact</a></li>
+                    <li><a href="{{ url_for('flatten') }}">Flatten</a></li>
+                </ul>
+            </li>
+            <li><a href="#"><span>EDIT</span></a>
+                <ul>
+                    <li><a href="{{ url_for('page_numbers') }}">Page Numbers</a></li>
+                    <li><a href="{{ url_for('watermark') }}">Add Watermark</a></li>
+                    <li><a href="{{ url_for('edit_content') }}">Edit Content</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+<div class="main-container">
+    <!-- Left Sidebar - Clean for AdSense Auto-Placement -->
+    <div class="sidebar left-sidebar">
+        {% block left_sidebar %}
+        <!-- Google AdSense will auto-place ads here -->
+        {% endblock %}
+    </div>
+    
+    <!-- Main Content Area -->
+    <div class="content-area">
+        {% block content %}
+        <div class="tool-form-container">
+            <h3>{% block page_title %}PDF Tool{% endblock %}</h3>
+            {% block tool_content %}
+            <p>Tool content goes here.</p>
+            {% endblock %}
+        </div>
+        {% endblock %}
+    </div>
+    
+    <!-- Right Sidebar - Clean for AdSense Auto-Placement -->
+    <div class="sidebar right-sidebar">
+        {% block right_sidebar %}
+        <!-- Google AdSense will auto-place ads here -->
+        {% endblock %}
+    </div>
+</div>
+
+    {% block scripts %}
+    {% endblock %}
+</div>
+</body>
+</html>

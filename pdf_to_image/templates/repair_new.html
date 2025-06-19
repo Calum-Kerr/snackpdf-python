@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - Repair PDF{% endblock %}
+
+{% block page_title %}Repair Corrupted PDF{% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Repair corrupted or damaged PDF files to restore accessibility and functionality.</p>
+
+<form id="repairForm" action="/repair" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop corrupted PDF files here or click to upload</strong>
+        <input type="file" id="fileInput" name="files" accept=".pdf" multiple style="display: none;" required>
+    </div>
+
+    <div class="form-group">
+        <label for="repair_level">Repair Level:</label>
+        <select id="repair_level" name="repair_level">
+            <option value="basic" selected>Basic Repair</option>
+            <option value="standard">Standard Repair</option>
+            <option value="aggressive">Aggressive Repair</option>
+            <option value="deep_scan">Deep Scan Repair</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="repair_options">Repair Options:</label>
+        <div style="margin-top: 10px;">
+            <label><input type="checkbox" name="fix_structure" value="yes" checked> Fix Document Structure</label><br>
+            <label><input type="checkbox" name="recover_text" value="yes" checked> Recover Text Content</label><br>
+            <label><input type="checkbox" name="recover_images" value="yes" checked> Recover Images</label><br>
+            <label><input type="checkbox" name="fix_fonts" value="yes"> Fix Font Issues</label><br>
+            <label><input type="checkbox" name="rebuild_xref" value="yes"> Rebuild Cross-Reference Table</label><br>
+            <label><input type="checkbox" name="remove_corruption" value="yes" checked> Remove Corrupted Elements</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="output_quality">Output Quality:</label>
+        <select id="output_quality" name="output_quality">
+            <option value="preserve" selected>Preserve Original Quality</option>
+            <option value="optimize">Optimize for Size</option>
+            <option value="enhance">Enhance Quality</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="backup_original">Backup Original:</label>
+        <select id="backup_original" name="backup_original">
+            <option value="yes" selected>Yes</option>
+            <option value="no">No</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="compatibility_mode">Compatibility Mode:</label>
+        <select id="compatibility_mode" name="compatibility_mode">
+            <option value="auto" selected>Auto-Detect</option>
+            <option value="pdf_1_4">PDF 1.4 (Maximum Compatibility)</option>
+            <option value="pdf_1_7">PDF 1.7 (Standard)</option>
+            <option value="pdf_2_0">PDF 2.0 (Latest)</option>
+        </select>
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Repair PDF</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const validFiles = Array.from(files).filter(file => 
+                file.type === 'application/pdf' || file.name.endsWith('.pdf')
+            );
+            
+            if (validFiles.length > 0) {
+                dragDropBox.querySelector('strong').textContent = 
+                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} PDF files selected`;
+            } else {
+                alert('Please upload PDF files (even if corrupted).');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop corrupted PDF files here or click to upload';
+        document.getElementById('repair_level').value = 'basic';
+        document.getElementById('output_quality').value = 'preserve';
+        document.getElementById('backup_original').value = 'yes';
+        document.getElementById('compatibility_mode').value = 'auto';
+        
+        // Reset checkboxes
+        document.querySelector('input[name="fix_structure"]').checked = true;
+        document.querySelector('input[name="recover_text"]').checked = true;
+        document.querySelector('input[name="recover_images"]').checked = true;
+        document.querySelector('input[name="fix_fonts"]').checked = false;
+        document.querySelector('input[name="rebuild_xref"]').checked = false;
+        document.querySelector('input[name="remove_corruption"]').checked = true;
+    });
+</script>
+{% endblock %}

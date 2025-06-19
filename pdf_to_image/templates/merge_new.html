@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}SnackPDF - Merge PDFs{% endblock %}
+
+{% block page_title %}Merge PDFs{% endblock %}
+
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Combine multiple PDF files into a single document with customizable order.</p>
+
+<form id="mergeForm" action="/merge" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop PDF files here or click to upload</strong>
+        <input type="file" id="fileInput" name="files" accept=".pdf" multiple style="display: none;" required>
+    </div>
+
+    <div class="form-group">
+        <label for="merge_order">Merge Order:</label>
+        <select id="merge_order" name="merge_order">
+            <option value="upload_order" selected>Upload Order</option>
+            <option value="alphabetical">Alphabetical</option>
+            <option value="size_ascending">Size (Smallest First)</option>
+            <option value="size_descending">Size (Largest First)</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="bookmarks">Bookmarks:</label>
+        <select id="bookmarks" name="bookmarks">
+            <option value="preserve" selected>Preserve Bookmarks</option>
+            <option value="remove">Remove Bookmarks</option>
+            <option value="create_from_filenames">Create from Filenames</option>
+        </select>
+    </div>
+
+    <div class="action-buttons">
+        <button type="submit">Merge PDFs</button>
+        <button type="button" id="cancelButton">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const validFiles = Array.from(files).filter(file => 
+                file.type === 'application/pdf'
+            );
+            
+            if (validFiles.length > 0) {
+                dragDropBox.querySelector('strong').textContent = 
+                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} PDF files selected`;
+            } else {
+                alert('Please upload valid PDF files.');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop PDF files here or click to upload';
+        document.getElementById('merge_order').value = 'upload_order';
+        document.getElementById('bookmarks').value = 'preserve';
+    });
+</script>
+{% endblock %}

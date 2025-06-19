@@ -1,44 +1,11 @@
 from flask import Flask, render_template, jsonify
-from .convert import convert_bp
-from .panoramic import panoramic_bp
-from .compress import compress_bp
-from .pdf_to_word import pdf_to_word_bp
-from .merge import merge_bp
-from .split import split_bp
-from .remove import remove_bp
-from .extract import extract_bp
-from .sort import sort_bp
-from .rotate import rotate_bp
-from .convert_to_pdf import convert_to_pdf_bp
-from .security import security_bp
-from .repair import repair_bp
-from .ocr import ocr_bp
-from .page_numbers import page_numbers_bp
-from .watermark import watermark_bp
-from .pdf_to_powerpoint import pdf_to_powerpoint_bp
 import traceback
 
 def create_app():
     app = Flask(__name__)
 
-    # Register blueprints
-    app.register_blueprint(convert_bp)
-    app.register_blueprint(panoramic_bp)
-    app.register_blueprint(compress_bp)
-    app.register_blueprint(pdf_to_word_bp)
-    app.register_blueprint(merge_bp)
-    app.register_blueprint(split_bp)
-    app.register_blueprint(convert_to_pdf_bp)
-    app.register_blueprint(security_bp)
-    app.register_blueprint(remove_bp)
-    app.register_blueprint(extract_bp)
-    app.register_blueprint(sort_bp)
-    app.register_blueprint(rotate_bp)
-    app.register_blueprint(repair_bp)
-    app.register_blueprint(ocr_bp)
-    app.register_blueprint(page_numbers_bp)
-    app.register_blueprint(watermark_bp)
-    app.register_blueprint(pdf_to_powerpoint_bp)
+    # Blueprints temporarily disabled for initial deployment
+    # Will be re-enabled once proper dependencies are added
 
 
     @app.route('/')
@@ -105,7 +72,68 @@ def create_app():
     def watermark():
         return render_template('watermark.html')
 
-    
+    # New pages routes
+    @app.route('/jpg_to_pdf')
+    def jpg_to_pdf():
+        return render_template('jpg_to_pdf.html')
+
+    @app.route('/word_to_pdf')
+    def word_to_pdf():
+        return render_template('word_to_pdf.html')
+
+    @app.route('/powerpoint_to_pdf')
+    def powerpoint_to_pdf():
+        return render_template('powerpoint_to_pdf.html')
+
+    @app.route('/excel_to_pdf')
+    def excel_to_pdf():
+        return render_template('excel_to_pdf.html')
+
+    @app.route('/html_to_pdf')
+    def html_to_pdf():
+        return render_template('html_to_pdf.html')
+
+    @app.route('/zip_to_pdf')
+    def zip_to_pdf():
+        return render_template('zip_to_pdf.html')
+
+    @app.route('/edit_content')
+    def edit_content():
+        return render_template('edit_content.html')
+
+    @app.route('/pdf_to_excel')
+    def pdf_to_excel():
+        return render_template('pdf_to_excel.html')
+
+    @app.route('/pdf_to_pdfa')
+    def pdf_to_pdfa():
+        return render_template('pdf_to_pdfa.html')
+
+    @app.route('/unlock')
+    def unlock():
+        return render_template('unlock.html')
+
+    @app.route('/protect')
+    def protect():
+        return render_template('protect.html')
+
+    @app.route('/sign')
+    def sign():
+        return render_template('sign.html')
+
+    @app.route('/compare')
+    def compare():
+        return render_template('compare.html')
+
+    @app.route('/redact')
+    def redact():
+        return render_template('redact.html')
+
+    @app.route('/flatten')
+    def flatten():
+        return render_template('flatten.html')
+
+
 
     @app.errorhandler(Exception)
     def handle_exception(e):

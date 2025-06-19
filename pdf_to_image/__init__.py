@@ -15,6 +15,7 @@ from .repair import repair_bp
 from .ocr import ocr_bp
 from .page_numbers import page_numbers_bp
 from .watermark import watermark_bp
+from .pdf_to_powerpoint import pdf_to_powerpoint_bp
 import traceback
 
 def create_app():
@@ -37,6 +38,7 @@ def create_app():
     app.register_blueprint(ocr_bp)
     app.register_blueprint(page_numbers_bp)
     app.register_blueprint(watermark_bp)
+    app.register_blueprint(pdf_to_powerpoint_bp)
 
 
     @app.route('/')

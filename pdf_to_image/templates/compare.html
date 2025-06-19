@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SnackPDF</title>
+    <title>SnackPDF - Compare PDFs</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -77,8 +77,8 @@
         .navbar ul li ul li a:hover {
             background-color: #f0f0f0;
         }
-
-        /* Flush Tool Form Card */
+        
+        /* Tool Form Container */
         .tool-form-container {
             margin: 40px auto;
             max-width: 600px;
@@ -96,29 +96,67 @@
             font-size: 14px;
             color: #6b7280;
         }
-        .drag-drop {
+        .file-upload-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .file-upload {
             border: 2px dashed #d1d5db;
             border-radius: 10px;
             padding: 20px;
             text-align: center;
             cursor: pointer;
-            margin-bottom: 20px;
         }
-        .drag-drop strong {
+        .file-upload h4 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            color: #1f2937;
+        }
+        .file-upload strong {
             font-weight: 600;
             display: block;
             margin-top: 10px;
+            font-size: 14px;
         }
-        .output-filename-selection {
+        .comparison-options {
+            background-color: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
             margin-bottom: 20px;
         }
-        .output-filename-selection input {
+        .comparison-options h4 {
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            color: #1f2937;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        select {
             width: 100%;
             padding: 10px;
             font-size: 14px;
             border-radius: 5px;
             border: 1px solid #d1d5db;
             box-sizing: border-box;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        input[type="checkbox"] {
+            padding: 0;
+            width: auto;
         }
         .action-buttons {
             display: flex;
@@ -136,7 +174,7 @@
         .action-buttons button:hover {
             background-color: #4b5563;
         }
-
+        
         /* Main Layout with Sidebars */
         .main-container {
             display: flex;
@@ -145,25 +183,25 @@
             gap: 20px;
             padding: 20px;
         }
-
+        
         .content-area {
             flex: 1;
             min-width: 0;
         }
-
+        
         .sidebar {
             width: 160px;
             flex-shrink: 0;
         }
-
+        
         .left-sidebar {
             order: -1;
         }
-
+        
         .right-sidebar {
             order: 1;
         }
-
+        
         /* Sidebar Banner Ad Styles */
         .sidebar-ad {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -177,57 +215,61 @@
             transition: transform 0.3s ease;
             font-size: 12px;
         }
-
+        
         .sidebar-ad:hover {
             transform: translateY(-2px);
         }
-
+        
         .sidebar-ad h4 {
             margin: 0 0 8px 0;
             font-size: 14px;
             font-weight: 600;
         }
-
+        
         .sidebar-ad p {
             margin: 0;
             font-size: 11px;
             opacity: 0.9;
             line-height: 1.3;
         }
-
+        
         .sidebar-ad.ad-style-2 {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
-
+        
         .sidebar-ad.ad-style-3 {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
         }
-
+        
         .sidebar-ad.ad-style-4 {
             background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
         }
-
+        
         /* Responsive Design */
         @media (max-width: 768px) {
             .main-container {
                 flex-direction: column;
                 padding: 10px;
             }
-
+            
             .sidebar {
                 width: 100%;
                 order: 0;
             }
-
+            
             .left-sidebar, .right-sidebar {
                 display: flex;
                 gap: 10px;
                 overflow-x: auto;
             }
-
+            
             .sidebar-ad {
                 min-width: 140px;
                 flex-shrink: 0;
+            }
+            
+            .file-upload-section {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -244,8 +286,8 @@
         <li><a href="#">OPTIMISE</a>
             <ul>
                 <li><a href="{{ url_for('compress') }}">Compress</a></li>
-                <li><a href="#">Repair</a></li>
-                <li><a href="#">OCR</a></li>
+                <li><a href="{{ url_for('repair') }}">Repair</a></li>
+                <li><a href="{{ url_for('ocr') }}">OCR</a></li>
             </ul>
         </li>
         <li><a href="#">CONVERT TO PDF</a>
@@ -263,7 +305,7 @@
                 <li><a href="{{ url_for('pdf_to_jpg') }}">PDF to JPG</a></li>
                 <li><a href="{{ url_for('pdf_to_panoramic') }}">PDF to Panoramic</a></li>
                 <li><a href="{{ url_for('word') }}">PDF to Word</a></li>
-                <li><a href="#">PDF to PowerPoint</a></li>
+                <li><a href="{{ url_for('powerpoint') }}">PDF to PowerPoint</a></li>
                 <li><a href="#">PDF to Excel</a></li>
                 <li><a href="#">PDF to PDF/A</a></li>
             </ul>
@@ -290,8 +332,8 @@
         </li>
         <li><a href="#">EDIT</a>
             <ul>
-                <li><a href="#">Page Numbers</a></li>
-                <li><a href="#">Add Watermark</a></li>
+                <li><a href="{{ url_for('page_numbers') }}">Page Numbers</a></li>
+                <li><a href="{{ url_for('watermark') }}">Add Watermark</a></li>
                 <li><a href="#">Edit Content</a></li>
             </ul>
         </li>
@@ -301,154 +343,156 @@
 <div class="main-container">
     <!-- Left Sidebar Ads -->
     <div class="sidebar left-sidebar">
-        <div class="sidebar-ad" onclick="window.open('https://example.com/pdf-merger-pro', '_blank')">
-            <h4>🔗 PDF Merger Pro</h4>
-            <p>Advanced merging options</p>
+        <div class="sidebar-ad" onclick="window.open('https://example.com/document-comparison-pro', '_blank')">
+            <h4>🔍 Document Compare Pro</h4>
+            <p>Advanced comparison tools</p>
         </div>
-        <div class="sidebar-ad ad-style-2" onclick="window.open('https://example.com/document-combiner', '_blank')">
-            <h4>📑 Document Combiner</h4>
-            <p>Merge any file types</p>
+        <div class="sidebar-ad ad-style-2" onclick="window.open('https://example.com/version-control', '_blank')">
+            <h4>📊 Version Control</h4>
+            <p>Track document changes</p>
         </div>
-        <div class="sidebar-ad ad-style-3" onclick="window.open('https://example.com/batch-merge', '_blank')">
-            <h4>⚡ Batch Merge</h4>
-            <p>Merge hundreds of files</p>
+        <div class="sidebar-ad ad-style-3" onclick="window.open('https://example.com/diff-analyzer', '_blank')">
+            <h4>📈 Diff Analyzer</h4>
+            <p>Analyze differences</p>
         </div>
     </div>
-
+    
     <!-- Main Content Area -->
     <div class="content-area">
-        <!-- Flush Tool Card -->
         <div class="tool-form-container">
-    <h3>Merge PDFs</h3>
-    <p>Combine multiple PDF files into one.</p>
+            <h3>Compare PDF Documents</h3>
+            <p>Compare two PDF documents to identify differences in text, images, and formatting.</p>
 
-    <form id="mergeForm" enctype="multipart/form-data">
-        <div id="dragDropBox" class="drag-drop">
-            <strong>Drag and drop PDF files here or click to upload</strong>
-            <input type="file" id="fileInput" accept="application/pdf" multiple style="display: none;">
-        </div>
+            <form id="compareForm" action="/compare_pdfs" method="post" enctype="multipart/form-data">
+                <div class="file-upload-section">
+                    <div class="file-upload" id="file1Upload">
+                        <h4>📄 Original Document</h4>
+                        <strong>Click to upload first PDF</strong>
+                        <input type="file" id="file1Input" name="file1" accept="application/pdf" style="display: none;" required>
+                    </div>
+                    <div class="file-upload" id="file2Upload">
+                        <h4>📄 Modified Document</h4>
+                        <strong>Click to upload second PDF</strong>
+                        <input type="file" id="file2Input" name="file2" accept="application/pdf" style="display: none;" required>
+                    </div>
+                </div>
 
-        <div class="output-filename-selection">
-            <input type="text" id="outputFilename" placeholder="Enter output filename (e.g., merged)">
-        </div>
+                <div class="comparison-options">
+                    <h4>Comparison Options</h4>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="compare_text" name="compare_text" checked>
+                        <label for="compare_text">Compare Text Content</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="compare_images" name="compare_images" checked>
+                        <label for="compare_images">Compare Images</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="compare_formatting" name="compare_formatting">
+                        <label for="compare_formatting">Compare Formatting</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="ignore_whitespace" name="ignore_whitespace">
+                        <label for="ignore_whitespace">Ignore Whitespace Changes</label>
+                    </div>
+                </div>
 
-        <div class="action-buttons">
-            <button type="button" id="mergeButton">Merge</button>
-            <button type="button" id="cancelButton">Cancel</button>
-        </div>
-    </form>
+                <div class="form-group">
+                    <label for="comparison_mode">Comparison Mode:</label>
+                    <select id="comparison_mode" name="comparison_mode">
+                        <option value="visual" selected>Visual Comparison</option>
+                        <option value="text_only">Text Only</option>
+                        <option value="detailed">Detailed Analysis</option>
+                        <option value="summary">Summary Report</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="output_format">Output Format:</label>
+                    <select id="output_format" name="output_format">
+                        <option value="highlighted_pdf" selected>Highlighted PDF</option>
+                        <option value="side_by_side">Side-by-Side PDF</option>
+                        <option value="report">Comparison Report</option>
+                        <option value="html">HTML Report</option>
+                    </select>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="submit">Compare Documents</button>
+                    <button type="button" id="cancelButton">Cancel</button>
+                </div>
+            </form>
         </div>
     </div>
-
+    
     <!-- Right Sidebar Ads -->
     <div class="sidebar right-sidebar">
-        <div class="sidebar-ad ad-style-4" onclick="window.open('https://example.com/pdf-organizer', '_blank')">
-            <h4>📁 PDF Organizer</h4>
-            <p>Organize your PDF library</p>
+        <div class="sidebar-ad ad-style-4" onclick="window.open('https://example.com/collaboration-tools', '_blank')">
+            <h4>👥 Collaboration Tools</h4>
+            <p>Collaborate on documents</p>
         </div>
-        <div class="sidebar-ad" onclick="window.open('https://example.com/file-manager', '_blank')">
-            <h4>🗂️ File Manager</h4>
-            <p>Manage all document types</p>
+        <div class="sidebar-ad" onclick="window.open('https://example.com/change-tracking', '_blank')">
+            <h4>📝 Change Tracking</h4>
+            <p>Track all document changes</p>
         </div>
-        <div class="sidebar-ad ad-style-2" onclick="window.open('https://example.com/cloud-sync', '_blank')">
-            <h4>☁️ Cloud Sync</h4>
-            <p>Sync merged files to cloud</p>
+        <div class="sidebar-ad ad-style-2" onclick="window.open('https://example.com/review-workflow', '_blank')">
+            <h4>🔄 Review Workflow</h4>
+            <p>Streamline document review</p>
         </div>
     </div>
 </div>
 
 <script>
-    const dragDropBox = document.getElementById('dragDropBox');
-    const fileInput = document.getElementById('fileInput');
-    let selectedFiles = [];
+    const file1Upload = document.getElementById('file1Upload');
+    const file1Input = document.getElementById('file1Input');
+    const file2Upload = document.getElementById('file2Upload');
+    const file2Input = document.getElementById('file2Input');
 
-    dragDropBox.addEventListener('click', function () {
-        fileInput.click();
+    file1Upload.addEventListener('click', function () {
+        file1Input.click();
     });
 
-    dragDropBox.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        dragDropBox.classList.add('dragover');
+    file2Upload.addEventListener('click', function () {
+        file2Input.click();
     });
 
-    dragDropBox.addEventListener('dragleave', function () {
-        dragDropBox.classList.remove('dragover');
+    file1Input.addEventListener('change', function () {
+        if (file1Input.files.length) {
+            handleFileUpload(file1Input.files[0], file1Upload);
+        }
     });
 
-    dragDropBox.addEventListener('drop', function (e) {
-        e.preventDefault();
-        dragDropBox.classList.remove('dragover');
-        handleFileUpload(e.dataTransfer.files);
+    file2Input.addEventListener('change', function () {
+        if (file2Input.files.length) {
+            handleFileUpload(file2Input.files[0], file2Upload);
+        }
     });
 
-    fileInput.addEventListener('change', function () {
-        handleFileUpload(fileInput.files);
-    });
-
-    function handleFileUpload(files) {
-        if (files.length > 0) {
-            selectedFiles = files;
-            const fileNames = Array.from(files).map(file => file.name).join(', ');
-            dragDropBox.querySelector('strong').textContent = fileNames;
+    function handleFileUpload(file, uploadElement) {
+        if (file && file.type === 'application/pdf') {
+            uploadElement.querySelector('strong').textContent = file.name;
+            uploadElement.style.borderColor = '#10b981';
+            uploadElement.style.backgroundColor = '#f0fdf4';
         } else {
-            alert('Please upload valid PDF files.');
+            alert('Please upload a valid PDF file.');
         }
     }
 
-    document.getElementById('mergeButton').addEventListener('click', function() {
-        if (selectedFiles.length === 0) {
-            alert('Please upload at least one PDF file.');
-            return;
-        }
-
-        const formData = new FormData();
-        Array.from(selectedFiles).forEach(file => formData.append('files', file));
-        let outputFilename = document.getElementById('outputFilename').value.trim();
-
-        // Add .pdf extension if not provided
-        if (!outputFilename.endsWith('.pdf')) {
-            outputFilename += '.pdf';
-        }
-
-        formData.append('output_filename', outputFilename);
-
-        fetch('{{ url_for("merge.merge_pdfs") }}', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.blob();
-            } else {
-                return response.json().then(errorData => {
-                    throw new Error(errorData.error);
-                });
-            }
-        })
-        .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            a.download = outputFilename;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-        })
-        .catch(error => console.error('Error:', error));
-    });
-
     document.getElementById('cancelButton').addEventListener('click', function() {
-        selectedFiles = [];
-        dragDropBox.querySelector('strong').textContent = 'Drag and drop PDF files here or click to upload';
-        document.getElementById('outputFilename').value = '';
-    });
-
-    document.getElementById('outputFilename').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault(); // Prevent the form from being submitted
-            document.getElementById('mergeButton').click(); // Trigger the merge button click instead
-        }
+        file1Input.value = '';
+        file2Input.value = '';
+        file1Upload.querySelector('strong').textContent = 'Click to upload first PDF';
+        file2Upload.querySelector('strong').textContent = 'Click to upload second PDF';
+        file1Upload.style.borderColor = '#d1d5db';
+        file1Upload.style.backgroundColor = 'white';
+        file2Upload.style.borderColor = '#d1d5db';
+        file2Upload.style.backgroundColor = 'white';
+        document.getElementById('compare_text').checked = true;
+        document.getElementById('compare_images').checked = true;
+        document.getElementById('compare_formatting').checked = false;
+        document.getElementById('ignore_whitespace').checked = false;
+        document.getElementById('comparison_mode').value = 'visual';
+        document.getElementById('output_format').value = 'highlighted_pdf';
     });
 </script>
 

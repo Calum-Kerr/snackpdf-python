@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SnackPDF</title>
+    <title>SnackPDF - Word to PDF</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -77,8 +77,8 @@
         .navbar ul li ul li a:hover {
             background-color: #f0f0f0;
         }
-
-        /* Flush Tool Form Card */
+        
+        /* Tool Form Container */
         .tool-form-container {
             margin: 40px auto;
             max-width: 600px;
@@ -109,16 +109,29 @@
             display: block;
             margin-top: 10px;
         }
-        .output-filename-selection {
+        .form-group {
             margin-bottom: 20px;
         }
-        .output-filename-selection input {
-            width: 100%;
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        select, input[type="checkbox"] {
             padding: 10px;
             font-size: 14px;
             border-radius: 5px;
             border: 1px solid #d1d5db;
+        }
+        select {
+            width: 100%;
             box-sizing: border-box;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .action-buttons {
             display: flex;
@@ -136,7 +149,7 @@
         .action-buttons button:hover {
             background-color: #4b5563;
         }
-
+        
         /* Main Layout with Sidebars */
         .main-container {
             display: flex;
@@ -145,25 +158,25 @@
             gap: 20px;
             padding: 20px;
         }
-
+        
         .content-area {
             flex: 1;
             min-width: 0;
         }
-
+        
         .sidebar {
             width: 160px;
             flex-shrink: 0;
         }
-
+        
         .left-sidebar {
             order: -1;
         }
-
+        
         .right-sidebar {
             order: 1;
         }
-
+        
         /* Sidebar Banner Ad Styles */
         .sidebar-ad {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -177,54 +190,54 @@
             transition: transform 0.3s ease;
             font-size: 12px;
         }
-
+        
         .sidebar-ad:hover {
             transform: translateY(-2px);
         }
-
+        
         .sidebar-ad h4 {
             margin: 0 0 8px 0;
             font-size: 14px;
             font-weight: 600;
         }
-
+        
         .sidebar-ad p {
             margin: 0;
             font-size: 11px;
             opacity: 0.9;
             line-height: 1.3;
         }
-
+        
         .sidebar-ad.ad-style-2 {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
-
+        
         .sidebar-ad.ad-style-3 {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
         }
-
+        
         .sidebar-ad.ad-style-4 {
             background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
         }
-
+        
         /* Responsive Design */
         @media (max-width: 768px) {
             .main-container {
                 flex-direction: column;
                 padding: 10px;
             }
-
+            
             .sidebar {
                 width: 100%;
                 order: 0;
             }
-
+            
             .left-sidebar, .right-sidebar {
                 display: flex;
                 gap: 10px;
                 overflow-x: auto;
             }
-
+            
             .sidebar-ad {
                 min-width: 140px;
                 flex-shrink: 0;
@@ -244,8 +257,8 @@
         <li><a href="#">OPTIMISE</a>
             <ul>
                 <li><a href="{{ url_for('compress') }}">Compress</a></li>
-                <li><a href="#">Repair</a></li>
-                <li><a href="#">OCR</a></li>
+                <li><a href="{{ url_for('repair') }}">Repair</a></li>
+                <li><a href="{{ url_for('ocr') }}">OCR</a></li>
             </ul>
         </li>
         <li><a href="#">CONVERT TO PDF</a>
@@ -263,7 +276,7 @@
                 <li><a href="{{ url_for('pdf_to_jpg') }}">PDF to JPG</a></li>
                 <li><a href="{{ url_for('pdf_to_panoramic') }}">PDF to Panoramic</a></li>
                 <li><a href="{{ url_for('word') }}">PDF to Word</a></li>
-                <li><a href="#">PDF to PowerPoint</a></li>
+                <li><a href="{{ url_for('powerpoint') }}">PDF to PowerPoint</a></li>
                 <li><a href="#">PDF to Excel</a></li>
                 <li><a href="#">PDF to PDF/A</a></li>
             </ul>
@@ -290,8 +303,8 @@
         </li>
         <li><a href="#">EDIT</a>
             <ul>
-                <li><a href="#">Page Numbers</a></li>
-                <li><a href="#">Add Watermark</a></li>
+                <li><a href="{{ url_for('page_numbers') }}">Page Numbers</a></li>
+                <li><a href="{{ url_for('watermark') }}">Add Watermark</a></li>
                 <li><a href="#">Edit Content</a></li>
             </ul>
         </li>
@@ -301,58 +314,76 @@
 <div class="main-container">
     <!-- Left Sidebar Ads -->
     <div class="sidebar left-sidebar">
-        <div class="sidebar-ad" onclick="window.open('https://example.com/pdf-merger-pro', '_blank')">
-            <h4>🔗 PDF Merger Pro</h4>
-            <p>Advanced merging options</p>
+        <div class="sidebar-ad" onclick="window.open('https://example.com/word-to-pdf-pro', '_blank')">
+            <h4>📄 Word to PDF Pro</h4>
+            <p>Advanced conversion options</p>
         </div>
-        <div class="sidebar-ad ad-style-2" onclick="window.open('https://example.com/document-combiner', '_blank')">
-            <h4>📑 Document Combiner</h4>
-            <p>Merge any file types</p>
+        <div class="sidebar-ad ad-style-2" onclick="window.open('https://example.com/office-converter', '_blank')">
+            <h4>🏢 Office Converter</h4>
+            <p>Convert all Office formats</p>
         </div>
-        <div class="sidebar-ad ad-style-3" onclick="window.open('https://example.com/batch-merge', '_blank')">
-            <h4>⚡ Batch Merge</h4>
-            <p>Merge hundreds of files</p>
+        <div class="sidebar-ad ad-style-3" onclick="window.open('https://example.com/document-merger', '_blank')">
+            <h4>🔗 Document Merger</h4>
+            <p>Merge Word docs to PDF</p>
         </div>
     </div>
-
+    
     <!-- Main Content Area -->
     <div class="content-area">
-        <!-- Flush Tool Card -->
         <div class="tool-form-container">
-    <h3>Merge PDFs</h3>
-    <p>Combine multiple PDF files into one.</p>
+            <h3>Convert Word to PDF</h3>
+            <p>Convert your Word documents (.docx, .doc) to PDF format with high fidelity.</p>
 
-    <form id="mergeForm" enctype="multipart/form-data">
-        <div id="dragDropBox" class="drag-drop">
-            <strong>Drag and drop PDF files here or click to upload</strong>
-            <input type="file" id="fileInput" accept="application/pdf" multiple style="display: none;">
-        </div>
+            <form id="wordToPdfForm" action="/word_to_pdf" method="post" enctype="multipart/form-data">
+                <div id="dragDropBox" class="drag-drop">
+                    <strong>Drag and drop Word files here or click to upload</strong>
+                    <input type="file" id="fileInput" name="files" accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" multiple style="display: none;" required>
+                </div>
 
-        <div class="output-filename-selection">
-            <input type="text" id="outputFilename" placeholder="Enter output filename (e.g., merged)">
-        </div>
+                <div class="form-group">
+                    <label for="quality">PDF Quality:</label>
+                    <select id="quality" name="quality">
+                        <option value="high" selected>High Quality</option>
+                        <option value="medium">Medium Quality</option>
+                        <option value="low">Low Quality (Smaller File)</option>
+                    </select>
+                </div>
 
-        <div class="action-buttons">
-            <button type="button" id="mergeButton">Merge</button>
-            <button type="button" id="cancelButton">Cancel</button>
-        </div>
-    </form>
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="preserve_formatting" name="preserve_formatting" checked>
+                        <label for="preserve_formatting">Preserve Original Formatting</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="include_bookmarks" name="include_bookmarks" checked>
+                        <label for="include_bookmarks">Include Bookmarks</label>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="submit">Convert to PDF</button>
+                    <button type="button" id="cancelButton">Cancel</button>
+                </div>
+            </form>
         </div>
     </div>
-
+    
     <!-- Right Sidebar Ads -->
     <div class="sidebar right-sidebar">
-        <div class="sidebar-ad ad-style-4" onclick="window.open('https://example.com/pdf-organizer', '_blank')">
-            <h4>📁 PDF Organizer</h4>
-            <p>Organize your PDF library</p>
+        <div class="sidebar-ad ad-style-4" onclick="window.open('https://example.com/pdf-editor', '_blank')">
+            <h4>✏️ PDF Editor</h4>
+            <p>Edit converted PDFs</p>
         </div>
-        <div class="sidebar-ad" onclick="window.open('https://example.com/file-manager', '_blank')">
-            <h4>🗂️ File Manager</h4>
-            <p>Manage all document types</p>
+        <div class="sidebar-ad" onclick="window.open('https://example.com/batch-office', '_blank')">
+            <h4>⚡ Batch Office</h4>
+            <p>Convert multiple files</p>
         </div>
-        <div class="sidebar-ad ad-style-2" onclick="window.open('https://example.com/cloud-sync', '_blank')">
-            <h4>☁️ Cloud Sync</h4>
-            <p>Sync merged files to cloud</p>
+        <div class="sidebar-ad ad-style-2" onclick="window.open('https://example.com/cloud-office', '_blank')">
+            <h4>☁️ Cloud Office</h4>
+            <p>Access files anywhere</p>
         </div>
     </div>
 </div>
@@ -360,7 +391,6 @@
 <script>
     const dragDropBox = document.getElementById('dragDropBox');
     const fileInput = document.getElementById('fileInput');
-    let selectedFiles = [];
 
     dragDropBox.addEventListener('click', function () {
         fileInput.click();
@@ -368,87 +398,48 @@
 
     dragDropBox.addEventListener('dragover', function (e) {
         e.preventDefault();
-        dragDropBox.classList.add('dragover');
+        dragDropBox.style.borderColor = '#2196F3';
     });
 
     dragDropBox.addEventListener('dragleave', function () {
-        dragDropBox.classList.remove('dragover');
+        dragDropBox.style.borderColor = '#d1d5db';
     });
 
     dragDropBox.addEventListener('drop', function (e) {
         e.preventDefault();
-        dragDropBox.classList.remove('dragover');
+        dragDropBox.style.borderColor = '#d1d5db';
         handleFileUpload(e.dataTransfer.files);
     });
 
     fileInput.addEventListener('change', function () {
-        handleFileUpload(fileInput.files);
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
     });
 
     function handleFileUpload(files) {
         if (files.length > 0) {
-            selectedFiles = files;
-            const fileNames = Array.from(files).map(file => file.name).join(', ');
-            dragDropBox.querySelector('strong').textContent = fileNames;
-        } else {
-            alert('Please upload valid PDF files.');
+            const validFiles = Array.from(files).filter(file => 
+                file.name.toLowerCase().endsWith('.doc') || 
+                file.name.toLowerCase().endsWith('.docx') ||
+                file.type.includes('word')
+            );
+            
+            if (validFiles.length > 0) {
+                dragDropBox.querySelector('strong').textContent = 
+                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} Word files selected`;
+            } else {
+                alert('Please upload valid Word files (.doc, .docx).');
+            }
         }
     }
 
-    document.getElementById('mergeButton').addEventListener('click', function() {
-        if (selectedFiles.length === 0) {
-            alert('Please upload at least one PDF file.');
-            return;
-        }
-
-        const formData = new FormData();
-        Array.from(selectedFiles).forEach(file => formData.append('files', file));
-        let outputFilename = document.getElementById('outputFilename').value.trim();
-
-        // Add .pdf extension if not provided
-        if (!outputFilename.endsWith('.pdf')) {
-            outputFilename += '.pdf';
-        }
-
-        formData.append('output_filename', outputFilename);
-
-        fetch('{{ url_for("merge.merge_pdfs") }}', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.blob();
-            } else {
-                return response.json().then(errorData => {
-                    throw new Error(errorData.error);
-                });
-            }
-        })
-        .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            a.download = outputFilename;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-        })
-        .catch(error => console.error('Error:', error));
-    });
-
     document.getElementById('cancelButton').addEventListener('click', function() {
-        selectedFiles = [];
-        dragDropBox.querySelector('strong').textContent = 'Drag and drop PDF files here or click to upload';
-        document.getElementById('outputFilename').value = '';
-    });
-
-    document.getElementById('outputFilename').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault(); // Prevent the form from being submitted
-            document.getElementById('mergeButton').click(); // Trigger the merge button click instead
-        }
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop Word files here or click to upload';
+        document.getElementById('quality').value = 'high';
+        document.getElementById('preserve_formatting').checked = true;
+        document.getElementById('include_bookmarks').checked = true;
     });
 </script>
 

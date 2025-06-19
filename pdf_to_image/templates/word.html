@@ -126,6 +126,100 @@
         .action-buttons button:hover {
             background-color: #4b5563;
         }
+
+        /* Main Layout with Sidebars */
+        .main-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .content-area {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sidebar {
+            width: 160px;
+            flex-shrink: 0;
+        }
+
+        .left-sidebar {
+            order: -1;
+        }
+
+        .right-sidebar {
+            order: 1;
+        }
+
+        /* Sidebar Banner Ad Styles */
+        .sidebar-ad {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            font-size: 12px;
+        }
+
+        .sidebar-ad:hover {
+            transform: translateY(-2px);
+        }
+
+        .sidebar-ad h4 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .sidebar-ad p {
+            margin: 0;
+            font-size: 11px;
+            opacity: 0.9;
+            line-height: 1.3;
+        }
+
+        .sidebar-ad.ad-style-2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .sidebar-ad.ad-style-3 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .sidebar-ad.ad-style-4 {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .sidebar {
+                width: 100%;
+                order: 0;
+            }
+
+            .left-sidebar, .right-sidebar {
+                display: flex;
+                gap: 10px;
+                overflow-x: auto;
+            }
+
+            .sidebar-ad {
+                min-width: 140px;
+                flex-shrink: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -194,8 +288,27 @@
     </ul>
 </div>
 
-<!-- Tool Card -->
-<div class="tool-form-container">
+<div class="main-container">
+    <!-- Left Sidebar Ads -->
+    <div class="sidebar left-sidebar">
+        <div class="sidebar-ad" onclick="window.open('https://example.com/word-converter-pro', '_blank')">
+            <h4>📄 Word Converter Pro</h4>
+            <p>Advanced Word conversion</p>
+        </div>
+        <div class="sidebar-ad ad-style-2" onclick="window.open('https://example.com/document-editor', '_blank')">
+            <h4>✏️ Document Editor</h4>
+            <p>Edit Word documents</p>
+        </div>
+        <div class="sidebar-ad ad-style-3" onclick="window.open('https://example.com/office-suite', '_blank')">
+            <h4>📋 Office Suite</h4>
+            <p>Complete office tools</p>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="content-area">
+        <!-- Tool Card -->
+        <div class="tool-form-container">
     <h3>Convert PDF to Word (Identical Layout)</h3>
     <p>Upload a PDF to convert it into a Word document with an identical layout.</p>
 
@@ -210,6 +323,24 @@
             <button type="button" id="cancelButton">Cancel</button>
         </div>
     </form>
+        </div>
+    </div>
+
+    <!-- Right Sidebar Ads -->
+    <div class="sidebar right-sidebar">
+        <div class="sidebar-ad ad-style-4" onclick="window.open('https://example.com/format-converter', '_blank')">
+            <h4>🔄 Format Converter</h4>
+            <p>Convert between formats</p>
+        </div>
+        <div class="sidebar-ad" onclick="window.open('https://example.com/batch-word', '_blank')">
+            <h4>⚡ Batch Word</h4>
+            <p>Convert multiple PDFs</p>
+        </div>
+        <div class="sidebar-ad ad-style-2" onclick="window.open('https://example.com/cloud-docs', '_blank')">
+            <h4>☁️ Cloud Docs</h4>
+            <p>Store docs in cloud</p>
+        </div>
+    </div>
 </div>
 
 <script>

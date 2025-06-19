@@ -214,76 +214,77 @@
         <!-- Main Content Area -->
         <div class="content-area">
             <div class="tools-section">
-        <!-- OPTIMISE -->
-        <div class="tool-card">
-            <h2>OPTIMISE</h2>
-            <ul>
-                <li><a href="{{ url_for('compress') }}">Compress</a></li>
-                <li><a href="{{ url_for('repair') }}">Repair</a></li>
-                <li><a href="{{ url_for('ocr') }}">OCR</a></li>
-            </ul>
-        </div>
+                <!-- OPTIMISE -->
+                <div class="tool-card">
+                    <h2>OPTIMISE</h2>
+                    <ul>
+                        <li><a href="{{ url_for('compress') }}">Compress</a></li>
+                        <li><a href="{{ url_for('repair') }}">Repair</a></li>
+                        <li><a href="{{ url_for('ocr') }}">OCR</a></li>
+                    </ul>
+                </div>
 
-        <!-- CONVERT TO PDF -->
-        <div class="tool-card">
-            <h2>CONVERT TO PDF</h2>
-            <ul>
-                <li><a href="#">JPG to PDF</a></li>
-                <li><a href="#">Word to PDF</a></li>
-                <li><a href="#">PowerPoint to PDF</a></li>
-                <li><a href="#">Excel to PDF</a></li>
-                <li><a href="#">HTML to PDF</a></li>
-                <li><a href="#">Zip of Images to PDF</a></li>
-            </ul>
-        </div>
+                <!-- CONVERT TO PDF -->
+                <div class="tool-card">
+                    <h2>CONVERT TO PDF</h2>
+                    <ul>
+                        <li><a href="{{ url_for('jpg_to_pdf') }}">JPG to PDF</a></li>
+                        <li><a href="{{ url_for('word_to_pdf') }}">Word to PDF</a></li>
+                        <li><a href="{{ url_for('powerpoint_to_pdf') }}">PowerPoint to PDF</a></li>
+                        <li><a href="{{ url_for('excel_to_pdf') }}">Excel to PDF</a></li>
+                        <li><a href="{{ url_for('html_to_pdf') }}">HTML to PDF</a></li>
+                        <li><a href="{{ url_for('zip_to_pdf') }}">Zip of Images to PDF</a></li>
+                    </ul>
+                </div>
 
-        <!-- EDIT -->
-        <div class="tool-card">
-            <h2>EDIT</h2>
-            <ul>
-                <li><a href="{{ url_for('page_numbers') }}">Page Numbers</a></li>
-                <li><a href="{{ url_for('watermark') }}">Add Watermark</a></li>
-                <li><a href="#">Edit Content</a></li>
-            </ul>
-        </div>
+                <!-- EDIT -->
+                <div class="tool-card">
+                    <h2>EDIT</h2>
+                    <ul>
+                        <li><a href="{{ url_for('page_numbers') }}">Page Numbers</a></li>
+                        <li><a href="{{ url_for('watermark') }}">Add Watermark</a></li>
+                        <li><a href="{{ url_for('edit_content') }}">Edit Content</a></li>
+                    </ul>
+                </div>
 
-        <!-- ORGANISE -->
-        <div class="tool-card">
-            <h2>ORGANISE</h2>
-            <ul>
-                <li><a href="{{ url_for('merge') }}">Merge</a></li>
-                <li><a href="{{ url_for('split') }}">Split</a></li>
-                <li><a href="{{ url_for('remove') }}">Remove</a></li>
-                <li><a href="{{ url_for('extract') }}">Extract</a></li>
-                <li><a href="{{ url_for('sort') }}">Sort</a></li>
-                <li><a href="{{ url_for('rotate') }}">Rotate</a></li>
-            </ul>
-        </div>
+                <!-- ORGANISE -->
+                <div class="tool-card">
+                    <h2>ORGANISE</h2>
+                    <ul>
+                        <li><a href="{{ url_for('merge') }}">Merge</a></li>
+                        <li><a href="{{ url_for('split') }}">Split</a></li>
+                        <li><a href="{{ url_for('remove') }}">Remove</a></li>
+                        <li><a href="{{ url_for('extract') }}">Extract</a></li>
+                        <li><a href="{{ url_for('sort') }}">Sort</a></li>
+                        <li><a href="{{ url_for('rotate') }}">Rotate</a></li>
+                    </ul>
+                </div>
 
-        <!-- CONVERT FROM PDF -->
-        <div class="tool-card">
-            <h2>CONVERT FROM PDF</h2>
-            <ul>
-                <li><a href="{{ url_for('pdf_to_jpg') }}">PDF to JPG</a></li>
-                <li><a href="{{ url_for('pdf_to_panoramic') }}">PDF to Panoramic</a></li>
-                <li><a href="{{ url_for('word') }}">PDF to Word</a></li>
-                <li><a href="{{ url_for('powerpoint') }}">PDF to PowerPoint</a></li>
-                <li><a href="#">PDF to Excel</a></li>
-                <li><a href="#">PDF to PDF/A</a></li>
-            </ul>
-        </div>
+                <!-- CONVERT FROM PDF -->
+                <div class="tool-card">
+                    <h2>CONVERT FROM PDF</h2>
+                    <ul>
+                        <li><a href="{{ url_for('pdf_to_jpg') }}">PDF to JPG</a></li>
+                        <li><a href="{{ url_for('pdf_to_panoramic') }}">PDF to Panoramic</a></li>
+                        <li><a href="{{ url_for('word') }}">PDF to Word</a></li>
+                        <li><a href="{{ url_for('powerpoint') }}">PDF to PowerPoint</a></li>
+                        <li><a href="{{ url_for('pdf_to_excel') }}">PDF to Excel</a></li>
+                        <li><a href="{{ url_for('pdf_to_pdfa') }}">PDF to PDF/A</a></li>
+                    </ul>
+                </div>
 
-        <!-- SECURITY -->
-        <div class="tool-card">
-            <h2>SECURITY</h2>
-            <ul>
-                <li><a href="#">Unlock</a></li>
-                <li><a href="#">Protect</a></li>
-                <li><a href="#">Sign</a></li>
-                <li><a href="#">Compare</a></li>
-                <li><a href="#">Redact</a></li>
-                <li><a href="#">Flatten</a></li>
-            </ul>
+                <!-- SECURITY -->
+                <div class="tool-card">
+                    <h2>SECURITY</h2>
+                    <ul>
+                        <li><a href="{{ url_for('unlock') }}">Unlock</a></li>
+                        <li><a href="{{ url_for('protect') }}">Protect</a></li>
+                        <li><a href="{{ url_for('sign') }}">Sign</a></li>
+                        <li><a href="{{ url_for('compare') }}">Compare</a></li>
+                        <li><a href="{{ url_for('redact') }}">Redact</a></li>
+                        <li><a href="{{ url_for('flatten') }}">Flatten</a></li>
+                    </ul>
+                </div>
             </div>
 
             <div class="tool-action">

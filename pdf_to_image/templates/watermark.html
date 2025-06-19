@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SnackPDF - Add Watermark</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3309044253592353"
+     crossorigin="anonymous"></script>
     <style>
         body {
             margin: 0;
@@ -327,7 +329,7 @@
             <h3>Add Watermark to PDF</h3>
             <p>Add text or image watermarks to your PDF documents for branding and protection.</p>
 
-            <form id="watermarkForm" action="{{ url_for('watermark.add_watermark') }}" method="post" enctype="multipart/form-data">
+            <form id="watermarkForm" action="{{ url_for('watermark') }}" method="post" enctype="multipart/form-data">
                 <div id="dragDropBox" class="drag-drop">
                     <strong>Drag and drop a PDF file here or click to upload</strong>
                     <input type="file" id="fileInput" name="file" accept="application/pdf" style="display: none;" required>

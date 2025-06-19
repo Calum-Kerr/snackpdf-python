@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SnackPDF</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3309044253592353"
+     crossorigin="anonymous"></script>
     <style>
         body {
             margin: 0;
@@ -435,7 +437,7 @@
         formData.append('resolution', document.getElementById('resolution').value);
         formData.append('fast_mode', document.getElementById('fast_mode').value);
 
-        fetch('{{ url_for("compress_bp.compress") }}', {
+        fetch('{{ url_for("compress") }}', {
             method: 'POST',
             body: formData,
         })

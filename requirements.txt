@@ -21,7 +21,7 @@ regex==2023.12.25
 numpy==1.26.4
 
 # Agent 5: Convert FROM PDF
-pandas==2.1.0
+# pandas==2.1.0  # Commented out due to compilation issues on Heroku
 pdf2docx==0.5.6
 pdf2image==1.17.0
 

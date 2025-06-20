@@ -5,7 +5,6 @@ import os
 def create_app():
     app = Flask(__name__)
 
-<<<<<<< HEAD
     # Register blueprints for convert-to-PDF functionality (Agent 2)
     try:
         from .convert_to_pdf import convert_to_pdf_bp
@@ -33,14 +32,50 @@ def create_app():
     except ImportError as e:
         print(f"Warning: Could not import PDF editing blueprints: {e}")
         # Continue without blueprints for now
-=======
-    # Register PDF optimization blueprints
-    from .compress import compress_bp
-    from .repair import repair_bp
 
-    app.register_blueprint(compress_bp)
-    app.register_blueprint(repair_bp)
->>>>>>> origin/feature/pdf-optimization-tools
+    # Register blueprints for PDF Optimization Tools (Agent 1)
+    try:
+        from .compress import compress_bp
+        from .repair import repair_bp
+
+        app.register_blueprint(compress_bp)
+        app.register_blueprint(repair_bp)
+    except ImportError as e:
+        print(f"Warning: Could not import optimization blueprints: {e}")
+        # Continue without blueprints for now
+
+    # Register blueprints for PDF Organization Tools (Agent 4)
+    try:
+        from .sort import sort_bp
+        from .rotate import rotate_bp
+        # split and merge blueprints already exist in the base system
+
+        app.register_blueprint(sort_bp)
+        app.register_blueprint(rotate_bp)
+    except ImportError as e:
+        print(f"Warning: Could not import organization blueprints: {e}")
+        # Continue without blueprints for now
+
+    # Register blueprints for PDF Conversion Tools (Agent 5)
+    try:
+        from .pdf_to_excel import pdf_to_excel_bp
+        from .pdf_to_pdfa import pdf_to_pdfa_bp
+        # Other conversion tools already exist in base system
+
+        app.register_blueprint(pdf_to_excel_bp)
+        app.register_blueprint(pdf_to_pdfa_bp)
+    except ImportError as e:
+        print(f"Warning: Could not import conversion blueprints: {e}")
+        # Continue without blueprints for now
+
+    # Register blueprints for PDF Security Tools (Agent 6)
+    try:
+        from .security import security_bp
+
+        app.register_blueprint(security_bp)
+    except ImportError as e:
+        print(f"Warning: Could not import security blueprints: {e}")
+        # Continue without blueprints for now
 
 
     @app.route('/')

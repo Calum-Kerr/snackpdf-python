@@ -5,8 +5,12 @@ import os
 def create_app():
     app = Flask(__name__)
 
-    # Blueprints temporarily disabled for initial deployment
-    # Will be re-enabled once proper dependencies are added
+    # Register PDF optimization blueprints
+    from .compress import compress_bp
+    from .repair import repair_bp
+
+    app.register_blueprint(compress_bp)
+    app.register_blueprint(repair_bp)
 
 
     @app.route('/')

@@ -5,8 +5,18 @@ import os
 def create_app():
     app = Flask(__name__)
 
-    # Blueprints temporarily disabled for initial deployment
-    # Will be re-enabled once proper dependencies are added
+    # Register blueprints for convert-to-PDF functionality
+    try:
+        from .convert_to_pdf import convert_to_pdf_bp
+        from .office_to_pdf import office_to_pdf_bp
+        from .html_to_pdf import html_to_pdf_bp
+
+        app.register_blueprint(convert_to_pdf_bp)
+        app.register_blueprint(office_to_pdf_bp)
+        app.register_blueprint(html_to_pdf_bp)
+    except ImportError as e:
+        print(f"Warning: Could not import convert-to-PDF blueprints: {e}")
+        # Continue without blueprints for development
 
 
     @app.route('/')

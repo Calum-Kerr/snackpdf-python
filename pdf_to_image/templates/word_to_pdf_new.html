@@ -39,14 +39,18 @@
 <div class="tool-form-container">
     <h1>Word to PDF Converter - Convert DOC to PDF Free</h1>
     <p>Convert Word documents (DOC, DOCX) to PDF online for free. Preserve formatting and layout. Fast Word to PDF conversion.</p>
-    
+
     <div class="drag-drop">
         <strong>Select or drag and drop your files here</strong>
     </div>
-    
+
     <div class="action-buttons">
-        <button type="submit">Process File</button>
+        <button type="submit" disabled>Process File</button>
         <button type="button">Clear</button>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='convert_to_pdf.js') }}"></script>
 {% endblock %}

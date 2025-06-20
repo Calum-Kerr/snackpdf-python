@@ -9,66 +9,38 @@
 {%endblock %}
 
 {%block tool_content %}
-<p>Convert HTML files or web pages to PDF with perfect formatting and styling preservation.</p>
+<div class="tool-form-container">
+    <h1>HTML to PDF Converter - Convert HTML to PDF Free</h1>
+    <p>Convert HTML files to PDF online for free. Preserve CSS styling and layout. Fast HTML to PDF conversion.</p>
 
-<form id="htmlToPdfForm" action="/html_to_pdf" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label for="input_type">Input Type:</label>
-        <select id="input_type" name="input_type">
-            <option value="file" selected>Upload HTML File</option>
-            <option value="url">Web Page URL</option>
-            <option value="html_code">HTML Code</option>
-        </select>
-    </div>
-
-    <div id="file_input" class="form-group">
-        <div id="dragDropBox" class="drag-drop">
-            <strong>Drag and drop HTML files here or click to upload</strong>
-            <input type="file" id="fileInput" name="files" accept=".html,.htm" multiple style="display: none;">
-        </div>
-    </div>
-
-    <div id="url_input" class="form-group" style="display: none;">
-        <label for="webpage_url">Web Page URL:</label>
-        <input type="url" id="webpage_url" name="webpage_url" placeholder="https://example.com">
-    </div>
-
-    <div id="code_input" class="form-group" style="display: none;">
-        <label for="html_code">HTML Code:</label>
-        <textarea id="html_code" name="html_code" rows="6" placeholder="Paste your HTML code here..."></textarea>
+    <div class="drag-drop">
+        <strong>Select or drag and drop your files here</strong>
     </div>
 
     <div class="form-group">
         <label for="page_size">Page Size:</label>
         <select id="page_size" name="page_size">
-            <option value="A4" selected>A4</option>
+            <option value="A4">A4</option>
             <option value="Letter">Letter</option>
             <option value="Legal">Legal</option>
             <option value="A3">A3</option>
+            <option value="A5">A5</option>
         </select>
     </div>
 
     <div class="form-group">
         <label for="orientation">Orientation:</label>
         <select id="orientation" name="orientation">
-            <option value="portrait" selected>Portrait</option>
+            <option value="portrait">Portrait</option>
             <option value="landscape">Landscape</option>
         </select>
     </div>
 
-    <div class="form-group">
-        <label for="include_background">Include Background:</label>
-        <select id="include_background" name="include_background">
-            <option value="yes" selected>Yes</option>
-            <option value="no">No</option>
-        </select>
-    </div>
-
     <div class="action-buttons">
-        <button type="submit">Convert to PDF</button>
-        <button type="button" id="cancelButton">Cancel</button>
+        <button type="submit" disabled>Process File</button>
+        <button type="button">Clear</button>
     </div>
-</form>
+</div>
 {%endblock %}
 
 {%block right_sidebar %}
@@ -76,70 +48,5 @@
 {%endblock %}
 
 {%block scripts %}
-<script>
-    const inputType = document.getElementById('input_type');
-    const fileInput = document.getElementById('file_input');
-    const urlInput = document.getElementById('url_input');
-    const codeInput = document.getElementById('code_input');
-    const dragDropBox = document.getElementById('dragDropBox');
-    const fileInputElement = document.getElementById('fileInput');
-
-    inputType.addEventListener('change', function() {
-        fileInput.style.display = this.value === 'file' ? 'block' : 'none';
-        urlInput.style.display = this.value === 'url' ? 'block' : 'none';
-        codeInput.style.display = this.value === 'html_code' ? 'block' : 'none';
-    });
-
-    dragDropBox.addEventListener('click', function () {
-        fileInputElement.click();
-    });
-
-    dragDropBox.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#2196F3';
-    });
-
-    dragDropBox.addEventListener('dragleave', function () {
-        dragDropBox.style.borderColor = '#d1d5db';
-    });
-
-    dragDropBox.addEventListener('drop', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#d1d5db';
-        handleFileUpload(e.dataTransfer.files);
-    });
-
-    fileInputElement.addEventListener('change', function () {
-        if (fileInputElement.files.length) {
-            handleFileUpload(fileInputElement.files);
-        }
-    });
-
-    function handleFileUpload(files) {
-        if (files.length > 0) {
-            const validFiles = Array.from(files).filter(file => 
-                file.name.endsWith('.html') || file.name.endsWith('.htm')
-            );
-            
-            if (validFiles.length > 0) {
-                dragDropBox.querySelector('strong').textContent = 
-                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} HTML files selected`;
-            } else {
-                alert('Please upload valid HTML files (.html or .htm).');
-            }
-        }
-    }
-
-    document.getElementById('cancelButton').addEventListener('click', function() {
-        fileInputElement.value = '';
-        dragDropBox.querySelector('strong').textContent = 'Drag and drop HTML files here or click to upload';
-        document.getElementById('webpage_url').value = '';
-        document.getElementById('html_code').value = '';
-        document.getElementById('input_type').value = 'file';
-        document.getElementById('page_size').value = 'A4';
-        document.getElementById('orientation').value = 'portrait';
-        document.getElementById('include_background').value = 'yes';
-        inputType.dispatchEvent(new Event('change'));
-    });
-</script>
+<script src="{{ url_for('static', filename='convert_to_pdf.js') }}"></script>
 {%endblock %}

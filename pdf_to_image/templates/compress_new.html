@@ -170,10 +170,17 @@ document.addEventListener('DOMContentLoaded', function() {
         dragDropBox.style.backgroundColor = '';
         const files = e.dataTransfer.files;
         if (files.length > 0) {
+            // Store the file for manual FormData creation
+            window.droppedFile = files[0];
             // Create a new DataTransfer object to properly set files
-            const dt = new DataTransfer();
-            dt.items.add(files[0]);
-            fileInput.files = dt.files;
+            try {
+                const dt = new DataTransfer();
+                dt.items.add(files[0]);
+                fileInput.files = dt.files;
+            } catch (e) {
+                // Fallback: just update display, file will be used from window.droppedFile
+                console.log('DataTransfer not supported, using fallback');
+            }
             updateFileDisplay(files[0]);
         }
     });
@@ -210,7 +217,10 @@ document.addEventListener('DOMContentLoaded', function() {
     compressForm.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        if (!fileInput.files.length) {
+        // Get the file from input or fallback to dropped file
+        const fileToUpload = fileInput.files.length > 0 ? fileInput.files[0] : window.droppedFile;
+
+        if (!fileToUpload) {
             showError('Please select a PDF file.');
             return;
         }
@@ -221,8 +231,17 @@ document.addEventListener('DOMContentLoaded', function() {
         processBtn.textContent = 'Compressing...';
         hideError();
 
-        // Submit form
-        const formData = new FormData(compressForm);
+        // Create FormData manually to ensure file is included
+        const formData = new FormData();
+        formData.append('file', fileToUpload);
+        formData.append('compression_level', document.getElementById('compression_level').value);
+        formData.append('retain_metadata', document.querySelector('input[name="retain_metadata"]').checked ? 'true' : 'false');
+        formData.append('fast_mode', document.querySelector('input[name="fast_mode"]').checked ? 'true' : 'false');
+
+        const resolutionInput = document.querySelector('input[name="resolution"]');
+        if (resolutionInput && resolutionInput.value) {
+            formData.append('resolution', resolutionInput.value);
+        }
 
         fetch('/compress', {
             method: 'POST',
@@ -242,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `compressed_${fileInput.files[0].name}`;
+            a.download = `compressed_${fileToUpload.name}`;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);

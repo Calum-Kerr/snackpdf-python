@@ -77,6 +77,15 @@ def create_app():
         print(f"Warning: Could not import security blueprints: {e}")
         # Continue without blueprints for now
 
+    # Register blueprint for basic operations (core functionality)
+    try:
+        from .basic_operations import basic_operations_bp
+
+        app.register_blueprint(basic_operations_bp)
+    except ImportError as e:
+        print(f"Warning: Could not import basic operations blueprint: {e}")
+        # Continue without blueprint for now
+
 
     @app.route('/')
     def index():

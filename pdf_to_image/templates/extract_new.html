@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{%extends "base.html" %}
 
-{% block title %}SnackPDF - Extract PDF Pages{% endblock %}
+{%block title %}SnackPDF - Extract PDF Pages{%endblock %}
 
-{% block page_title %}Extract PDF Pages{% endblock %}
+{%block page_title %}Extract PDF Pages{%endblock %}
 
-{% block left_sidebar %}
+{%block left_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block tool_content %}
+{%block tool_content %}
 <p>Extract specific pages from PDF documents to create new PDF files with selected content.</p>
 
 <form id="extractForm" action="/extract" method="post" enctype="multipart/form-data">
@@ -60,13 +60,13 @@
         <button type="button" id="cancelButton">Cancel</button>
     </div>
 </form>
-{% endblock %}
+{%endblock %}
 
-{% block right_sidebar %}
+{%block right_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block scripts %}
+{%block scripts %}
 <script>
     const dragDropBox = document.getElementById('dragDropBox');
     const fileInput = document.getElementById('fileInput');
@@ -130,4 +130,4 @@
         extractionMethod.dispatchEvent(new Event('change'));
     });
 </script>
-{% endblock %}
+{%endblock %}

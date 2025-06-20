@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{%extends "base.html" %}
 
-{% block title %}SnackPDF - HTML to PDF{% endblock %}
+{%block title %}SnackPDF - HTML to PDF{%endblock %}
 
-{% block page_title %}Convert HTML to PDF{% endblock %}
+{%block page_title %}Convert HTML to PDF{%endblock %}
 
-{% block left_sidebar %}
+{%block left_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block tool_content %}
+{%block tool_content %}
 <p>Convert HTML files or web pages to PDF with perfect formatting and styling preservation.</p>
 
 <form id="htmlToPdfForm" action="/html_to_pdf" method="post" enctype="multipart/form-data">
@@ -69,13 +69,13 @@
         <button type="button" id="cancelButton">Cancel</button>
     </div>
 </form>
-{% endblock %}
+{%endblock %}
 
-{% block right_sidebar %}
+{%block right_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block scripts %}
+{%block scripts %}
 <script>
     const inputType = document.getElementById('input_type');
     const fileInput = document.getElementById('file_input');
@@ -142,4 +142,4 @@
         inputType.dispatchEvent(new Event('change'));
     });
 </script>
-{% endblock %}
+{%endblock %}

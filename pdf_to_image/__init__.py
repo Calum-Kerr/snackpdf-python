@@ -143,6 +143,13 @@ def create_app():
     def robots():
         return send_from_directory(os.path.dirname(os.path.dirname(__file__)), 'robots.txt', mimetype='text/plain')
 
+    # Google AdSense ads.txt
+    @app.route('/ads.txt')
+    def ads_txt():
+        from flask import Response
+        ads_content = "google.com, pub-3309044253592353, DIRECT, f08c47fec0942fa0"
+        return Response(ads_content, mimetype='text/plain')
+
     # Google Search Console Verification
     @app.route('/google6520a768170937d3.html')
     def google_verification():

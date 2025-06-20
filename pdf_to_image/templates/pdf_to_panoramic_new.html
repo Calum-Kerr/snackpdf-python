@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{%extends "base.html" %}
 
-{% block title %}SnackPDF - PDF to Panoramic{% endblock %}
+{%block title %}SnackPDF - PDF to Panoramic{%endblock %}
 
-{% block page_title %}Convert PDF to Panoramic Image{% endblock %}
+{%block page_title %}Convert PDF to Panoramic Image{%endblock %}
 
-{% block left_sidebar %}
+{%block left_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block tool_content %}
+{%block tool_content %}
 <p>Convert PDF pages to a single panoramic image by stitching pages horizontally or vertically.</p>
 
 <form id="pdfToPanoramicForm" action="/pdf_to_panoramic" method="post" enctype="multipart/form-data">
@@ -73,13 +73,13 @@
         <button type="button" id="cancelButton">Cancel</button>
     </div>
 </form>
-{% endblock %}
+{%endblock %}
 
-{% block right_sidebar %}
+{%block right_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block scripts %}
+{%block scripts %}
 <script>
     const dragDropBox = document.getElementById('dragDropBox');
     const fileInput = document.getElementById('fileInput');
@@ -138,4 +138,4 @@
         document.getElementById('page_range_input').style.display = 'none';
     });
 </script>
-{% endblock %}
+{%endblock %}

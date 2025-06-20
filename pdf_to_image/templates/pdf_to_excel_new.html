@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{%extends "base.html" %}
 
-{% block title %}SnackPDF - PDF to Excel{% endblock %}
+{%block title %}SnackPDF - PDF to Excel{%endblock %}
 
-{% block page_title %}Convert PDF to Excel{% endblock %}
+{%block page_title %}Convert PDF to Excel{%endblock %}
 
-{% block left_sidebar %}
+{%block left_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block tool_content %}
+{%block tool_content %}
 <p>Convert PDF tables and data to Excel spreadsheets with intelligent table detection.</p>
 
 <form id="pdfToExcelForm" action="/pdf_to_excel" method="post" enctype="multipart/form-data">
@@ -55,13 +55,13 @@
         <button type="button" id="cancelButton">Cancel</button>
     </div>
 </form>
-{% endblock %}
+{%endblock %}
 
-{% block right_sidebar %}
+{%block right_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block scripts %}
+{%block scripts %}
 <script>
     const dragDropBox = document.getElementById('dragDropBox');
     const fileInput = document.getElementById('fileInput');
@@ -118,4 +118,4 @@
         document.getElementById('page_range_input').style.display = 'none';
     });
 </script>
-{% endblock %}
+{%endblock %}

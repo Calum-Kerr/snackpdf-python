@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{%extends "base.html" %}
 
-{% block title %}SnackPDF - Add Watermark{% endblock %}
+{%block title %}SnackPDF - Add Watermark{%endblock %}
 
-{% block page_title %}Add Watermark to PDF{% endblock %}
+{%block page_title %}Add Watermark to PDF{%endblock %}
 
-{% block left_sidebar %}
+{%block left_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block tool_content %}
+{%block tool_content %}
 <p>Add text or image watermarks to PDF documents for branding, copyright protection, or identification.</p>
 
 <form id="watermarkForm" action="/watermark" method="post" enctype="multipart/form-data">
@@ -121,13 +121,13 @@
         <button type="button" id="cancelButton">Cancel</button>
     </div>
 </form>
-{% endblock %}
+{%endblock %}
 
-{% block right_sidebar %}
+{%block right_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block scripts %}
+{%block scripts %}
 <script>
     const dragDropBox = document.getElementById('dragDropBox');
     const fileInput = document.getElementById('fileInput');
@@ -209,4 +209,4 @@
         pagesToWatermark.dispatchEvent(new Event('change'));
     });
 </script>
-{% endblock %}
+{%endblock %}

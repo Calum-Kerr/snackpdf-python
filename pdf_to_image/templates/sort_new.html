@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{%extends "base.html" %}
 
-{% block title %}SnackPDF - Sort PDF Pages{% endblock %}
+{%block title %}SnackPDF - Sort PDF Pages{%endblock %}
 
-{% block page_title %}Sort PDF Pages{% endblock %}
+{%block page_title %}Sort PDF Pages{%endblock %}
 
-{% block left_sidebar %}
+{%block left_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block tool_content %}
+{%block tool_content %}
 <p>Reorder and sort PDF pages to create better organized documents with custom page arrangements.</p>
 
 <form id="sortForm" action="/sort" method="post" enctype="multipart/form-data">
@@ -58,13 +58,13 @@
         <button type="button" id="cancelButton">Cancel</button>
     </div>
 </form>
-{% endblock %}
+{%endblock %}
 
-{% block right_sidebar %}
+{%block right_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block scripts %}
+{%block scripts %}
 <script>
     const dragDropBox = document.getElementById('dragDropBox');
     const fileInput = document.getElementById('fileInput');
@@ -121,4 +121,4 @@
         sortMethod.dispatchEvent(new Event('change'));
     });
 </script>
-{% endblock %}
+{%endblock %}

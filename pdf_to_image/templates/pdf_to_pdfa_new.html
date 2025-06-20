@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{%extends "base.html" %}
 
-{% block title %}SnackPDF - PDF to PDF/A{% endblock %}
+{%block title %}SnackPDF - PDF to PDF/A{%endblock %}
 
-{% block page_title %}Convert PDF to PDF/A (Archival Format){% endblock %}
+{%block page_title %}Convert PDF to PDF/A (Archival Format){%endblock %}
 
-{% block left_sidebar %}
+{%block left_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block tool_content %}
+{%block tool_content %}
 <p>Convert PDF files to PDF/A format for long-term archival and compliance requirements.</p>
 
 <form id="pdfToPdfAForm" action="/pdf_to_pdfa" method="post" enctype="multipart/form-data">
@@ -69,13 +69,13 @@
         <button type="button" id="cancelButton">Cancel</button>
     </div>
 </form>
-{% endblock %}
+{%endblock %}
 
-{% block right_sidebar %}
+{%block right_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block scripts %}
+{%block scripts %}
 <script>
     const dragDropBox = document.getElementById('dragDropBox');
     const fileInput = document.getElementById('fileInput');
@@ -130,4 +130,4 @@
         document.getElementById('metadata_preservation').value = 'preserve';
     });
 </script>
-{% endblock %}
+{%endblock %}

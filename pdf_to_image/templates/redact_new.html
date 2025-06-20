@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{%extends "base.html" %}
 
-{% block title %}SnackPDF - Redact PDF{% endblock %}
+{%block title %}SnackPDF - Redact PDF{%endblock %}
 
-{% block page_title %}Redact Sensitive Information{% endblock %}
+{%block page_title %}Redact Sensitive Information{%endblock %}
 
-{% block left_sidebar %}
+{%block left_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block tool_content %}
+{%block tool_content %}
 <p>Remove or black out sensitive information from PDF documents for privacy and compliance.</p>
 
 <form id="redactForm" action="/redact" method="post" enctype="multipart/form-data">
@@ -82,13 +82,13 @@
         <button type="button" id="cancelButton">Cancel</button>
     </div>
 </form>
-{% endblock %}
+{%endblock %}
 
-{% block right_sidebar %}
+{%block right_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block scripts %}
+{%block scripts %}
 <script>
     const dragDropBox = document.getElementById('dragDropBox');
     const fileInput = document.getElementById('fileInput');
@@ -166,4 +166,4 @@
         redactionStyle.dispatchEvent(new Event('change'));
     });
 </script>
-{% endblock %}
+{%endblock %}

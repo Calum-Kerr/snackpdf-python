@@ -5,31 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Primary Meta Tags -->
-    <title>{% block title %}SnackPDF - Free PDF Tools{% endblock %}</title>
-    <meta name="title" content="{% block meta_title %}SnackPDF - Free PDF Tools{% endblock %}">
-    <meta name="description" content="{% block meta_description %}Free online PDF tools for compression, conversion, merging, splitting, and editing. Convert JPG to PDF, Word to PDF, compress PDFs, and more. No registration required.{% endblock %}">
-    <meta name="keywords" content="{% block meta_keywords %}PDF tools, PDF converter, compress PDF, merge PDF, split PDF, JPG to PDF, Word to PDF, PDF to Word, free PDF tools, online PDF editor{% endblock %}">
+    <title>{%block title %}SnackPDF - Free PDF Tools{%endblock %}</title>
+    <meta name="title" content="{%block meta_title %}SnackPDF - Free PDF Tools{%endblock %}">
+    <meta name="description" content="{%block meta_description %}Free online PDF tools for compression, conversion, merging, splitting, and editing. Convert JPG to PDF, Word to PDF, compress PDFs, and more. No registration required.{%endblock %}">
+    <meta name="keywords" content="{%block meta_keywords %}PDF tools, PDF converter, compress PDF, merge PDF, split PDF, JPG to PDF, Word to PDF, PDF to Word, free PDF tools, online PDF editor{%endblock %}">
     <meta name="author" content="SnackPDF">
     <meta name="robots" content="index, follow">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="{% block canonical_url %}https://www.snackpdf.com/{% endblock %}">
+    <link rel="canonical" href="{%block canonical_url %}https://www.snackpdf.com/{%endblock %}">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="{% block og_url %}https://www.snackpdf.com/{% endblock %}">
-    <meta property="og:title" content="{% block og_title %}SnackPDF - Free PDF Tools{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}Free online PDF tools for compression, conversion, merging, splitting, and editing. Convert JPG to PDF, Word to PDF, compress PDFs, and more.{% endblock %}">
-    <meta property="og:image" content="{% block og_image %}https://www.snackpdf.com/static/og-image.png{% endblock %}">
+    <meta property="og:url" content="{%block og_url %}https://www.snackpdf.com/{%endblock %}">
+    <meta property="og:title" content="{%block og_title %}SnackPDF - Free PDF Tools{%endblock %}">
+    <meta property="og:description" content="{%block og_description %}Free online PDF tools for compression, conversion, merging, splitting, and editing. Convert JPG to PDF, Word to PDF, compress PDFs, and more.{%endblock %}">
+    <meta property="og:image" content="{%block og_image %}https://www.snackpdf.com/static/og-image.png{%endblock %}">
     <meta property="og:site_name" content="SnackPDF">
     <meta property="og:locale" content="en_US">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="{% block twitter_url %}https://www.snackpdf.com/{% endblock %}">
-    <meta property="twitter:title" content="{% block twitter_title %}SnackPDF - Free PDF Tools{% endblock %}">
-    <meta property="twitter:description" content="{% block twitter_description %}Free online PDF tools for compression, conversion, merging, splitting, and editing. Convert JPG to PDF, Word to PDF, compress PDFs, and more.{% endblock %}">
-    <meta property="twitter:image" content="{% block twitter_image %}https://www.snackpdf.com/static/twitter-image.png{% endblock %}">
+    <meta property="twitter:url" content="{%block twitter_url %}https://www.snackpdf.com/{%endblock %}">
+    <meta property="twitter:title" content="{%block twitter_title %}SnackPDF - Free PDF Tools{%endblock %}">
+    <meta property="twitter:description" content="{%block twitter_description %}Free online PDF tools for compression, conversion, merging, splitting, and editing. Convert JPG to PDF, Word to PDF, compress PDFs, and more.{%endblock %}">
+    <meta property="twitter:image" content="{%block twitter_image %}https://www.snackpdf.com/static/twitter-image.png{%endblock %}">
 
     <!-- Additional SEO Meta Tags -->
     <meta name="theme-color" content="#667eea">
@@ -50,7 +50,7 @@
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
-    {% block structured_data %}
+    {%block structured_data %}
     {
         "@context": "https://schema.org",
         "@type": "WebApplication",
@@ -82,7 +82,7 @@
             "PDF Organization"
         ]
     }
-    {% endblock %}
+    {%endblock %}
     </script>
 
     <style>
@@ -731,65 +731,40 @@
     </div>
 
     <!-- Breadcrumb Navigation -->
-    {% block breadcrumb %}
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-        <div class="breadcrumb-container">
-            <ol itemscope itemtype="https://schema.org/BreadcrumbList">
-                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                    <a href="/" itemprop="item">
-                        <span itemprop="name">Home</span>
-                    </a>
-                    <meta itemprop="position" content="1" />
-                </li>
-                {% if breadcrumb_items %}
-                    {% for item in breadcrumb_items %}
-                    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                        {% if item.url %}
-                            <a href="{{ item.url }}" itemprop="item">
-                                <span itemprop="name">{{ item.name }}</span>
-                            </a>
-                        {% else %}
-                            <span class="current" itemprop="name">{{ item.name }}</span>
-                        {% endif %}
-                        <meta itemprop="position" content="{{ loop.index + 1 }}" />
-                    </li>
-                    {% endfor %}
-                {% endif %}
-            </ol>
-        </div>
-    </nav>
-    {% endblock %}
+    {%block breadcrumb %}
+    <!-- Breadcrumb navigation removed -->
+    {%endblock %}
 
 <div class="main-container">
     <!-- Left Sidebar - Clean for AdSense Auto-Placement -->
     <div class="sidebar left-sidebar">
-        {% block left_sidebar %}
+        {%block left_sidebar %}
         <!-- Google AdSense will auto-place ads here -->
-        {% endblock %}
+        {%endblock %}
     </div>
     
     <!-- Main Content Area -->
     <div class="content-area">
-        {% block content %}
+        {%block content %}
         <div class="tool-form-container">
-            <h3>{% block page_title %}PDF Tool{% endblock %}</h3>
-            {% block tool_content %}
+            <h3>{%block page_title %}PDF Tool{%endblock %}</h3>
+            {%block tool_content %}
             <p>Tool content goes here.</p>
-            {% endblock %}
+            {%endblock %}
         </div>
-        {% endblock %}
+        {%endblock %}
     </div>
     
     <!-- Right Sidebar - Clean for AdSense Auto-Placement -->
     <div class="sidebar right-sidebar">
-        {% block right_sidebar %}
+        {%block right_sidebar %}
         <!-- Google AdSense will auto-place ads here -->
-        {% endblock %}
+        {%endblock %}
     </div>
 </div>
 
-    {% block scripts %}
-    {% endblock %}
+    {%block scripts %}
+    {%endblock %}
 </div>
 </body>
 </html>

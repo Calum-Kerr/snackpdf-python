@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{%extends "base.html" %}
 
-{% block title %}SnackPDF - PDF to PowerPoint Converter (1:1 Conversion){% endblock %}
+{%block title %}SnackPDF - PDF to PowerPoint Converter (1:1 Conversion){%endblock %}
 
-{% block page_title %}Convert PDF to PowerPoint (Identical Layout){% endblock %}
+{%block page_title %}Convert PDF to PowerPoint (Identical Layout){%endblock %}
 
-{% block left_sidebar %}
+{%block left_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block tool_content %}
+{%block tool_content %}
 <p>Convert PDF pages to PowerPoint slides with identical layout preservation.</p>
 
 <form id="pdfToPowerPointForm" action="/powerpoint" method="post" enctype="multipart/form-data">
@@ -49,13 +49,13 @@
         <button type="button" id="cancelButton">Cancel</button>
     </div>
 </form>
-{% endblock %}
+{%endblock %}
 
-{% block right_sidebar %}
+{%block right_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block scripts %}
+{%block scripts %}
 <script>
     const dragDropBox = document.getElementById('dragDropBox');
     const fileInput = document.getElementById('fileInput');
@@ -104,4 +104,4 @@
         document.getElementById('pages_per_slide').value = '1';
     });
 </script>
-{% endblock %}
+{%endblock %}

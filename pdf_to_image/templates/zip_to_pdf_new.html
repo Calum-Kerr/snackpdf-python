@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{%extends "base.html" %}
 
-{% block title %}SnackPDF - Zip to PDF{% endblock %}
+{%block title %}SnackPDF - Zip to PDF{%endblock %}
 
-{% block page_title %}Convert Zip of Images to PDF{% endblock %}
+{%block page_title %}Convert Zip of Images to PDF{%endblock %}
 
-{% block left_sidebar %}
+{%block left_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block tool_content %}
+{%block tool_content %}
 <p>Convert a ZIP file containing images to a single PDF document with customizable layout.</p>
 
 <form id="zipToPdfForm" action="/zip_to_pdf" method="post" enctype="multipart/form-data">
@@ -71,13 +71,13 @@
         <button type="button" id="cancelButton">Cancel</button>
     </div>
 </form>
-{% endblock %}
+{%endblock %}
 
-{% block right_sidebar %}
+{%block right_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block scripts %}
+{%block scripts %}
 <script>
     const dragDropBox = document.getElementById('dragDropBox');
     const fileInput = document.getElementById('fileInput');
@@ -128,4 +128,4 @@
         document.getElementById('image_quality').value = 'high';
     });
 </script>
-{% endblock %}
+{%endblock %}

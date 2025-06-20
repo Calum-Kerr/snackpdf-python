@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{%extends "base.html" %}
 
-{% block title %}SnackPDF - Flatten PDF{% endblock %}
+{%block title %}SnackPDF - Flatten PDF{%endblock %}
 
-{% block page_title %}Flatten PDF Forms{% endblock %}
+{%block page_title %}Flatten PDF Forms{%endblock %}
 
-{% block left_sidebar %}
+{%block left_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block tool_content %}
+{%block tool_content %}
 <p>Flatten PDF forms and annotations to create non-editable, final documents.</p>
 
 <form id="flattenForm" action="/flatten" method="post" enctype="multipart/form-data">
@@ -82,13 +82,13 @@
         <button type="button" id="cancelButton">Cancel</button>
     </div>
 </form>
-{% endblock %}
+{%endblock %}
 
-{% block right_sidebar %}
+{%block right_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block scripts %}
+{%block scripts %}
 <script>
     const dragDropBox = document.getElementById('dragDropBox');
     const fileInput = document.getElementById('fileInput');
@@ -152,4 +152,4 @@
         document.querySelector('input[name="flatten_highlights"]').checked = false;
     });
 </script>
-{% endblock %}
+{%endblock %}

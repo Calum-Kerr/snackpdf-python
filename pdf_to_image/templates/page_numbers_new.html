@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{%extends "base.html" %}
 
-{% block title %}SnackPDF - Add Page Numbers{% endblock %}
+{%block title %}SnackPDF - Add Page Numbers{%endblock %}
 
-{% block page_title %}Add Page Numbers to PDF{% endblock %}
+{%block page_title %}Add Page Numbers to PDF{%endblock %}
 
-{% block left_sidebar %}
+{%block left_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block tool_content %}
+{%block tool_content %}
 <p>Add professional page numbers to PDF documents with customizable positioning and formatting.</p>
 
 <form id="pageNumbersForm" action="/page_numbers" method="post" enctype="multipart/form-data">
@@ -109,13 +109,13 @@
         <button type="button" id="cancelButton">Cancel</button>
     </div>
 </form>
-{% endblock %}
+{%endblock %}
 
-{% block right_sidebar %}
+{%block right_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block scripts %}
+{%block scripts %}
 <script>
     const dragDropBox = document.getElementById('dragDropBox');
     const fileInput = document.getElementById('fileInput');
@@ -189,4 +189,4 @@
         pagesToNumber.dispatchEvent(new Event('change'));
     });
 </script>
-{% endblock %}
+{%endblock %}

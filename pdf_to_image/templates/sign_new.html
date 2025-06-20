@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{%extends "base.html" %}
 
-{% block title %}SnackPDF - Sign PDF{% endblock %}
+{%block title %}SnackPDF - Sign PDF{%endblock %}
 
-{% block page_title %}Add Digital Signature to PDF{% endblock %}
+{%block page_title %}Add Digital Signature to PDF{%endblock %}
 
-{% block left_sidebar %}
+{%block left_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block tool_content %}
+{%block tool_content %}
 <p>Add digital signatures to PDF documents for authentication and legal compliance.</p>
 
 <form id="signForm" action="/sign" method="post" enctype="multipart/form-data">
@@ -82,13 +82,13 @@
         <button type="button" id="cancelButton">Cancel</button>
     </div>
 </form>
-{% endblock %}
+{%endblock %}
 
-{% block right_sidebar %}
+{%block right_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block scripts %}
+{%block scripts %}
 <script>
     const dragDropBox = document.getElementById('dragDropBox');
     const fileInput = document.getElementById('fileInput');
@@ -162,4 +162,4 @@
         signaturePage.dispatchEvent(new Event('change'));
     });
 </script>
-{% endblock %}
+{%endblock %}

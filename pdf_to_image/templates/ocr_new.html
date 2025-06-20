@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{%extends "base.html" %}
 
-{% block title %}SnackPDF - OCR PDF{% endblock %}
+{%block title %}SnackPDF - OCR PDF{%endblock %}
 
-{% block page_title %}OCR - Extract Text from Scanned PDFs{% endblock %}
+{%block page_title %}OCR - Extract Text from Scanned PDFs{%endblock %}
 
-{% block left_sidebar %}
+{%block left_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block tool_content %}
+{%block tool_content %}
 <p>Extract text from scanned PDFs and images using advanced OCR (Optical Character Recognition) technology.</p>
 
 <form id="ocrForm" action="/ocr" method="post" enctype="multipart/form-data">
@@ -87,13 +87,13 @@
         <button type="button" id="cancelButton">Cancel</button>
     </div>
 </form>
-{% endblock %}
+{%endblock %}
 
-{% block right_sidebar %}
+{%block right_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block scripts %}
+{%block scripts %}
 <script>
     const dragDropBox = document.getElementById('dragDropBox');
     const fileInput = document.getElementById('fileInput');
@@ -149,4 +149,4 @@
         document.getElementById('confidence_threshold').value = 'medium';
     });
 </script>
-{% endblock %}
+{%endblock %}

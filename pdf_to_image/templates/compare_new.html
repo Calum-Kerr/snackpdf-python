@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{%extends "base.html" %}
 
-{% block title %}SnackPDF - Compare PDFs{% endblock %}
+{%block title %}SnackPDF - Compare PDFs{%endblock %}
 
-{% block page_title %}Compare PDF Documents{% endblock %}
+{%block page_title %}Compare PDF Documents{%endblock %}
 
-{% block left_sidebar %}
+{%block left_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block tool_content %}
+{%block tool_content %}
 <p>Compare two PDF documents to identify differences, changes, and modifications between versions.</p>
 
 <form id="compareForm" action="/compare" method="post" enctype="multipart/form-data">
@@ -73,13 +73,13 @@
         <button type="button" id="cancelButton">Cancel</button>
     </div>
 </form>
-{% endblock %}
+{%endblock %}
 
-{% block right_sidebar %}
+{%block right_sidebar %}
 <!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%endblock %}
 
-{% block scripts %}
+{%block scripts %}
 <script>
     const dragDropBox1 = document.getElementById('dragDropBox1');
     const dragDropBox2 = document.getElementById('dragDropBox2');
@@ -165,4 +165,4 @@
         document.querySelector('input[name="ignore_headers_footers"]').checked = false;
     });
 </script>
-{% endblock %}
+{%endblock %}

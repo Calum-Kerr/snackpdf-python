@@ -143,6 +143,11 @@ def create_app():
     def robots():
         return send_from_directory(os.path.dirname(os.path.dirname(__file__)), 'robots.txt', mimetype='text/plain')
 
+    # Google Search Console Verification
+    @app.route('/google6520a768170937d3.html')
+    def google_verification():
+        return send_from_directory(os.path.dirname(os.path.dirname(__file__)), 'google6520a768170937d3.html', mimetype='text/html')
+
     @app.errorhandler(Exception)
     def handle_exception(e):
         # Print the traceback to the console

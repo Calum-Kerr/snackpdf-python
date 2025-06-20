@@ -5,8 +5,20 @@ import os
 def create_app():
     app = Flask(__name__)
 
-    # Blueprints temporarily disabled for initial deployment
-    # Will be re-enabled once proper dependencies are added
+    # Register blueprints for PDF Content Editing Tools (Agent 3)
+    try:
+        from .watermark import watermark_bp
+        from .page_numbers import page_numbers_bp
+        from .edit_content import edit_content_bp
+        from .redact import redact_bp
+
+        app.register_blueprint(watermark_bp)
+        app.register_blueprint(page_numbers_bp)
+        app.register_blueprint(edit_content_bp)
+        app.register_blueprint(redact_bp)
+    except ImportError as e:
+        print(f"Warning: Could not import blueprints: {e}")
+        # Continue without blueprints for now
 
 
     @app.route('/')

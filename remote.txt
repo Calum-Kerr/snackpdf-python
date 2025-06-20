@@ -1,0 +1,272 @@
+# SNACKPDF BACKEND DEVELOPMENT - 6 REMOTE AGENTS INSTRUCTIONS
+# Domain: https://www.snackpdf.com/
+# Project: PDF Tools Website with Ghostscript Integration
+# Each agent builds backend scripts for their assigned category
+
+## AGENT 1: OPTIMISE CATEGORY
+**Responsibility**: PDF Optimization Tools
+**Primary Technology**: Ghostscript (gs command)
+
+### Tools to Build:
+1. **Compress PDF** (`/compress` route)
+   - Use Ghostscript with optimization settings
+   - Multiple compression levels (low, medium, high quality)
+   - Preserve PDF structure and metadata
+   - File size reduction without quality loss
+
+2. **Repair PDF** (`/repair` route)  
+   - Use Ghostscript to reconstruct corrupted PDFs
+   - Fix PDF structure errors
+   - Recover readable content from damaged files
+   - Error handling for severely corrupted files
+
+### Technical Requirements:
+- Integrate with existing Flask routes in `pdf_to_image/__init__.py`
+- Use Ghostscript subprocess calls
+- Implement file upload/download handling
+- Add progress indicators for large files
+- Error handling and validation
+
+---
+
+## AGENT 2: CONVERT TO PDF CATEGORY
+**Responsibility**: Converting various formats TO PDF
+**Primary Technology**: Ghostscript + format-specific libraries
+
+### Tools to Build:
+1. **JPG to PDF** (`/jpg_to_pdf` route)
+   - Convert single/multiple images to PDF
+   - Maintain image quality and aspect ratios
+   - Page sizing options (A4, Letter, Custom)
+
+2. **Word to PDF** (`/word_to_pdf` route)
+   - Convert DOC/DOCX to PDF
+   - Preserve formatting and layout
+   - Handle embedded images and tables
+
+3. **PowerPoint to PDF** (`/powerpoint_to_pdf` route)
+   - Convert PPT/PPTX to PDF
+   - Maintain slide layouts and animations (static)
+
+4. **Excel to PDF** (`/excel_to_pdf` route)
+   - Convert XLS/XLSX to PDF
+   - Handle multiple sheets
+   - Preserve formatting and charts
+
+5. **HTML to PDF** (`/html_to_pdf` route)
+   - Use Ghostscript for HTML rendering
+   - CSS styling support
+   - Responsive layout handling
+
+6. **ZIP to PDF** (`/zip_to_pdf` route)
+   - Extract ZIP contents
+   - Convert supported files to PDF
+   - Combine into single PDF document
+
+### Technical Requirements:
+- Multi-format support with appropriate libraries
+- Batch processing capabilities
+- Quality settings for different output needs
+- Integration with existing Flask templates
+
+---
+
+## AGENT 3: EDIT CATEGORY  
+**Responsibility**: PDF Content Editing Tools
+**Primary Technology**: Ghostscript + PDF manipulation libraries
+
+### Tools to Build:
+1. **Add Watermark** (`/watermark` route)
+   - Text and image watermarks
+   - Position control (center, corner, custom)
+   - Transparency and rotation options
+   - Batch watermarking
+
+2. **Add Page Numbers** (`/page_numbers` route)
+   - Customizable number formats
+   - Position and styling options
+   - Start number and increment settings
+   - Skip pages option
+
+3. **Edit Content** (`/edit_content` route)
+   - Text editing capabilities
+   - Image replacement/insertion
+   - Basic layout modifications
+
+4. **Redact** (`/redact` route)
+   - Black out sensitive information
+   - Permanent content removal
+   - Pattern-based redaction (emails, SSNs)
+   - Preview before final redaction
+
+### Technical Requirements:
+- Ghostscript overlay techniques
+- Coordinate-based positioning
+- Font and styling options
+- Undo/preview functionality before final processing
+
+---
+
+## AGENT 4: ORGANISE CATEGORY
+**Responsibility**: PDF Organization and Manipulation Tools
+**Primary Technology**: Ghostscript (optimal for PDF operations)
+
+### Tools to Build:
+1. **Merge PDF** (`/merge` route)
+   - Combine multiple PDFs into one
+   - Preserve bookmarks and metadata
+   - Custom page ordering
+   - Batch merge capabilities
+
+2. **Split PDF** (`/split` route)
+   - Split by page ranges
+   - Split by file size
+   - Split by bookmarks
+   - Individual page extraction
+
+3. **Remove Pages** (`/remove` route)
+   - Delete specific pages or ranges
+   - Preview before removal
+   - Batch page removal
+
+4. **Extract Pages** (`/extract` route)
+   - Extract specific pages to new PDF
+   - Range selection (1-5, 10, 15-20)
+   - Maintain original quality
+
+5. **Sort Pages** (`/sort` route)
+   - Reorder pages by drag-and-drop interface
+   - Reverse page order
+   - Custom sorting patterns
+
+6. **Rotate Pages** (`/rotate` route)
+   - Rotate individual or all pages
+   - 90°, 180°, 270° rotation options
+   - Selective page rotation
+
+### Technical Requirements:
+- Ghostscript page manipulation commands
+- Efficient handling of large PDFs
+- Page preview thumbnails
+- Batch processing support
+
+---
+
+## AGENT 5: CONVERT FROM PDF CATEGORY
+**Responsibility**: Converting PDF TO other formats
+**Primary Technology**: Ghostscript (excellent for PDF reading)
+
+### Tools to Build:
+1. **PDF to JPG** (`/pdf_to_jpg` route)
+   - High-quality image extraction
+   - DPI settings (72, 150, 300, 600)
+   - Format options (JPG, PNG, TIFF)
+   - Single page or all pages
+
+2. **PDF to Word** (`/word` route)
+   - Convert PDF to DOC/DOCX
+   - Preserve text formatting
+   - Handle tables and images
+   - OCR for scanned PDFs
+
+3. **PDF to Excel** (`/pdf_to_excel` route)
+   - Extract tabular data
+   - Multiple sheet support
+   - Preserve cell formatting
+
+4. **PDF to PowerPoint** (`/powerpoint` route)
+   - Convert pages to slides
+   - Maintain layout structure
+   - Image and text extraction
+
+5. **PDF to PDF/A** (`/pdf_to_pdfa` route)
+   - Archive-compliant conversion
+   - Metadata preservation
+   - Long-term accessibility
+
+6. **PDF to Panoramic** (`/pdf_to_panoramic` route)
+   - Create wide-format images
+   - Stitch multiple pages horizontally
+   - Custom width settings
+
+### Technical Requirements:
+- Ghostscript rendering engine
+- Format-specific conversion libraries
+- Quality and resolution controls
+- OCR integration for scanned documents
+
+---
+
+## AGENT 6: SECURITY CATEGORY
+**Responsibility**: PDF Security and Protection Tools
+**Primary Technology**: Ghostscript + security libraries
+
+### Tools to Build:
+1. **Protect PDF** (`/protect` route)
+   - Password protection (user/owner passwords)
+   - Permission restrictions (print, copy, edit)
+   - Encryption levels (40-bit, 128-bit, 256-bit)
+
+2. **Unlock PDF** (`/unlock` route)
+   - Remove password protection
+   - User authorization required
+   - Batch unlock capabilities
+
+3. **Flatten PDF** (`/flatten` route)
+   - Flatten form fields
+   - Remove interactive elements
+   - Convert to static PDF
+
+4. **Sign PDF** (`/sign` route)
+   - Digital signature application
+   - Certificate-based signing
+   - Visible signature placement
+
+5. **Compare PDF** (`/compare` route)
+   - Visual comparison of two PDFs
+   - Highlight differences
+   - Side-by-side view
+
+### Technical Requirements:
+- Ghostscript security features
+- Digital certificate handling
+- Encryption/decryption algorithms
+- Visual diff algorithms
+
+---
+
+## GLOBAL REQUIREMENTS FOR ALL AGENTS:
+
+### Integration Points:
+- Flask app structure: `pdf_to_image/__init__.py`
+- Template files: `pdf_to_image/templates/*_new.html`
+- Static files: `pdf_to_image/static/`
+- Existing routes already defined
+
+### Common Features:
+- File upload handling (drag-and-drop support)
+- Progress indicators for long operations
+- Error handling and user feedback
+- File size limits and validation
+- Temporary file cleanup
+- Mobile-responsive design
+
+### Ghostscript Installation:
+- Ensure Ghostscript is available in production
+- Handle different OS environments
+- Version compatibility checks
+- Error handling for missing dependencies
+
+### Performance Requirements:
+- Async processing for large files
+- Queue system for batch operations
+- Memory management for large PDFs
+- Timeout handling
+
+### Security Considerations:
+- Input validation and sanitization
+- Secure file handling
+- Temporary file cleanup
+- Rate limiting for API endpoints
+
+Each agent should create robust, production-ready backend scripts that integrate seamlessly with the existing frontend templates and provide full functionality for their assigned PDF tools.

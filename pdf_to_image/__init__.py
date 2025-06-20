@@ -150,6 +150,20 @@ def create_app():
         ads_content = "google.com, pub-3309044253592353, DIRECT, f08c47fec0942fa0"
         return Response(ads_content, mimetype='text/plain')
 
+    # Ghostscript test endpoint
+    @app.route('/test-ghostscript')
+    def test_ghostscript():
+        from flask import Response
+        try:
+            from .ghostscript_utils import test_ghostscript
+            success = test_ghostscript()
+            if success:
+                return Response("✅ Ghostscript is working properly!", mimetype='text/plain')
+            else:
+                return Response("❌ Ghostscript test failed", mimetype='text/plain'), 500
+        except Exception as e:
+            return Response(f"❌ Ghostscript error: {str(e)}", mimetype='text/plain'), 500
+
     # Google Search Console Verification
     @app.route('/google6520a768170937d3.html')
     def google_verification():

@@ -5,8 +5,36 @@ import os
 def create_app():
     app = Flask(__name__)
 
-    # Blueprints temporarily disabled for initial deployment
-    # Will be re-enabled once proper dependencies are added
+    # Import and register blueprints for PDF conversion tools
+    blueprints_to_register = [
+        ('convert', 'convert_bp'),
+        ('pdf_to_excel', 'pdf_to_excel_bp'),
+        ('pdf_to_pdfa', 'pdf_to_pdfa_bp'),
+    ]
+
+    # Try to import optional blueprints
+    optional_blueprints = [
+        ('pdf_to_word', 'pdf_to_word_bp'),
+        ('pdf_to_powerpoint', 'pdf_to_powerpoint_bp'),
+    ]
+
+    for module_name, blueprint_name in blueprints_to_register:
+        try:
+            module = __import__(f'pdf_to_image.{module_name}', fromlist=[blueprint_name])
+            blueprint = getattr(module, blueprint_name)
+            app.register_blueprint(blueprint)
+            print(f"Successfully registered {blueprint_name}")
+        except Exception as e:
+            print(f"Warning: Could not import {blueprint_name}: {e}")
+
+    for module_name, blueprint_name in optional_blueprints:
+        try:
+            module = __import__(f'pdf_to_image.{module_name}', fromlist=[blueprint_name])
+            blueprint = getattr(module, blueprint_name)
+            app.register_blueprint(blueprint)
+            print(f"Successfully registered {blueprint_name}")
+        except Exception as e:
+            print(f"Info: Optional blueprint {blueprint_name} not available: {e}")
 
 
     @app.route('/')

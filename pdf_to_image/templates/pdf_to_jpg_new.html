@@ -1,121 +1,53 @@
-{% extends "base.html" %}
+{%% extends "base.html" %%}
 
-{% block title %}SnackPDF - PDF to JPG{% endblock %}
+{%% block title %%}PDF to JPG Converter - Convert PDF to Images Free | SnackPDF{%% endblock %%}
+{%% block meta_title %%}PDF to JPG Converter - Convert PDF to Images Free | SnackPDF{%% endblock %%}
+{%% block meta_description %%}Convert PDF to JPG, PNG images online for free. Extract images from PDF documents. High-quality PDF to image conversion.{%% endblock %%}
+{%% block meta_keywords %%}PDF to JPG, PDF to image, PDF to PNG, convert PDF to pictures, extract images from PDF{%% endblock %%}
 
-{% block page_title %}Convert PDF to JPG{% endblock %}
+{%% block canonical_url %%}https://www.snackpdf.com/pdf_to_jpg{%% endblock %%}
+{%% block og_url %%}https://www.snackpdf.com/pdf_to_jpg{%% endblock %%}
+{%% block og_title %%}PDF to JPG Converter - Convert PDF to Images Free | SnackPDF{%% endblock %%}
+{%% block og_description %%}Convert PDF to JPG, PNG images online for free. Extract images from PDF documents. High-quality PDF to image conversion.{%% endblock %%}
 
-{% block left_sidebar %}
-<!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%% block twitter_url %%}https://www.snackpdf.com/pdf_to_jpg{%% endblock %%}
+{%% block twitter_title %%}PDF to JPG Converter - Convert PDF to Images Free | SnackPDF{%% endblock %%}
+{%% block twitter_description %%}Convert PDF to JPG, PNG images online for free. Extract images from PDF documents. High-quality PDF to image conversion.{%% endblock %%}
 
-{% block tool_content %}
-<p>Convert PDF pages to high-quality JPG images with customizable settings.</p>
-
-<form id="pdfToJpgForm" action="/pdf_to_jpg" method="post" enctype="multipart/form-data">
-    <div id="dragDropBox" class="drag-drop">
-        <strong>Drag and drop a PDF file here or click to upload</strong>
-        <input type="file" id="fileInput" name="file" accept=".pdf" style="display: none;" required>
-    </div>
-
-    <div class="form-group">
-        <label for="quality">Image Quality:</label>
-        <select id="quality" name="quality">
-            <option value="high" selected>High Quality (300 DPI)</option>
-            <option value="medium">Medium Quality (150 DPI)</option>
-            <option value="low">Low Quality (72 DPI)</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="pages">Pages to Convert:</label>
-        <select id="pages" name="pages">
-            <option value="all" selected>All Pages</option>
-            <option value="first">First Page Only</option>
-            <option value="last">Last Page Only</option>
-            <option value="range">Page Range</option>
-        </select>
-    </div>
-
-    <div class="form-group" id="page_range_input" style="display: none;">
-        <label for="page_range">Page Range (e.g., 1-5):</label>
-        <input type="text" id="page_range" name="page_range" placeholder="e.g., 1-5 or 2,4,6">
-    </div>
-
-    <div class="form-group">
-        <label for="format">Output Format:</label>
-        <select id="format" name="format">
-            <option value="jpg" selected>JPG</option>
-            <option value="png">PNG</option>
-            <option value="webp">WebP</option>
-        </select>
-    </div>
-
-    <div class="action-buttons">
-        <button type="submit">Convert to Images</button>
-        <button type="button" id="cancelButton">Cancel</button>
-    </div>
-</form>
-{% endblock %}
-
-{% block right_sidebar %}
-<!-- Clean for AdSense auto-placement -->
-{% endblock %}
-
-{% block scripts %}
-<script>
-    const dragDropBox = document.getElementById('dragDropBox');
-    const fileInput = document.getElementById('fileInput');
-    const pagesSelect = document.getElementById('pages');
-
-    dragDropBox.addEventListener('click', function () {
-        fileInput.click();
-    });
-
-    dragDropBox.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#2196F3';
-    });
-
-    dragDropBox.addEventListener('dragleave', function () {
-        dragDropBox.style.borderColor = '#d1d5db';
-    });
-
-    dragDropBox.addEventListener('drop', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#d1d5db';
-        handleFileUpload(e.dataTransfer.files);
-    });
-
-    fileInput.addEventListener('change', function () {
-        if (fileInput.files.length) {
-            handleFileUpload(fileInput.files);
-        }
-    });
-
-    pagesSelect.addEventListener('change', function() {
-        const pageRangeInput = document.getElementById('page_range_input');
-        pageRangeInput.style.display = this.value === 'range' ? 'block' : 'none';
-    });
-
-    function handleFileUpload(files) {
-        if (files.length > 0) {
-            const file = files[0];
-            if (file.type === 'application/pdf') {
-                dragDropBox.querySelector('strong').textContent = file.name;
-            } else {
-                alert('Please upload a valid PDF file.');
-            }
-        }
+{%% block structured_data %%}
+{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PDF to JPG Converter - Convert PDF to Images Free",
+    "url": "https://www.snackpdf.com/pdf_to_jpg",
+    "description": "Convert PDF to JPG, PNG images online for free. Extract images from PDF documents. High-quality PDF to image conversion.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "SnackPDF",
+        "url": "https://www.snackpdf.com"
     }
+}
+{%% endblock %%}
 
-    document.getElementById('cancelButton').addEventListener('click', function() {
-        fileInput.value = '';
-        dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
-        document.getElementById('quality').value = 'high';
-        document.getElementById('pages').value = 'all';
-        document.getElementById('page_range').value = '';
-        document.getElementById('format').value = 'jpg';
-        document.getElementById('page_range_input').style.display = 'none';
-    });
-</script>
-{% endblock %}
+{%% block content %%}
+<div class="tool-form-container">
+    <h1>PDF to JPG Converter - Convert PDF to Images Free</h1>
+    <p>Convert PDF to JPG, PNG images online for free. Extract images from PDF documents. High-quality PDF to image conversion.</p>
+    
+    <div class="drag-drop">
+        <strong>Select or drag and drop your files here</strong>
+    </div>
+    
+    <div class="action-buttons">
+        <button type="submit">Process File</button>
+        <button type="button">Clear</button>
+    </div>
+</div>
+{%% endblock %%}

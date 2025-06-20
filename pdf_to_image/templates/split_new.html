@@ -1,115 +1,53 @@
-{% extends "base.html" %}
+{%% extends "base.html" %%}
 
-{% block title %}SnackPDF - Split PDF{% endblock %}
+{%% block title %%}Split PDF Online Free - Extract Pages from PDF | SnackPDF{%% endblock %%}
+{%% block meta_title %%}Split PDF Online Free - Extract Pages from PDF | SnackPDF{%% endblock %%}
+{%% block meta_description %%}Split PDF files online for free. Extract specific pages or split into multiple documents. Fast and secure PDF splitter tool.{%% endblock %%}
+{%% block meta_keywords %%}split PDF, extract PDF pages, divide PDF, separate PDF pages, PDF splitter, break PDF{%% endblock %%}
 
-{% block page_title %}Split PDF{% endblock %}
+{%% block canonical_url %%}https://www.snackpdf.com/split{%% endblock %%}
+{%% block og_url %%}https://www.snackpdf.com/split{%% endblock %%}
+{%% block og_title %%}Split PDF Online Free - Extract Pages from PDF | SnackPDF{%% endblock %%}
+{%% block og_description %%}Split PDF files online for free. Extract specific pages or split into multiple documents. Fast and secure PDF splitter tool.{%% endblock %%}
 
-{% block left_sidebar %}
-<!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%% block twitter_url %%}https://www.snackpdf.com/split{%% endblock %%}
+{%% block twitter_title %%}Split PDF Online Free - Extract Pages from PDF | SnackPDF{%% endblock %%}
+{%% block twitter_description %%}Split PDF files online for free. Extract specific pages or split into multiple documents. Fast and secure PDF splitter tool.{%% endblock %%}
 
-{% block tool_content %}
-<p>Split a PDF into multiple documents by page ranges or extract specific pages.</p>
-
-<form id="splitForm" action="/split" method="post" enctype="multipart/form-data">
-    <div id="dragDropBox" class="drag-drop">
-        <strong>Drag and drop a PDF file here or click to upload</strong>
-        <input type="file" id="fileInput" name="file" accept=".pdf" style="display: none;" required>
-    </div>
-
-    <div class="form-group">
-        <label for="split_method">Split Method:</label>
-        <select id="split_method" name="split_method">
-            <option value="pages" selected>By Page Numbers</option>
-            <option value="ranges">By Page Ranges</option>
-            <option value="size">By File Size</option>
-            <option value="bookmarks">By Bookmarks</option>
-        </select>
-    </div>
-
-    <div class="form-group" id="pages_input">
-        <label for="page_numbers">Page Numbers (comma-separated):</label>
-        <input type="text" id="page_numbers" name="page_numbers" placeholder="e.g., 1,3,5-7,10">
-    </div>
-
-    <div class="form-group" id="ranges_input" style="display: none;">
-        <label for="page_ranges">Page Ranges (comma-separated):</label>
-        <input type="text" id="page_ranges" name="page_ranges" placeholder="e.g., 1-5,6-10,11-15">
-    </div>
-
-    <div class="form-group" id="size_input" style="display: none;">
-        <label for="max_size">Maximum Size per File (MB):</label>
-        <input type="number" id="max_size" name="max_size" min="1" max="100" value="10">
-    </div>
-
-    <div class="action-buttons">
-        <button type="submit">Split PDF</button>
-        <button type="button" id="cancelButton">Cancel</button>
-    </div>
-</form>
-{% endblock %}
-
-{% block right_sidebar %}
-<!-- Clean for AdSense auto-placement -->
-{% endblock %}
-
-{% block scripts %}
-<script>
-    const dragDropBox = document.getElementById('dragDropBox');
-    const fileInput = document.getElementById('fileInput');
-    const splitMethod = document.getElementById('split_method');
-
-    dragDropBox.addEventListener('click', function () {
-        fileInput.click();
-    });
-
-    dragDropBox.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#2196F3';
-    });
-
-    dragDropBox.addEventListener('dragleave', function () {
-        dragDropBox.style.borderColor = '#d1d5db';
-    });
-
-    dragDropBox.addEventListener('drop', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#d1d5db';
-        handleFileUpload(e.dataTransfer.files);
-    });
-
-    fileInput.addEventListener('change', function () {
-        if (fileInput.files.length) {
-            handleFileUpload(fileInput.files);
-        }
-    });
-
-    splitMethod.addEventListener('change', function() {
-        const method = this.value;
-        document.getElementById('pages_input').style.display = method === 'pages' ? 'block' : 'none';
-        document.getElementById('ranges_input').style.display = method === 'ranges' ? 'block' : 'none';
-        document.getElementById('size_input').style.display = method === 'size' ? 'block' : 'none';
-    });
-
-    function handleFileUpload(files) {
-        if (files.length > 0) {
-            const file = files[0];
-            if (file.type === 'application/pdf') {
-                dragDropBox.querySelector('strong').textContent = file.name;
-            } else {
-                alert('Please upload a valid PDF file.');
-            }
-        }
+{%% block structured_data %%}
+{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Split PDF Online Free - Extract Pages from PDF",
+    "url": "https://www.snackpdf.com/split",
+    "description": "Split PDF files online for free. Extract specific pages or split into multiple documents. Fast and secure PDF splitter tool.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "SnackPDF",
+        "url": "https://www.snackpdf.com"
     }
+}
+{%% endblock %%}
 
-    document.getElementById('cancelButton').addEventListener('click', function() {
-        fileInput.value = '';
-        dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
-        document.getElementById('split_method').value = 'pages';
-        document.getElementById('page_numbers').value = '';
-        document.getElementById('page_ranges').value = '';
-        document.getElementById('max_size').value = '10';
-        splitMethod.dispatchEvent(new Event('change'));
-    });
-</script>
-{% endblock %}
+{%% block content %%}
+<div class="tool-form-container">
+    <h1>Split PDF Online Free - Extract Pages from PDF</h1>
+    <p>Split PDF files online for free. Extract specific pages or split into multiple documents. Fast and secure PDF splitter tool.</p>
+    
+    <div class="drag-drop">
+        <strong>Select or drag and drop your files here</strong>
+    </div>
+    
+    <div class="action-buttons">
+        <button type="submit">Process File</button>
+        <button type="button">Clear</button>
+    </div>
+</div>
+{%% endblock %%}

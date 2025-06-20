@@ -1,129 +1,53 @@
-{% extends "base.html" %}
+{%% extends "base.html" %%}
 
-{% block title %}SnackPDF - Compress PDF{% endblock %}
+{%% block title %%}Compress PDF Online Free - Reduce PDF File Size | SnackPDF{%% endblock %%}
+{%% block meta_title %%}Compress PDF Online Free - Reduce PDF File Size | SnackPDF{%% endblock %%}
+{%% block meta_description %%}Compress PDF files online for free. Reduce PDF file size without losing quality. Fast, secure, and easy PDF compression tool. No registration required.{%% endblock %%}
+{%% block meta_keywords %%}compress PDF, reduce PDF size, PDF compressor, shrink PDF, PDF file size reducer, online PDF compression{%% endblock %%}
 
-{% block page_title %}Compress PDF{% endblock %}
+{%% block canonical_url %%}https://www.snackpdf.com/compress{%% endblock %%}
+{%% block og_url %%}https://www.snackpdf.com/compress{%% endblock %%}
+{%% block og_title %%}Compress PDF Online Free - Reduce PDF File Size | SnackPDF{%% endblock %%}
+{%% block og_description %%}Compress PDF files online for free. Reduce PDF file size without losing quality. Fast, secure, and easy PDF compression tool. No registration required.{%% endblock %%}
 
-{% block left_sidebar %}
-<!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%% block twitter_url %%}https://www.snackpdf.com/compress{%% endblock %%}
+{%% block twitter_title %%}Compress PDF Online Free - Reduce PDF File Size | SnackPDF{%% endblock %%}
+{%% block twitter_description %%}Compress PDF files online for free. Reduce PDF file size without losing quality. Fast, secure, and easy PDF compression tool. No registration required.{%% endblock %%}
 
-{% block tool_content %}
-<p>Reduce the size of your PDF with customisable compression settings.</p>
-
-<form id="compressForm" action="/compress" method="post" enctype="multipart/form-data">
-    <div id="dragDropBox" class="drag-drop">
-        <strong>Drag and drop PDF files here or click to upload</strong>
-        <input type="file" id="fileInput" name="files" accept=".pdf" multiple style="display: none;" required>
-    </div>
-
-    <div class="form-group">
-        <label for="compression_level">Compression Level:</label>
-        <select id="compression_level" name="compression_level">
-            <option value="low">Low Compression (High Quality)</option>
-            <option value="medium" selected>Medium Compression</option>
-            <option value="high">High Compression (Low Quality)</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="metadata">Metadata:</label>
-        <select id="metadata" name="metadata">
-            <option value="retain" selected>Retain Metadata</option>
-            <option value="remove">Remove Metadata</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="compression_type">Compression Type:</label>
-        <select id="compression_type" name="compression_type">
-            <option value="standard" selected>Standard Compression</option>
-            <option value="lossless">Lossless Compression</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="image_downscaling">Image Downscaling:</label>
-        <select id="image_downscaling" name="image_downscaling">
-            <option value="none" selected>No Downscaling</option>
-            <option value="72">72 DPI</option>
-            <option value="150">150 DPI</option>
-            <option value="300">300 DPI</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="processing_mode">Processing Mode:</label>
-        <select id="processing_mode" name="processing_mode">
-            <option value="standard" selected>Standard Mode</option>
-            <option value="fast">Fast Mode (Lower Quality)</option>
-        </select>
-    </div>
-
-    <div class="action-buttons">
-        <button type="submit">Compress</button>
-        <button type="button" id="cancelButton">Cancel</button>
-    </div>
-</form>
-{% endblock %}
-
-{% block right_sidebar %}
-<!-- Clean for AdSense auto-placement -->
-{% endblock %}
-
-{% block scripts %}
-<script>
-    const dragDropBox = document.getElementById('dragDropBox');
-    const fileInput = document.getElementById('fileInput');
-
-    dragDropBox.addEventListener('click', function () {
-        fileInput.click();
-    });
-
-    dragDropBox.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#2196F3';
-    });
-
-    dragDropBox.addEventListener('dragleave', function () {
-        dragDropBox.style.borderColor = '#d1d5db';
-    });
-
-    dragDropBox.addEventListener('drop', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#d1d5db';
-        handleFileUpload(e.dataTransfer.files);
-    });
-
-    fileInput.addEventListener('change', function () {
-        if (fileInput.files.length) {
-            handleFileUpload(fileInput.files);
-        }
-    });
-
-    function handleFileUpload(files) {
-        if (files.length > 0) {
-            const validFiles = Array.from(files).filter(file => 
-                file.type === 'application/pdf'
-            );
-            
-            if (validFiles.length > 0) {
-                dragDropBox.querySelector('strong').textContent = 
-                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} PDF files selected`;
-            } else {
-                alert('Please upload valid PDF files.');
-            }
-        }
+{%% block structured_data %%}
+{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Compress PDF Online Free - Reduce PDF File Size",
+    "url": "https://www.snackpdf.com/compress",
+    "description": "Compress PDF files online for free. Reduce PDF file size without losing quality. Fast, secure, and easy PDF compression tool. No registration required.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "SnackPDF",
+        "url": "https://www.snackpdf.com"
     }
+}
+{%% endblock %%}
 
-    document.getElementById('cancelButton').addEventListener('click', function() {
-        fileInput.value = '';
-        dragDropBox.querySelector('strong').textContent = 'Drag and drop PDF files here or click to upload';
-        document.getElementById('compression_level').value = 'medium';
-        document.getElementById('metadata').value = 'retain';
-        document.getElementById('compression_type').value = 'standard';
-        document.getElementById('image_downscaling').value = 'none';
-        document.getElementById('processing_mode').value = 'standard';
-    });
-</script>
-{% endblock %}
+{%% block content %%}
+<div class="tool-form-container">
+    <h1>Compress PDF Online Free - Reduce PDF File Size</h1>
+    <p>Compress PDF files online for free. Reduce PDF file size without losing quality. Fast, secure, and easy PDF compression tool. No registration required.</p>
+    
+    <div class="drag-drop">
+        <strong>Select or drag and drop your files here</strong>
+    </div>
+    
+    <div class="action-buttons">
+        <button type="submit">Process File</button>
+        <button type="button">Clear</button>
+    </div>
+</div>
+{%% endblock %%}

@@ -1,151 +1,53 @@
-{% extends "base.html" %}
+{%% extends "base.html" %%}
 
-{% block title %}SnackPDF - Rotate PDF Pages{% endblock %}
+{%% block title %%}Rotate PDF Pages Online Free - Fix PDF Orientation | SnackPDF{%% endblock %%}
+{%% block meta_title %%}Rotate PDF Pages Online Free - Fix PDF Orientation | SnackPDF{%% endblock %%}
+{%% block meta_description %%}Rotate PDF pages online for free. Fix page orientation, rotate clockwise or counterclockwise. Easy PDF rotation tool.{%% endblock %%}
+{%% block meta_keywords %%}rotate PDF, rotate PDF pages, fix PDF orientation, turn PDF pages, PDF rotation{%% endblock %%}
 
-{% block page_title %}Rotate PDF Pages{% endblock %}
+{%% block canonical_url %%}https://www.snackpdf.com/rotate{%% endblock %%}
+{%% block og_url %%}https://www.snackpdf.com/rotate{%% endblock %%}
+{%% block og_title %%}Rotate PDF Pages Online Free - Fix PDF Orientation | SnackPDF{%% endblock %%}
+{%% block og_description %%}Rotate PDF pages online for free. Fix page orientation, rotate clockwise or counterclockwise. Easy PDF rotation tool.{%% endblock %%}
 
-{% block left_sidebar %}
-<!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%% block twitter_url %%}https://www.snackpdf.com/rotate{%% endblock %%}
+{%% block twitter_title %%}Rotate PDF Pages Online Free - Fix PDF Orientation | SnackPDF{%% endblock %%}
+{%% block twitter_description %%}Rotate PDF pages online for free. Fix page orientation, rotate clockwise or counterclockwise. Easy PDF rotation tool.{%% endblock %%}
 
-{% block tool_content %}
-<p>Rotate PDF pages to correct orientation or adjust viewing angle with precise angle control.</p>
-
-<form id="rotateForm" action="/rotate" method="post" enctype="multipart/form-data">
-    <div id="dragDropBox" class="drag-drop">
-        <strong>Drag and drop a PDF file here or click to upload</strong>
-        <input type="file" id="fileInput" name="file" accept=".pdf" style="display: none;" required>
-    </div>
-
-    <div class="form-group">
-        <label for="rotation_angle">Rotation Angle:</label>
-        <select id="rotation_angle" name="rotation_angle">
-            <option value="90" selected>90° Clockwise</option>
-            <option value="180">180° (Upside Down)</option>
-            <option value="270">270° Clockwise (90° Counter-clockwise)</option>
-            <option value="-90">90° Counter-clockwise</option>
-            <option value="custom">Custom Angle</option>
-        </select>
-    </div>
-
-    <div class="form-group" id="custom_angle_input" style="display: none;">
-        <label for="custom_angle">Custom Angle (degrees):</label>
-        <input type="number" id="custom_angle" name="custom_angle" min="-360" max="360" step="1" placeholder="45">
-    </div>
-
-    <div class="form-group">
-        <label for="pages_to_rotate">Pages to Rotate:</label>
-        <select id="pages_to_rotate" name="pages_to_rotate">
-            <option value="all" selected>All Pages</option>
-            <option value="odd">Odd Pages Only</option>
-            <option value="even">Even Pages Only</option>
-            <option value="first">First Page Only</option>
-            <option value="last">Last Page Only</option>
-            <option value="range">Page Range</option>
-            <option value="specific">Specific Pages</option>
-        </select>
-    </div>
-
-    <div class="form-group" id="page_range_input" style="display: none;">
-        <label for="start_page">Start Page:</label>
-        <input type="number" id="start_page" name="start_page" min="1" placeholder="1">
-        <label for="end_page">End Page:</label>
-        <input type="number" id="end_page" name="end_page" min="1" placeholder="5">
-    </div>
-
-    <div class="form-group" id="specific_pages_input" style="display: none;">
-        <label for="specific_pages">Specific Pages (comma-separated):</label>
-        <input type="text" id="specific_pages" name="specific_pages" placeholder="e.g., 1,3,5-7,10">
-    </div>
-
-    <div class="form-group">
-        <label for="auto_detect">Auto-Detect Orientation:</label>
-        <select id="auto_detect" name="auto_detect">
-            <option value="no" selected>No</option>
-            <option value="yes">Yes (Correct Upside-Down Pages)</option>
-            <option value="text_based">Text-Based Detection</option>
-        </select>
-    </div>
-
-    <div class="action-buttons">
-        <button type="submit">Rotate Pages</button>
-        <button type="button" id="cancelButton">Cancel</button>
-    </div>
-</form>
-{% endblock %}
-
-{% block right_sidebar %}
-<!-- Clean for AdSense auto-placement -->
-{% endblock %}
-
-{% block scripts %}
-<script>
-    const dragDropBox = document.getElementById('dragDropBox');
-    const fileInput = document.getElementById('fileInput');
-    const rotationAngle = document.getElementById('rotation_angle');
-    const pagesToRotate = document.getElementById('pages_to_rotate');
-
-    dragDropBox.addEventListener('click', function () {
-        fileInput.click();
-    });
-
-    dragDropBox.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#2196F3';
-    });
-
-    dragDropBox.addEventListener('dragleave', function () {
-        dragDropBox.style.borderColor = '#d1d5db';
-    });
-
-    dragDropBox.addEventListener('drop', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#d1d5db';
-        handleFileUpload(e.dataTransfer.files);
-    });
-
-    fileInput.addEventListener('change', function () {
-        if (fileInput.files.length) {
-            handleFileUpload(fileInput.files);
-        }
-    });
-
-    rotationAngle.addEventListener('change', function() {
-        const customAngleInput = document.getElementById('custom_angle_input');
-        customAngleInput.style.display = this.value === 'custom' ? 'block' : 'none';
-    });
-
-    pagesToRotate.addEventListener('change', function() {
-        const value = this.value;
-        document.getElementById('page_range_input').style.display = 
-            value === 'range' ? 'block' : 'none';
-        document.getElementById('specific_pages_input').style.display = 
-            value === 'specific' ? 'block' : 'none';
-    });
-
-    function handleFileUpload(files) {
-        if (files.length > 0) {
-            const file = files[0];
-            if (file.type === 'application/pdf') {
-                dragDropBox.querySelector('strong').textContent = file.name;
-            } else {
-                alert('Please upload a valid PDF file.');
-            }
-        }
+{%% block structured_data %%}
+{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Rotate PDF Pages Online Free - Fix PDF Orientation",
+    "url": "https://www.snackpdf.com/rotate",
+    "description": "Rotate PDF pages online for free. Fix page orientation, rotate clockwise or counterclockwise. Easy PDF rotation tool.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "SnackPDF",
+        "url": "https://www.snackpdf.com"
     }
+}
+{%% endblock %%}
 
-    document.getElementById('cancelButton').addEventListener('click', function() {
-        fileInput.value = '';
-        dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
-        document.getElementById('rotation_angle').value = '90';
-        document.getElementById('custom_angle').value = '';
-        document.getElementById('pages_to_rotate').value = 'all';
-        document.getElementById('start_page').value = '';
-        document.getElementById('end_page').value = '';
-        document.getElementById('specific_pages').value = '';
-        document.getElementById('auto_detect').value = 'no';
-        rotationAngle.dispatchEvent(new Event('change'));
-        pagesToRotate.dispatchEvent(new Event('change'));
-    });
-</script>
-{% endblock %}
+{%% block content %%}
+<div class="tool-form-container">
+    <h1>Rotate PDF Pages Online Free - Fix PDF Orientation</h1>
+    <p>Rotate PDF pages online for free. Fix page orientation, rotate clockwise or counterclockwise. Easy PDF rotation tool.</p>
+    
+    <div class="drag-drop">
+        <strong>Select or drag and drop your files here</strong>
+    </div>
+    
+    <div class="action-buttons">
+        <button type="submit">Process File</button>
+        <button type="button">Clear</button>
+    </div>
+</div>
+{%% endblock %%}

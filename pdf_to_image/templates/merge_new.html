@@ -1,102 +1,53 @@
-{% extends "base.html" %}
+{%% extends "base.html" %%}
 
-{% block title %}SnackPDF - Merge PDFs{% endblock %}
+{%% block title %%}Merge PDF Files Online Free - Combine PDFs | SnackPDF{%% endblock %%}
+{%% block meta_title %%}Merge PDF Files Online Free - Combine PDFs | SnackPDF{%% endblock %%}
+{%% block meta_description %%}Merge multiple PDF files into one document online for free. Combine PDFs quickly and securely. No software installation required.{%% endblock %%}
+{%% block meta_keywords %%}merge PDF, combine PDF, join PDF files, PDF merger, unite PDFs, concatenate PDF{%% endblock %%}
 
-{% block page_title %}Merge PDFs{% endblock %}
+{%% block canonical_url %%}https://www.snackpdf.com/merge{%% endblock %%}
+{%% block og_url %%}https://www.snackpdf.com/merge{%% endblock %%}
+{%% block og_title %%}Merge PDF Files Online Free - Combine PDFs | SnackPDF{%% endblock %%}
+{%% block og_description %%}Merge multiple PDF files into one document online for free. Combine PDFs quickly and securely. No software installation required.{%% endblock %%}
 
-{% block left_sidebar %}
-<!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%% block twitter_url %%}https://www.snackpdf.com/merge{%% endblock %%}
+{%% block twitter_title %%}Merge PDF Files Online Free - Combine PDFs | SnackPDF{%% endblock %%}
+{%% block twitter_description %%}Merge multiple PDF files into one document online for free. Combine PDFs quickly and securely. No software installation required.{%% endblock %%}
 
-{% block tool_content %}
-<p>Combine multiple PDF files into a single document with customizable order.</p>
-
-<form id="mergeForm" action="/merge" method="post" enctype="multipart/form-data">
-    <div id="dragDropBox" class="drag-drop">
-        <strong>Drag and drop PDF files here or click to upload</strong>
-        <input type="file" id="fileInput" name="files" accept=".pdf" multiple style="display: none;" required>
-    </div>
-
-    <div class="form-group">
-        <label for="merge_order">Merge Order:</label>
-        <select id="merge_order" name="merge_order">
-            <option value="upload_order" selected>Upload Order</option>
-            <option value="alphabetical">Alphabetical</option>
-            <option value="size_ascending">Size (Smallest First)</option>
-            <option value="size_descending">Size (Largest First)</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="bookmarks">Bookmarks:</label>
-        <select id="bookmarks" name="bookmarks">
-            <option value="preserve" selected>Preserve Bookmarks</option>
-            <option value="remove">Remove Bookmarks</option>
-            <option value="create_from_filenames">Create from Filenames</option>
-        </select>
-    </div>
-
-    <div class="action-buttons">
-        <button type="submit">Merge PDFs</button>
-        <button type="button" id="cancelButton">Cancel</button>
-    </div>
-</form>
-{% endblock %}
-
-{% block right_sidebar %}
-<!-- Clean for AdSense auto-placement -->
-{% endblock %}
-
-{% block scripts %}
-<script>
-    const dragDropBox = document.getElementById('dragDropBox');
-    const fileInput = document.getElementById('fileInput');
-
-    dragDropBox.addEventListener('click', function () {
-        fileInput.click();
-    });
-
-    dragDropBox.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#2196F3';
-    });
-
-    dragDropBox.addEventListener('dragleave', function () {
-        dragDropBox.style.borderColor = '#d1d5db';
-    });
-
-    dragDropBox.addEventListener('drop', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#d1d5db';
-        handleFileUpload(e.dataTransfer.files);
-    });
-
-    fileInput.addEventListener('change', function () {
-        if (fileInput.files.length) {
-            handleFileUpload(fileInput.files);
-        }
-    });
-
-    function handleFileUpload(files) {
-        if (files.length > 0) {
-            const validFiles = Array.from(files).filter(file => 
-                file.type === 'application/pdf'
-            );
-            
-            if (validFiles.length > 0) {
-                dragDropBox.querySelector('strong').textContent = 
-                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} PDF files selected`;
-            } else {
-                alert('Please upload valid PDF files.');
-            }
-        }
+{%% block structured_data %%}
+{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Merge PDF Files Online Free - Combine PDFs",
+    "url": "https://www.snackpdf.com/merge",
+    "description": "Merge multiple PDF files into one document online for free. Combine PDFs quickly and securely. No software installation required.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "SnackPDF",
+        "url": "https://www.snackpdf.com"
     }
+}
+{%% endblock %%}
 
-    document.getElementById('cancelButton').addEventListener('click', function() {
-        fileInput.value = '';
-        dragDropBox.querySelector('strong').textContent = 'Drag and drop PDF files here or click to upload';
-        document.getElementById('merge_order').value = 'upload_order';
-        document.getElementById('bookmarks').value = 'preserve';
-    });
-</script>
-{% endblock %}
+{%% block content %%}
+<div class="tool-form-container">
+    <h1>Merge PDF Files Online Free - Combine PDFs</h1>
+    <p>Merge multiple PDF files into one document online for free. Combine PDFs quickly and securely. No software installation required.</p>
+    
+    <div class="drag-drop">
+        <strong>Select or drag and drop your files here</strong>
+    </div>
+    
+    <div class="action-buttons">
+        <button type="submit">Process File</button>
+        <button type="button">Clear</button>
+    </div>
+</div>
+{%% endblock %%}

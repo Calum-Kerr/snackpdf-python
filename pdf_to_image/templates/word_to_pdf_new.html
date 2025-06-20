@@ -1,112 +1,53 @@
-{% extends "base.html" %}
+{%% extends "base.html" %%}
 
-{% block title %}SnackPDF - Word to PDF{% endblock %}
+{%% block title %%}Word to PDF Converter - Convert DOC to PDF Free | SnackPDF{%% endblock %%}
+{%% block meta_title %%}Word to PDF Converter - Convert DOC to PDF Free | SnackPDF{%% endblock %%}
+{%% block meta_description %%}Convert Word documents (DOC, DOCX) to PDF online for free. Preserve formatting and layout. Fast Word to PDF conversion.{%% endblock %%}
+{%% block meta_keywords %%}Word to PDF, DOC to PDF, DOCX to PDF, convert Word to PDF, document to PDF{%% endblock %%}
 
-{% block page_title %}Convert Word to PDF{% endblock %}
+{%% block canonical_url %%}https://www.snackpdf.com/word_to_pdf{%% endblock %%}
+{%% block og_url %%}https://www.snackpdf.com/word_to_pdf{%% endblock %%}
+{%% block og_title %%}Word to PDF Converter - Convert DOC to PDF Free | SnackPDF{%% endblock %%}
+{%% block og_description %%}Convert Word documents (DOC, DOCX) to PDF online for free. Preserve formatting and layout. Fast Word to PDF conversion.{%% endblock %%}
 
-{% block left_sidebar %}
-<!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%% block twitter_url %%}https://www.snackpdf.com/word_to_pdf{%% endblock %%}
+{%% block twitter_title %%}Word to PDF Converter - Convert DOC to PDF Free | SnackPDF{%% endblock %%}
+{%% block twitter_description %%}Convert Word documents (DOC, DOCX) to PDF online for free. Preserve formatting and layout. Fast Word to PDF conversion.{%% endblock %%}
 
-{% block tool_content %}
-<p>Convert Word documents to PDF with perfect formatting preservation.</p>
-
-<form id="wordToPdfForm" action="/word_to_pdf" method="post" enctype="multipart/form-data">
-    <div id="dragDropBox" class="drag-drop">
-        <strong>Drag and drop Word files here or click to upload</strong>
-        <input type="file" id="fileInput" name="files" accept=".doc,.docx" multiple style="display: none;" required>
-    </div>
-
-    <div class="form-group">
-        <label for="page_orientation">Page Orientation:</label>
-        <select id="page_orientation" name="page_orientation">
-            <option value="portrait" selected>Portrait</option>
-            <option value="landscape">Landscape</option>
-            <option value="auto">Auto (Preserve Original)</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="quality">PDF Quality:</label>
-        <select id="quality" name="quality">
-            <option value="high" selected>High Quality</option>
-            <option value="medium">Medium Quality</option>
-            <option value="web">Web Optimized</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="margins">Margins:</label>
-        <select id="margins" name="margins">
-            <option value="preserve" selected>Preserve Original</option>
-            <option value="narrow">Narrow</option>
-            <option value="normal">Normal</option>
-            <option value="wide">Wide</option>
-        </select>
-    </div>
-
-    <div class="action-buttons">
-        <button type="submit">Convert to PDF</button>
-        <button type="button" id="cancelButton">Cancel</button>
-    </div>
-</form>
-{% endblock %}
-
-{% block right_sidebar %}
-<!-- Clean for AdSense auto-placement -->
-{% endblock %}
-
-{% block scripts %}
-<script>
-    const dragDropBox = document.getElementById('dragDropBox');
-    const fileInput = document.getElementById('fileInput');
-
-    dragDropBox.addEventListener('click', function () {
-        fileInput.click();
-    });
-
-    dragDropBox.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#2196F3';
-    });
-
-    dragDropBox.addEventListener('dragleave', function () {
-        dragDropBox.style.borderColor = '#d1d5db';
-    });
-
-    dragDropBox.addEventListener('drop', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#d1d5db';
-        handleFileUpload(e.dataTransfer.files);
-    });
-
-    fileInput.addEventListener('change', function () {
-        if (fileInput.files.length) {
-            handleFileUpload(fileInput.files);
-        }
-    });
-
-    function handleFileUpload(files) {
-        if (files.length > 0) {
-            const validFiles = Array.from(files).filter(file => 
-                file.name.endsWith('.doc') || file.name.endsWith('.docx')
-            );
-            
-            if (validFiles.length > 0) {
-                dragDropBox.querySelector('strong').textContent = 
-                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} Word files selected`;
-            } else {
-                alert('Please upload valid Word files (.doc or .docx).');
-            }
-        }
+{%% block structured_data %%}
+{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Word to PDF Converter - Convert DOC to PDF Free",
+    "url": "https://www.snackpdf.com/word_to_pdf",
+    "description": "Convert Word documents (DOC, DOCX) to PDF online for free. Preserve formatting and layout. Fast Word to PDF conversion.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "SnackPDF",
+        "url": "https://www.snackpdf.com"
     }
+}
+{%% endblock %%}
 
-    document.getElementById('cancelButton').addEventListener('click', function() {
-        fileInput.value = '';
-        dragDropBox.querySelector('strong').textContent = 'Drag and drop Word files here or click to upload';
-        document.getElementById('page_orientation').value = 'portrait';
-        document.getElementById('quality').value = 'high';
-        document.getElementById('margins').value = 'preserve';
-    });
-</script>
-{% endblock %}
+{%% block content %%}
+<div class="tool-form-container">
+    <h1>Word to PDF Converter - Convert DOC to PDF Free</h1>
+    <p>Convert Word documents (DOC, DOCX) to PDF online for free. Preserve formatting and layout. Fast Word to PDF conversion.</p>
+    
+    <div class="drag-drop">
+        <strong>Select or drag and drop your files here</strong>
+    </div>
+    
+    <div class="action-buttons">
+        <button type="submit">Process File</button>
+        <button type="button">Clear</button>
+    </div>
+</div>
+{%% endblock %%}

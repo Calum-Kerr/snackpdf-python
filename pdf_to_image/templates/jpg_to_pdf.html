@@ -1,478 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SnackPDF - JPG to PDF</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3309044253592353"
-     crossorigin="anonymous"></script>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: #ffffff;
-            color: #1f2937;
-        }
-        header {
-            background-color: #1f2937;
-            padding: 20px;
-            color: white;
-            text-align: center;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 36px;
-        }
-        
-        /* Navigation Bar Styles */
-        .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 0;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            position: relative;
-            z-index: 1000;
-        }
-        .navbar ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: space-around;
-        }
-        .navbar ul li {
-            position: relative;
-            font-size: 14px;
-        }
-        .navbar ul li > a {
-            text-decoration: none;
-            color: #ffffff;
-            font-weight: 600;
-            padding: 18px 20px;
-            display: block;
-            transition: all 0.3s ease;
-            border-radius: 0;
-            position: relative;
-            overflow: hidden;
-        }
-        .navbar ul li > a:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-        .navbar ul li > a:hover:before {
-            left: 100%;
-        }
-        .navbar ul li > a:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-        }
-        .navbar ul li:hover ul {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-        .navbar ul li ul {
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%) translateY(-10px);
-            background: #ffffff;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            list-style-type: none;
-            padding: 15px 0;
-            min-width: 200px;
-            border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            opacity: 0;
-            visibility: hidden;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        .navbar ul li ul:before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-bottom: 8px solid #ffffff;
-        }
-        .navbar ul li ul li {
-            padding: 0;
-            margin: 0;
-        }
-        .navbar ul li ul li a {
-            color: #1f2937;
-            text-decoration: none;
-            display: block;
-            padding: 12px 25px;
-            transition: all 0.2s ease;
-            font-weight: 500;
-            border-radius: 0;
-            position: relative;
-        }
-        .navbar ul li ul li a:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #ffffff;
-            padding-left: 35px;
-            transform: translateX(5px);
-        }
-        
-        /* Tool Form Container */
-        .tool-form-container {
-            margin: 40px auto;
-            max-width: 600px;
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: none;
-        }
-        .tool-form-container h3 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        .tool-form-container p {
-            margin-bottom: 20px;
-            font-size: 14px;
-            color: #6b7280;
-        }
-        .drag-drop {
-            border: 2px dashed #d1d5db;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-        .drag-drop strong {
-            font-weight: 600;
-            display: block;
-            margin-top: 10px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        select, input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            font-size: 14px;
-            border-radius: 5px;
-            border: 1px solid #d1d5db;
-            box-sizing: border-box;
-        }
-        .action-buttons {
-            display: flex;
-            justify-content: space-between;
-        }
-        .action-buttons button {
-            background-color: #1f2937;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        .action-buttons button:hover {
-            background-color: #4b5563;
-        }
-        
-        /* Main Layout with Sidebars */
-        .main-container {
-            display: flex;
-            max-width: 1400px;
-            margin: 0 auto;
-            gap: 20px;
-            padding: 20px;
-        }
-        
-        .content-area {
-            flex: 1;
-            min-width: 0;
-        }
-        
-        .sidebar {
-            width: 160px;
-            flex-shrink: 0;
-        }
-        
-        .left-sidebar {
-            order: -1;
-        }
-        
-        .right-sidebar {
-            order: 1;
-        }
-        
-        /* Sidebar Banner Ad Styles */
-        .sidebar-ad {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            font-size: 12px;
-        }
-        
-        .sidebar-ad:hover {
-            transform: translateY(-2px);
-        }
-        
-        .sidebar-ad h4 {
-            margin: 0 0 8px 0;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        
-        .sidebar-ad p {
-            margin: 0;
-            font-size: 11px;
-            opacity: 0.9;
-            line-height: 1.3;
-        }
-        
-        .sidebar-ad.ad-style-2 {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-        
-        .sidebar-ad.ad-style-3 {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-        
-        .sidebar-ad.ad-style-4 {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .main-container {
-                flex-direction: column;
-                padding: 10px;
-            }
-            
-            .sidebar {
-                width: 100%;
-                order: 0;
-            }
-            
-            .left-sidebar, .right-sidebar {
-                display: flex;
-                gap: 10px;
-                overflow-x: auto;
-            }
-            
-            .sidebar-ad {
-                min-width: 140px;
-                flex-shrink: 0;
-            }
-        }
-    </style>
-</head>
-<body>
+{%% extends "base.html" %%}
 
-<header>
-    <h1><a href="{{ url_for('index') }}" style="text-decoration: none; color: inherit;">SnackPDF</a></h1>
-</header>
+{%% block title %%}JPG to PDF Converter - Convert Images to PDF Free | SnackPDF{%% endblock %%}
+{%% block meta_title %%}JPG to PDF Converter - Convert Images to PDF Free | SnackPDF{%% endblock %%}
+{%% block meta_description %%}Convert JPG, JPEG, PNG images to PDF online for free. Merge multiple images into one PDF. Fast, secure image to PDF converter.{%% endblock %%}
+{%% block meta_keywords %%}JPG to PDF, image to PDF, JPEG to PDF, PNG to PDF, convert images to PDF, photo to PDF{%% endblock %%}
 
-<!-- Navigation Bar -->
-<div class="navbar">
-    <ul>
-        <li><a href="#">OPTIMISE</a>
-            <ul>
-                <li><a href="{{ url_for('compress') }}">Compress</a></li>
-                <li><a href="{{ url_for('repair') }}">Repair</a></li>
-                <li><a href="{{ url_for('ocr') }}">OCR</a></li>
-            </ul>
-        </li>
-        <li><a href="#">CONVERT TO PDF</a>
-            <ul>
-                <li><a href="#">JPG to PDF</a></li>
-                <li><a href="#">Word to PDF</a></li>
-                <li><a href="#">PowerPoint to PDF</a></li>
-                <li><a href="#">Excel to PDF</a></li>
-                <li><a href="#">HTML to PDF</a></li>
-                <li><a href="#">Zip of Images to PDF</a></li>
-            </ul>
-        </li>
-        <li><a href="#">CONVERT FROM PDF</a>
-            <ul>
-                <li><a href="{{ url_for('pdf_to_jpg') }}">PDF to JPG</a></li>
-                <li><a href="{{ url_for('pdf_to_panoramic') }}">PDF to Panoramic</a></li>
-                <li><a href="{{ url_for('word') }}">PDF to Word</a></li>
-                <li><a href="{{ url_for('powerpoint') }}">PDF to PowerPoint</a></li>
-                <li><a href="#">PDF to Excel</a></li>
-                <li><a href="#">PDF to PDF/A</a></li>
-            </ul>
-        </li>
-        <li><a href="#">ORGANISE</a>
-            <ul>
-                <li><a href="{{ url_for('merge') }}">Merge</a></li>
-                <li><a href="{{ url_for('split') }}">Split</a></li>
-                <li><a href="{{ url_for('remove') }}">Remove</a></li>
-                <li><a href="{{ url_for('extract') }}">Extract</a></li>
-                <li><a href="{{ url_for('sort') }}">Sort</a></li>
-                <li><a href="{{ url_for('rotate') }}">Rotate</a></li>
-            </ul>
-        </li>
-        <li><a href="#">SECURITY</a>
-            <ul>
-                <li><a href="#">Unlock</a></li>
-                <li><a href="#">Protect</a></li>
-                <li><a href="#">Sign</a></li>
-                <li><a href="#">Compare</a></li>
-                <li><a href="#">Redact</a></li>
-                <li><a href="#">Flatten</a></li>
-            </ul>
-        </li>
-        <li><a href="#">EDIT</a>
-            <ul>
-                <li><a href="{{ url_for('page_numbers') }}">Page Numbers</a></li>
-                <li><a href="{{ url_for('watermark') }}">Add Watermark</a></li>
-                <li><a href="#">Edit Content</a></li>
-            </ul>
-        </li>
-    </ul>
-</div>
+{%% block canonical_url %%}https://www.snackpdf.com/jpg_to_pdf{%% endblock %%}
+{%% block og_url %%}https://www.snackpdf.com/jpg_to_pdf{%% endblock %%}
+{%% block og_title %%}JPG to PDF Converter - Convert Images to PDF Free | SnackPDF{%% endblock %%}
+{%% block og_description %%}Convert JPG, JPEG, PNG images to PDF online for free. Merge multiple images into one PDF. Fast, secure image to PDF converter.{%% endblock %%}
 
-<div class="main-container">
-    <!-- Left Sidebar - Clean for AdSense Auto-Placement -->
-    <div class="sidebar left-sidebar">
-        <!-- Google AdSense will auto-place ads here -->
-    </div>
-        <div class="sidebar-ad ad-style-2" onclick="window.open('https://example.com/batch-image-converter', '_blank')">
-            <h4>⚡ Batch Converter</h4>
-            <p>Convert hundreds of images</p>
-        </div>
-        <div class="sidebar-ad ad-style-3" onclick="window.open('https://example.com/photo-organizer', '_blank')">
-            <h4>📁 Photo Organizer</h4>
-            <p>Organize your images</p>
-        </div>
-    </div>
-    
-    <!-- Main Content Area -->
-    <div class="content-area">
-        <div class="tool-form-container">
-            <h3>Convert JPG to PDF</h3>
-            <p>Convert your JPG images to PDF documents with customizable settings.</p>
+{%% block twitter_url %%}https://www.snackpdf.com/jpg_to_pdf{%% endblock %%}
+{%% block twitter_title %%}JPG to PDF Converter - Convert Images to PDF Free | SnackPDF{%% endblock %%}
+{%% block twitter_description %%}Convert JPG, JPEG, PNG images to PDF online for free. Merge multiple images into one PDF. Fast, secure image to PDF converter.{%% endblock %%}
 
-            <form id="jpgToPdfForm" action="/jpg_to_pdf" method="post" enctype="multipart/form-data">
-                <div id="dragDropBox" class="drag-drop">
-                    <strong>Drag and drop JPG files here or click to upload</strong>
-                    <input type="file" id="fileInput" name="files" accept="image/jpeg,image/jpg" multiple style="display: none;" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="page_size">Page Size:</label>
-                    <select id="page_size" name="page_size">
-                        <option value="A4" selected>A4</option>
-                        <option value="Letter">Letter</option>
-                        <option value="Legal">Legal</option>
-                        <option value="A3">A3</option>
-                        <option value="A5">A5</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="orientation">Orientation:</label>
-                    <select id="orientation" name="orientation">
-                        <option value="portrait" selected>Portrait</option>
-                        <option value="landscape">Landscape</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="quality">Image Quality:</label>
-                    <select id="quality" name="quality">
-                        <option value="high" selected>High</option>
-                        <option value="medium">Medium</option>
-                        <option value="low">Low</option>
-                    </select>
-                </div>
-
-                <div class="action-buttons">
-                    <button type="submit">Convert to PDF</button>
-                    <button type="button" id="cancelButton">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Right Sidebar - Clean for AdSense Auto-Placement -->
-    <div class="sidebar right-sidebar">
-        <!-- Google AdSense will auto-place ads here -->
-    </div>
-</div>
-
-<script>
-    const dragDropBox = document.getElementById('dragDropBox');
-    const fileInput = document.getElementById('fileInput');
-
-    dragDropBox.addEventListener('click', function () {
-        fileInput.click();
-    });
-
-    dragDropBox.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#2196F3';
-    });
-
-    dragDropBox.addEventListener('dragleave', function () {
-        dragDropBox.style.borderColor = '#d1d5db';
-    });
-
-    dragDropBox.addEventListener('drop', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#d1d5db';
-        handleFileUpload(e.dataTransfer.files);
-    });
-
-    fileInput.addEventListener('change', function () {
-        if (fileInput.files.length) {
-            handleFileUpload(fileInput.files);
-        }
-    });
-
-    function handleFileUpload(files) {
-        if (files.length > 0) {
-            const validFiles = Array.from(files).filter(file => 
-                file.type === 'image/jpeg' || file.type === 'image/jpg'
-            );
-            
-            if (validFiles.length > 0) {
-                dragDropBox.querySelector('strong').textContent = 
-                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} JPG files selected`;
-            } else {
-                alert('Please upload valid JPG files.');
-            }
-        }
+{%% block structured_data %%}
+{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "JPG to PDF Converter - Convert Images to PDF Free",
+    "url": "https://www.snackpdf.com/jpg_to_pdf",
+    "description": "Convert JPG, JPEG, PNG images to PDF online for free. Merge multiple images into one PDF. Fast, secure image to PDF converter.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "SnackPDF",
+        "url": "https://www.snackpdf.com"
     }
+}
+{%% endblock %%}
 
-    document.getElementById('cancelButton').addEventListener('click', function() {
-        fileInput.value = '';
-        dragDropBox.querySelector('strong').textContent = 'Drag and drop JPG files here or click to upload';
-        document.getElementById('page_size').value = 'A4';
-        document.getElementById('orientation').value = 'portrait';
-        document.getElementById('quality').value = 'high';
-    });
-</script>
+{%% block content %%}
+<div class="tool-form-container">
+    <h1>JPG to PDF Converter - Convert Images to PDF Free</h1>
+    <p>Convert JPG, JPEG, PNG images to PDF online for free. Merge multiple images into one PDF. Fast, secure image to PDF converter.</p>
+    
+    <div class="drag-drop">
+        <strong>Select or drag and drop your files here</strong>
+    </div>
+    
+    <div class="action-buttons">
+        <button type="submit">Process File</button>
+        <button type="button">Clear</button>
+    </div>
+</div>
 
-</body>
-</html>
+<!-- FAQ Section for SEO -->
+<div class="faq-section" style="max-width: 800px; margin: 40px auto; padding: 20px;">
+    <h2>Frequently Asked Questions - JPG to PDF Conversion</h2>
+
+    <div class="faq-item" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+        <h3 style="color: #1f2937; font-size: 18px;">What image formats can I convert to PDF?</h3>
+        <p>You can convert JPG, JPEG, PNG, GIF, BMP, and TIFF images to PDF. Our tool supports all common image formats with high-quality conversion.</p>
+    </div>
+
+    <div class="faq-item" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+        <h3 style="color: #1f2937; font-size: 18px;">Can I convert multiple images to one PDF?</h3>
+        <p>Yes, you can upload multiple images and they will be combined into a single PDF document. Each image becomes a separate page in the PDF.</p>
+    </div>
+
+    <div class="faq-item" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+        <h3 style="color: #1f2937; font-size: 18px;">Will the image quality be preserved?</h3>
+        <p>Absolutely! Our conversion process maintains the original image quality and resolution. The PDF will contain high-quality versions of your images.</p>
+    </div>
+
+    <div class="faq-item" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+        <h3 style="color: #1f2937; font-size: 18px;">Can I adjust the page size and orientation?</h3>
+        <p>Yes, you can choose from standard page sizes (A4, Letter, etc.) and set orientation (portrait or landscape) to fit your images perfectly.</p>
+    </div>
+
+    <div class="faq-item" style="margin-bottom: 20px;">
+        <h3 style="color: #1f2937; font-size: 18px;">Is there a limit on image file size?</h3>
+        <p>Each image can be up to 25MB in size. You can convert up to 50 images at once, making it perfect for photo albums and document scanning.</p>
+    </div>
+</div>
+{%% endblock %%}

@@ -1,112 +1,53 @@
-{% extends "base.html" %}
+{%% extends "base.html" %%}
 
-{% block title %}SnackPDF - JPG to PDF{% endblock %}
+{%% block title %%}JPG to PDF Converter - Convert Images to PDF Free | SnackPDF{%% endblock %%}
+{%% block meta_title %%}JPG to PDF Converter - Convert Images to PDF Free | SnackPDF{%% endblock %%}
+{%% block meta_description %%}Convert JPG, JPEG, PNG images to PDF online for free. Merge multiple images into one PDF. Fast, secure image to PDF converter.{%% endblock %%}
+{%% block meta_keywords %%}JPG to PDF, image to PDF, JPEG to PDF, PNG to PDF, convert images to PDF, photo to PDF{%% endblock %%}
 
-{% block page_title %}Convert JPG to PDF{% endblock %}
+{%% block canonical_url %%}https://www.snackpdf.com/jpg_to_pdf{%% endblock %%}
+{%% block og_url %%}https://www.snackpdf.com/jpg_to_pdf{%% endblock %%}
+{%% block og_title %%}JPG to PDF Converter - Convert Images to PDF Free | SnackPDF{%% endblock %%}
+{%% block og_description %%}Convert JPG, JPEG, PNG images to PDF online for free. Merge multiple images into one PDF. Fast, secure image to PDF converter.{%% endblock %%}
 
-{% block left_sidebar %}
-<!-- Clean for AdSense auto-placement -->
-{% endblock %}
+{%% block twitter_url %%}https://www.snackpdf.com/jpg_to_pdf{%% endblock %%}
+{%% block twitter_title %%}JPG to PDF Converter - Convert Images to PDF Free | SnackPDF{%% endblock %%}
+{%% block twitter_description %%}Convert JPG, JPEG, PNG images to PDF online for free. Merge multiple images into one PDF. Fast, secure image to PDF converter.{%% endblock %%}
 
-{% block tool_content %}
-<p>Convert your JPG images to PDF documents with customizable settings.</p>
-
-<form id="jpgToPdfForm" action="/jpg_to_pdf" method="post" enctype="multipart/form-data">
-    <div id="dragDropBox" class="drag-drop">
-        <strong>Drag and drop JPG files here or click to upload</strong>
-        <input type="file" id="fileInput" name="files" accept="image/jpeg,image/jpg" multiple style="display: none;" required>
-    </div>
-
-    <div class="form-group">
-        <label for="page_size">Page Size:</label>
-        <select id="page_size" name="page_size">
-            <option value="A4" selected>A4</option>
-            <option value="Letter">Letter</option>
-            <option value="Legal">Legal</option>
-            <option value="A3">A3</option>
-            <option value="A5">A5</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="orientation">Orientation:</label>
-        <select id="orientation" name="orientation">
-            <option value="portrait" selected>Portrait</option>
-            <option value="landscape">Landscape</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="quality">Image Quality:</label>
-        <select id="quality" name="quality">
-            <option value="high" selected>High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
-        </select>
-    </div>
-
-    <div class="action-buttons">
-        <button type="submit">Convert to PDF</button>
-        <button type="button" id="cancelButton">Cancel</button>
-    </div>
-</form>
-{% endblock %}
-
-{% block right_sidebar %}
-<!-- Clean for AdSense auto-placement -->
-{% endblock %}
-
-{% block scripts %}
-<script>
-    const dragDropBox = document.getElementById('dragDropBox');
-    const fileInput = document.getElementById('fileInput');
-
-    dragDropBox.addEventListener('click', function () {
-        fileInput.click();
-    });
-
-    dragDropBox.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#2196F3';
-    });
-
-    dragDropBox.addEventListener('dragleave', function () {
-        dragDropBox.style.borderColor = '#d1d5db';
-    });
-
-    dragDropBox.addEventListener('drop', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#d1d5db';
-        handleFileUpload(e.dataTransfer.files);
-    });
-
-    fileInput.addEventListener('change', function () {
-        if (fileInput.files.length) {
-            handleFileUpload(fileInput.files);
-        }
-    });
-
-    function handleFileUpload(files) {
-        if (files.length > 0) {
-            const validFiles = Array.from(files).filter(file => 
-                file.type === 'image/jpeg' || file.type === 'image/jpg'
-            );
-            
-            if (validFiles.length > 0) {
-                dragDropBox.querySelector('strong').textContent = 
-                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} JPG files selected`;
-            } else {
-                alert('Please upload valid JPG files.');
-            }
-        }
+{%% block structured_data %%}
+{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "JPG to PDF Converter - Convert Images to PDF Free",
+    "url": "https://www.snackpdf.com/jpg_to_pdf",
+    "description": "Convert JPG, JPEG, PNG images to PDF online for free. Merge multiple images into one PDF. Fast, secure image to PDF converter.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "SnackPDF",
+        "url": "https://www.snackpdf.com"
     }
+}
+{%% endblock %%}
 
-    document.getElementById('cancelButton').addEventListener('click', function() {
-        fileInput.value = '';
-        dragDropBox.querySelector('strong').textContent = 'Drag and drop JPG files here or click to upload';
-        document.getElementById('page_size').value = 'A4';
-        document.getElementById('orientation').value = 'portrait';
-        document.getElementById('quality').value = 'high';
-    });
-</script>
-{% endblock %}
+{%% block content %%}
+<div class="tool-form-container">
+    <h1>JPG to PDF Converter - Convert Images to PDF Free</h1>
+    <p>Convert JPG, JPEG, PNG images to PDF online for free. Merge multiple images into one PDF. Fast, secure image to PDF converter.</p>
+    
+    <div class="drag-drop">
+        <strong>Select or drag and drop your files here</strong>
+    </div>
+    
+    <div class="action-buttons">
+        <button type="submit">Process File</button>
+        <button type="button">Clear</button>
+    </div>
+</div>
+{%% endblock %%}

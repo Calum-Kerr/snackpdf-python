@@ -36,8 +36,13 @@
     <meta name="msapplication-TileColor" content="#667eea">
     <meta name="application-name" content="SnackPDF">
 
-    <!-- Fonts -->
+    <!-- Fonts with preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="//pagead2.googlesyndication.com">
 
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3309044253592353"
@@ -85,6 +90,20 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        /* Performance optimizations */
+        img {
+            max-width: 100%;
+            height: auto;
+            loading: lazy;
+        }
+
+        /* Reduce repaints and reflows */
+        .tool-form-container,
+        .sidebar-ad,
+        .navbar ul li ul {
+            will-change: transform;
         }
 
         body {
@@ -332,6 +351,8 @@
             display: block;
             margin-bottom: 16px;
             opacity: 0.6;
+            role: 'img';
+            aria-label: 'File upload icon';
         }
 
         .drag-drop:hover {
@@ -500,6 +521,58 @@
             background: linear-gradient(135deg, #43e97b, #38f9d7);
         }
         
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 12px 20px;
+            margin: 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+        }
+
+        .breadcrumb-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .breadcrumb ol {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .breadcrumb li {
+            display: flex;
+            align-items: center;
+        }
+
+        .breadcrumb li:not(:last-child)::after {
+            content: '›';
+            margin: 0 8px;
+            color: #718096;
+            font-weight: bold;
+        }
+
+        .breadcrumb a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .breadcrumb .current {
+            color: #1a202c;
+            font-weight: 600;
+        }
+
         /* Responsive Design */
         @media (max-width: 1200px) {
             .main-container {
@@ -656,6 +729,36 @@
             </li>
         </ul>
     </div>
+
+    <!-- Breadcrumb Navigation -->
+    {% block breadcrumb %}
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+        <div class="breadcrumb-container">
+            <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    <a href="/" itemprop="item">
+                        <span itemprop="name">Home</span>
+                    </a>
+                    <meta itemprop="position" content="1" />
+                </li>
+                {% if breadcrumb_items %}
+                    {% for item in breadcrumb_items %}
+                    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                        {% if item.url %}
+                            <a href="{{ item.url }}" itemprop="item">
+                                <span itemprop="name">{{ item.name }}</span>
+                            </a>
+                        {% else %}
+                            <span class="current" itemprop="name">{{ item.name }}</span>
+                        {% endif %}
+                        <meta itemprop="position" content="{{ loop.index + 1 }}" />
+                    </li>
+                    {% endfor %}
+                {% endif %}
+            </ol>
+        </div>
+    </nav>
+    {% endblock %}
 
 <div class="main-container">
     <!-- Left Sidebar - Clean for AdSense Auto-Placement -->

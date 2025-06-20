@@ -1,456 +1,106 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SnackPDF</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3309044253592353"
-     crossorigin="anonymous"></script>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: #ffffff;
-            color: #1f2937;
-        }
-        header {
-            background-color: #1f2937;
-            padding: 20px;
-            color: white;
-            text-align: center;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 36px;
-        }
-        
-        /* Navigation Bar Styles */
-        .navbar {
-            background-color: #ffffff;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .navbar ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: space-around;
-        }
-        .navbar ul li {
-            position: relative;
-            font-size: 16px;
-        }
-        .navbar ul li a {
-            text-decoration: none;
-            color: #1f2937;
-            font-weight: 600;
-        }
-        .navbar ul li:hover ul {
-            display: block; /* Show dropdown on hover */
-            opacity: 1;
-            visibility: visible;
-        }
-        .navbar ul li ul {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 50%; /* Align dropdown with parent */
-            transform: translateX(-50%); /* Ensure it is centered under parent */
-            background-color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            list-style-type: none;
-            padding: 10px 0;
-            min-width: 150px;
-            transition: opacity 0.3s ease, visibility 0.3s ease; /* Smooth transition */
-            opacity: 0;
-            visibility: hidden;
-        }
-        .navbar ul li ul li {
-            padding: 10px 20px;
-        }
-        .navbar ul li ul li a {
-            color: #1f2937;
-            text-decoration: none;
-            display: block;
-            transition: background-color 0.2s ease; /* Smooth hover effect */
-        }
-        .navbar ul li ul li a:hover {
-            background-color: #f0f0f0; /* Subtle background color change on hover */
-        }
-        /* Flush Tool Card Styles */
-        .tool-form-container {
-            margin: 40px auto;
-            max-width: 600px;
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: none;
-        }
-        .tool-form-container h3 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        .tool-form-container p {
-            margin-bottom: 20px;
-            font-size: 14px;
-            color: #6b7280;
-        }
-        .drag-drop {
-            border: 2px dashed #d1d5db;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-        .drag-drop strong {
-            font-weight: 600;
-            display: block;
-            margin-top: 10px;
-        }
-        select {
-            width: 100%;
-            padding: 10px;
-            font-size: 14px;
-            border-radius: 5px;
-            border: 1px solid #d1d5db;
-            margin-bottom: 20px;
-        }
-        .action-buttons {
-            display: flex;
-            justify-content: space-between;
-        }
-        .action-buttons button {
-            background-color: #1f2937;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        .action-buttons button:hover {
-            background-color: #4b5563;
-        }
+{%% extends "base.html" %%}
 
-        /* Main Layout with Sidebars */
-        .main-container {
-            display: flex;
-            max-width: 1400px;
-            margin: 0 auto;
-            gap: 20px;
-            padding: 20px;
-        }
+{%% block title %%}Compress PDF Online Free - Reduce PDF File Size | SnackPDF{%% endblock %%}
+{%% block meta_title %%}Compress PDF Online Free - Reduce PDF File Size | SnackPDF{%% endblock %%}
+{%% block meta_description %%}Compress PDF files online for free. Reduce PDF file size without losing quality. Fast, secure, and easy PDF compression tool. No registration required.{%% endblock %%}
+{%% block meta_keywords %%}compress PDF, reduce PDF size, PDF compressor, shrink PDF, PDF file size reducer, online PDF compression{%% endblock %%}
 
-        .content-area {
-            flex: 1;
-            min-width: 0;
-        }
+{%% block canonical_url %%}https://www.snackpdf.com/compress{%% endblock %%}
+{%% block og_url %%}https://www.snackpdf.com/compress{%% endblock %%}
+{%% block og_title %%}Compress PDF Online Free - Reduce PDF File Size | SnackPDF{%% endblock %%}
+{%% block og_description %%}Compress PDF files online for free. Reduce PDF file size without losing quality. Fast, secure, and easy PDF compression tool. No registration required.{%% endblock %%}
 
-        .sidebar {
-            width: 160px;
-            flex-shrink: 0;
-        }
+{%% block twitter_url %%}https://www.snackpdf.com/compress{%% endblock %%}
+{%% block twitter_title %%}Compress PDF Online Free - Reduce PDF File Size | SnackPDF{%% endblock %%}
+{%% block twitter_description %%}Compress PDF files online for free. Reduce PDF file size without losing quality. Fast, secure, and easy PDF compression tool. No registration required.{%% endblock %%}
 
-        .left-sidebar {
-            order: -1;
-        }
-
-        .right-sidebar {
-            order: 1;
-        }
-
-        /* Sidebar Banner Ad Styles */
-        .sidebar-ad {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            font-size: 12px;
-        }
-
-        .sidebar-ad:hover {
-            transform: translateY(-2px);
-        }
-
-        .sidebar-ad h4 {
-            margin: 0 0 8px 0;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .sidebar-ad p {
-            margin: 0;
-            font-size: 11px;
-            opacity: 0.9;
-            line-height: 1.3;
-        }
-
-        .sidebar-ad.ad-style-2 {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .sidebar-ad.ad-style-3 {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-
-        .sidebar-ad.ad-style-4 {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .main-container {
-                flex-direction: column;
-                padding: 10px;
-            }
-
-            .sidebar {
-                width: 100%;
-                order: 0;
-            }
-
-            .left-sidebar, .right-sidebar {
-                display: flex;
-                gap: 10px;
-                overflow-x: auto;
-            }
-
-            .sidebar-ad {
-                min-width: 140px;
-                flex-shrink: 0;
-            }
-        }
-    </style>
-</head>
-<body>
-
-<header>
-    <h1><a href="{{ url_for('index') }}" style="text-decoration: none; color: inherit;">SnackPDF</a></h1>
-</header>
-
-<!-- Navigation Bar -->
-<div class="navbar">
-    <ul>
-        <li><a href="#">OPTIMISE</a>
-            <ul>
-                <li><a href="{{ url_for('compress') }}">Compress</a></li>
-                <li><a href="#">Repair</a></li>
-                <li><a href="#">OCR</a></li>
-            </ul>
-        </li>
-        <li><a href="#">CONVERT TO PDF</a>
-            <ul>
-                <li><a href="#">JPG to PDF</a></li>
-                <li><a href="#">Word to PDF</a></li>
-                <li><a href="#">PowerPoint to PDF</a></li>
-                <li><a href="#">Excel to PDF</a></li>
-                <li><a href="#">HTML to PDF</a></li>
-                <li><a href="#">Zip of Images to PDF</a></li>
-            </ul>
-        </li>
-        <li><a href="#">CONVERT FROM PDF</a>
-            <ul>
-                <li><a href="{{ url_for('pdf_to_jpg') }}">PDF to JPG</a></li>
-                <li><a href="{{ url_for('pdf_to_panoramic') }}">PDF to Panoramic</a></li>
-                <li><a href="{{ url_for('word') }}">PDF to Word</a></li>
-                <li><a href="#">PDF to PowerPoint</a></li>
-                <li><a href="#">PDF to Excel</a></li>
-                <li><a href="#">PDF to PDF/A</a></li>
-            </ul>
-        </li>
-        <li><a href="#">ORGANISE</a>
-            <ul>
-                <li><a href="{{ url_for('merge') }}">Merge</a></li>
-                <li><a href="{{ url_for('split') }}">Split</a></li>
-                <li><a href="{{ url_for('remove') }}">Remove</a></li>
-                <li><a href="{{ url_for('extract') }}">Extract</a></li>
-                <li><a href="{{ url_for('sort') }}">Sort</a></li>
-                <li><a href="{{ url_for('rotate') }}">Rotate</a></li>
-            </ul>
-        </li>
-        <li><a href="#">SECURITY</a>
-            <ul>
-                <li><a href="#">Unlock</a></li>
-                <li><a href="#">Protect</a></li>
-                <li><a href="#">Sign</a></li>
-                <li><a href="#">Compare</a></li>
-                <li><a href="#">Redact</a></li>
-                <li><a href="#">Flatten</a></li>
-            </ul>
-        </li>
-        <li><a href="#">EDIT</a>
-            <ul>
-                <li><a href="#">Page Numbers</a></li>
-                <li><a href="#">Add Watermark</a></li>
-                <li><a href="#">Edit Content</a></li>
-            </ul>
-        </li>
-    </ul>
-</div>
-
-<div class="main-container">
-    <!-- Left Sidebar - Clean for AdSense Auto-Placement -->
-    <div class="sidebar left-sidebar">
-        <!-- Google AdSense will auto-place ads here -->
-    </div>
-
-    <!-- Main Content Area -->
-    <div class="content-area">
-        <!-- Flush Tool Card -->
-        <div class="tool-form-container">
-    <h3>Compress PDF</h3>
-    <p>Reduce the size of your PDF with customisable compression settings.</p>
-
-    <form id="compressForm" enctype="multipart/form-data">
-        <div id="dragDropBox" class="drag-drop">
-            <strong>Drag and drop PDF files here or click to upload</strong>
-            <input type="file" id="fileInput" accept="application/pdf" multiple style="display: none;">
-        </div>
-
-        <!-- Compression Level Selection -->
-        <select name="compression_level" id="compression_level">
-            <option value="low">Low Compression (High Quality)</option>
-            <option value="medium" selected>Medium Compression</option>
-            <option value="high">High Compression (Low Quality)</option>
-        </select>
-
-        <!-- Retain Metadata -->
-        <select name="retain_metadata" id="retain_metadata">
-            <option value="true" selected>Retain Metadata</option>
-            <option value="false">Remove Metadata</option>
-        </select>
-
-        <!-- Lossless Compression -->
-        <select name="lossless" id="lossless">
-            <option value="false" selected>Standard Compression</option>
-            <option value="true">Lossless Compression</option>
-        </select>
-
-        <!-- Resolution Selection -->
-        <select name="resolution" id="resolution">
-            <option value="" selected>No Downscaling</option>
-            <option value="72">72 DPI</option>
-            <option value="150">150 DPI</option>
-            <option value="300">300 DPI</option>
-        </select>
-
-        <!-- Fast Mode -->
-        <select name="fast_mode" id="fast_mode">
-            <option value="false" selected>Standard Mode</option>
-            <option value="true">Fast Mode (Lower Quality)</option>
-        </select>
-
-        <!-- Action Buttons -->
-        <div class="action-buttons">
-            <button type="button" id="compressButton">Compress</button>
-            <button type="button" id="cancelButton">Cancel</button>
-        </div>
-    </form>
-        </div>
-    </div>
-
-    <!-- Right Sidebar - Clean for AdSense Auto-Placement -->
-    <div class="sidebar right-sidebar">
-        <!-- Google AdSense will auto-place ads here -->
-    </div>
-</div>
-
-<script>
-    const dragDropBox = document.getElementById('dragDropBox');
-    const fileInput = document.getElementById('fileInput');
-    let selectedFiles = [];
-
-    dragDropBox.addEventListener('click', function () {
-        fileInput.click();
-    });
-
-    dragDropBox.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        dragDropBox.classList.add('dragover');
-    });
-
-    dragDropBox.addEventListener('dragleave', function () {
-        dragDropBox.classList.remove('dragover');
-    });
-
-    dragDropBox.addEventListener('drop', function (e) {
-        e.preventDefault();
-        dragDropBox.classList.remove('dragover');
-        handleFileUpload(e.dataTransfer.files);
-    });
-
-    fileInput.addEventListener('change', function () {
-        handleFileUpload(fileInput.files);
-    });
-
-    function handleFileUpload(files) {
-        if (files.length > 0) {
-            selectedFiles = files;
-            const fileNames = Array.from(files).map(file => file.name).join(', ');
-            dragDropBox.querySelector('strong').textContent = fileNames;
-        } else {
-            alert('Please upload valid PDF files.');
-        }
+{%% block structured_data %%}
+{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Compress PDF Online Free - Reduce PDF File Size",
+    "url": "https://www.snackpdf.com/compress",
+    "description": "Compress PDF files online for free. Reduce PDF file size without losing quality. Fast, secure, and easy PDF compression tool. No registration required.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "SnackPDF",
+        "url": "https://www.snackpdf.com"
     }
+}
+{%% endblock %%}
 
-    document.getElementById('compressButton').addEventListener('click', function() {
-        if (selectedFiles.length === 0) {
-            alert('Please upload at least one PDF file.');
-            return;
-        }
+{%% block content %%}
+<div class="tool-form-container">
+    <h1>Compress PDF Online Free - Reduce PDF File Size</h1>
+    <p>Compress PDF files online for free. Reduce PDF file size without losing quality. Fast, secure, and easy PDF compression tool. No registration required.</p>
+    
+    <div class="drag-drop">
+        <strong>Select or drag and drop your files here</strong>
+    </div>
+    
+    <div class="action-buttons">
+        <button type="submit">Process File</button>
+        <button type="button">Clear</button>
+    </div>
+</div>
 
-        const formData = new FormData();
-        formData.append('files', selectedFiles[0]);  // Handle one file for simplicity
-        formData.append('compression_level', document.getElementById('compression_level').value);
-        formData.append('retain_metadata', document.getElementById('retain_metadata').value);
-        formData.append('lossless', document.getElementById('lossless').value);
-        formData.append('resolution', document.getElementById('resolution').value);
-        formData.append('fast_mode', document.getElementById('fast_mode').value);
+<!-- FAQ Section for SEO -->
+<div class="faq-section" style="max-width: 800px; margin: 40px auto; padding: 20px;">
+    <h2>Frequently Asked Questions - PDF Compression</h2>
 
-        fetch('{{ url_for("compress") }}', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.blob();
-            } else {
-                return response.json().then(errorData => {
-                    throw new Error(errorData.error);
-                });
-            }
-        })
-        .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            a.download = 'compressed_file.pdf'; // Or use the original filename
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-        })
-        .catch(error => console.error('Error:', error));
-    });
+    <div class="faq-item" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+        <h3 style="color: #1f2937; font-size: 18px;">How does PDF compression work?</h3>
+        <p>PDF compression reduces file size by optimizing images, removing unnecessary data, and using efficient encoding methods while maintaining document quality and readability.</p>
+    </div>
 
-    document.getElementById('cancelButton').addEventListener('click', function() {
-        selectedFiles = [];
-        dragDropBox.querySelector('strong').textContent = 'Drag and drop PDF files here or click to upload';
-        document.getElementById('compression_level').value = 'medium';
-        document.getElementById('retain_metadata').value = 'true';
-        document.getElementById('lossless').value = 'false';
-        document.getElementById('resolution').value = '';
-        document.getElementById('fast_mode').value = 'false';
-    });
-</script>
+    <div class="faq-item" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+        <h3 style="color: #1f2937; font-size: 18px;">Will compressing a PDF reduce quality?</h3>
+        <p>Our compression algorithm is designed to maintain visual quality while reducing file size. You can choose different compression levels based on your needs.</p>
+    </div>
 
-</body>
-</html>
+    <div class="faq-item" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+        <h3 style="color: #1f2937; font-size: 18px;">What's the maximum file size I can compress?</h3>
+        <p>You can compress PDF files up to 100MB in size. For larger files, consider splitting them first or contact us for enterprise solutions.</p>
+    </div>
+
+    <div class="faq-item" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+        <h3 style="color: #1f2937; font-size: 18px;">Is PDF compression safe and secure?</h3>
+        <p>Yes, all files are processed securely with SSL encryption. Your files are automatically deleted from our servers after processing for your privacy and security.</p>
+    </div>
+
+    <div class="faq-item" style="margin-bottom: 20px;">
+        <h3 style="color: #1f2937; font-size: 18px;">Can I compress multiple PDFs at once?</h3>
+        <p>Currently, you can compress one PDF at a time. For batch processing, consider our premium tools or process files individually for best results.</p>
+    </div>
+</div>
+
+<!-- Related Tools Section for Internal Linking -->
+<div class="related-tools" style="max-width: 800px; margin: 40px auto; padding: 20px; background: #f8fafc; border-radius: 12px;">
+    <h2 style="color: #1f2937; margin-bottom: 20px;">Related PDF Tools</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+        <a href="/merge" style="text-decoration: none; color: #667eea; padding: 15px; background: white; border-radius: 8px; border: 1px solid #e2e8f0; transition: all 0.2s;">
+            <strong>📄 Merge PDFs</strong><br>
+            <small style="color: #718096;">Combine multiple PDFs into one</small>
+        </a>
+        <a href="/split" style="text-decoration: none; color: #667eea; padding: 15px; background: white; border-radius: 8px; border: 1px solid #e2e8f0; transition: all 0.2s;">
+            <strong>✂️ Split PDF</strong><br>
+            <small style="color: #718096;">Extract pages from PDF</small>
+        </a>
+        <a href="/protect" style="text-decoration: none; color: #667eea; padding: 15px; background: white; border-radius: 8px; border: 1px solid #e2e8f0; transition: all 0.2s;">
+            <strong>🔒 Protect PDF</strong><br>
+            <small style="color: #718096;">Add password protection</small>
+        </a>
+        <a href="/pdf_to_jpg" style="text-decoration: none; color: #667eea; padding: 15px; background: white; border-radius: 8px; border: 1px solid #e2e8f0; transition: all 0.2s;">
+            <strong>🖼️ PDF to JPG</strong><br>
+            <small style="color: #718096;">Convert PDF to images</small>
+        </a>
+    </div>
+</div>
+{%% endblock %%}

@@ -1,0 +1,40 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://snackpdf.com/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+# Block access to admin or sensitive areas (if any in future)
+# User-agent: *
+# Disallow: /admin/
+# Disallow: /private/
+
+# Allow access to static resources
+Allow: /static/
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.gif$
+Allow: /*.svg$
+Allow: /*.ico$

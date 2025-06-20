@@ -1,5 +1,6 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, send_from_directory
 import traceback
+import os
 
 def create_app():
     app = Flask(__name__)
@@ -133,7 +134,14 @@ def create_app():
     def flatten():
         return render_template('flatten_new.html')
 
+    # SEO Routes
+    @app.route('/sitemap.xml')
+    def sitemap():
+        return send_from_directory('.', 'sitemap.xml', mimetype='application/xml')
 
+    @app.route('/robots.txt')
+    def robots():
+        return send_from_directory('.', 'robots.txt', mimetype='text/plain')
 
     @app.errorhandler(Exception)
     def handle_exception(e):

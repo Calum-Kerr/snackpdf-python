@@ -3,10 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}SnackPDF{% endblock %}</title>
+
+    <!-- Primary Meta Tags -->
+    <title>{% block title %}SnackPDF - Free PDF Tools{% endblock %}</title>
+    <meta name="title" content="{% block meta_title %}SnackPDF - Free PDF Tools{% endblock %}">
+    <meta name="description" content="{% block meta_description %}Free online PDF tools for compression, conversion, merging, splitting, and editing. Convert JPG to PDF, Word to PDF, compress PDFs, and more. No registration required.{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}PDF tools, PDF converter, compress PDF, merge PDF, split PDF, JPG to PDF, Word to PDF, PDF to Word, free PDF tools, online PDF editor{% endblock %}">
+    <meta name="author" content="SnackPDF">
+    <meta name="robots" content="index, follow">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{% block canonical_url %}https://snackpdf.com/{% endblock %}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{% block og_url %}https://snackpdf.com/{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}SnackPDF - Free PDF Tools{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Free online PDF tools for compression, conversion, merging, splitting, and editing. Convert JPG to PDF, Word to PDF, compress PDFs, and more.{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}https://snackpdf.com/static/og-image.png{% endblock %}">
+    <meta property="og:site_name" content="SnackPDF">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{% block twitter_url %}https://snackpdf.com/{% endblock %}">
+    <meta property="twitter:title" content="{% block twitter_title %}SnackPDF - Free PDF Tools{% endblock %}">
+    <meta property="twitter:description" content="{% block twitter_description %}Free online PDF tools for compression, conversion, merging, splitting, and editing. Convert JPG to PDF, Word to PDF, compress PDFs, and more.{% endblock %}">
+    <meta property="twitter:image" content="{% block twitter_image %}https://snackpdf.com/static/twitter-image.png{% endblock %}">
+
+    <!-- Additional SEO Meta Tags -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="msapplication-TileColor" content="#667eea">
+    <meta name="application-name" content="SnackPDF">
+
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3309044253592353"
      crossorigin="anonymous"></script>
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {% block structured_data %}
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "SnackPDF",
+        "url": "https://snackpdf.com",
+        "description": "Free online PDF tools for compression, conversion, merging, splitting, and editing. Convert JPG to PDF, Word to PDF, compress PDFs, and more.",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "SnackPDF",
+            "url": "https://snackpdf.com"
+        },
+        "featureList": [
+            "PDF Compression",
+            "PDF Conversion",
+            "PDF Merging",
+            "PDF Splitting",
+            "JPG to PDF",
+            "Word to PDF",
+            "PDF to Word",
+            "PDF Editing",
+            "PDF Security",
+            "PDF Organization"
+        ]
+    }
+    {% endblock %}
+    </script>
+
     <style>
         * {
             margin: 0;

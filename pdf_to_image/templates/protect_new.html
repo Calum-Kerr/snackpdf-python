@@ -221,6 +221,24 @@ document.addEventListener('DOMContentLoaded', function() {
         progressContainer.style.display = 'block';
         hideError();
 
+        // Set up download detection
+        const downloadTimer = setTimeout(() => {
+            // Hide progress after 10 seconds (fallback)
+            progressContainer.style.display = 'none';
+        }, 10000);
+
+        // Listen for page visibility change (when download completes)
+        const handleVisibilityChange = () => {
+            if (!document.hidden) {
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                    clearTimeout(downloadTimer);
+                    document.removeEventListener('visibilitychange', handleVisibilityChange);
+                }, 1000); // Small delay to ensure download started
+            }
+        };
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
         // Submit form normally for file download
         this.submit();
     });

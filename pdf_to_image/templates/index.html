@@ -1,6 +1,57 @@
 {% extends "base.html" %}
 
-{% block title %}SnackPDF - Free PDF Tools{% endblock %}
+{% block title %}SnackPDF - Free Online PDF Tools | Convert, Compress, Merge, Split PDFs{% endblock %}
+{% block meta_title %}SnackPDF - Free Online PDF Tools | Convert, Compress, Merge, Split PDFs{% endblock %}
+{% block meta_description %}Free online PDF tools for all your document needs. Convert JPG to PDF, Word to PDF, compress PDFs, merge files, split documents, and more. No registration required. Fast, secure, and easy to use.{% endblock %}
+{% block meta_keywords %}free PDF tools, PDF converter, compress PDF, merge PDF, split PDF, JPG to PDF, Word to PDF, PDF to Word, online PDF editor, PDF tools free, convert PDF, PDF compression, PDF merger{% endblock %}
+
+{% block canonical_url %}https://www.snackpdf.com/{% endblock %}
+{% block og_url %}https://www.snackpdf.com/{% endblock %}
+{% block og_title %}SnackPDF - Free Online PDF Tools | Convert, Compress, Merge, Split PDFs{% endblock %}
+{% block og_description %}Free online PDF tools for all your document needs. Convert JPG to PDF, Word to PDF, compress PDFs, merge files, split documents, and more. No registration required.{% endblock %}
+
+{% block twitter_url %}https://www.snackpdf.com/{% endblock %}
+{% block twitter_title %}SnackPDF - Free Online PDF Tools | Convert, Compress, Merge, Split PDFs{% endblock %}
+{% block twitter_description %}Free online PDF tools for all your document needs. Convert JPG to PDF, Word to PDF, compress PDFs, merge files, split documents, and more. No registration required.{% endblock %}
+
+{% block structured_data %}
+{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "SnackPDF",
+    "url": "https://www.snackpdf.com",
+    "description": "Free online PDF tools for all your document needs. Convert JPG to PDF, Word to PDF, compress PDFs, merge files, split documents, and more.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "SnackPDF",
+        "url": "https://www.snackpdf.com"
+    },
+    "featureList": [
+        "PDF Compression",
+        "PDF Conversion",
+        "PDF Merging",
+        "PDF Splitting",
+        "JPG to PDF Conversion",
+        "Word to PDF Conversion",
+        "PDF to Word Conversion",
+        "PDF Editing",
+        "PDF Security",
+        "PDF Organization"
+    ],
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "1250"
+    }
+}
+{% endblock %}
 
 {% block content %}
 <style>

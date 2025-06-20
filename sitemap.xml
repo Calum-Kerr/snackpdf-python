@@ -6,7 +6,7 @@
 
     <!-- Homepage -->
     <url>
-        <loc>https://snackpdf.com/</loc>
+        <loc>https://www.snackpdf.com/</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
@@ -14,19 +14,19 @@
 
     <!-- OPTIMISE Tools -->
     <url>
-        <loc>https://snackpdf.com/compress</loc>
+        <loc>https://www.snackpdf.com/compress</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/repair</loc>
+        <loc>https://www.snackpdf.com/repair</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/ocr</loc>
+        <loc>https://www.snackpdf.com/ocr</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
@@ -34,37 +34,37 @@
 
     <!-- CONVERT TO PDF Tools -->
     <url>
-        <loc>https://snackpdf.com/jpg_to_pdf</loc>
+        <loc>https://www.snackpdf.com/jpg_to_pdf</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/word_to_pdf</loc>
+        <loc>https://www.snackpdf.com/word_to_pdf</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/powerpoint_to_pdf</loc>
+        <loc>https://www.snackpdf.com/powerpoint_to_pdf</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/excel_to_pdf</loc>
+        <loc>https://www.snackpdf.com/excel_to_pdf</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/html_to_pdf</loc>
+        <loc>https://www.snackpdf.com/html_to_pdf</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/zip_to_pdf</loc>
+        <loc>https://www.snackpdf.com/zip_to_pdf</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
@@ -72,37 +72,37 @@
 
     <!-- CONVERT FROM PDF Tools -->
     <url>
-        <loc>https://snackpdf.com/pdf_to_jpg</loc>
+        <loc>https://www.snackpdf.com/pdf_to_jpg</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/pdf_to_panoramic</loc>
+        <loc>https://www.snackpdf.com/pdf_to_panoramic</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/word</loc>
+        <loc>https://www.snackpdf.com/word</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/powerpoint</loc>
+        <loc>https://www.snackpdf.com/powerpoint</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/pdf_to_excel</loc>
+        <loc>https://www.snackpdf.com/pdf_to_excel</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/pdf_to_pdfa</loc>
+        <loc>https://www.snackpdf.com/pdf_to_pdfa</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
@@ -110,37 +110,37 @@
 
     <!-- ORGANISE Tools -->
     <url>
-        <loc>https://snackpdf.com/merge</loc>
+        <loc>https://www.snackpdf.com/merge</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/split</loc>
+        <loc>https://www.snackpdf.com/split</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/remove</loc>
+        <loc>https://www.snackpdf.com/remove</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/extract</loc>
+        <loc>https://www.snackpdf.com/extract</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/sort</loc>
+        <loc>https://www.snackpdf.com/sort</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/rotate</loc>
+        <loc>https://www.snackpdf.com/rotate</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
@@ -148,37 +148,37 @@
 
     <!-- SECURITY Tools -->
     <url>
-        <loc>https://snackpdf.com/unlock</loc>
+        <loc>https://www.snackpdf.com/unlock</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/protect</loc>
+        <loc>https://www.snackpdf.com/protect</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/sign</loc>
+        <loc>https://www.snackpdf.com/sign</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/compare</loc>
+        <loc>https://www.snackpdf.com/compare</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/redact</loc>
+        <loc>https://www.snackpdf.com/redact</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/flatten</loc>
+        <loc>https://www.snackpdf.com/flatten</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
@@ -186,19 +186,19 @@
 
     <!-- EDIT Tools -->
     <url>
-        <loc>https://snackpdf.com/page_numbers</loc>
+        <loc>https://www.snackpdf.com/page_numbers</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/watermark</loc>
+        <loc>https://www.snackpdf.com/watermark</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://snackpdf.com/edit_content</loc>
+        <loc>https://www.snackpdf.com/edit_content</loc>
         <lastmod>2025-01-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>

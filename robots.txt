@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://snackpdf.com/sitemap.xml
+Sitemap: https://www.snackpdf.com/sitemap.xml
 
 # Crawl-delay for respectful crawling
 Crawl-delay: 1

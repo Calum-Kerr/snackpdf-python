@@ -387,3 +387,181 @@ def protect_pdf():
     except Exception as e:
         logging.error(f"Error in PDF protection: {str(e)}")
         return jsonify({"error": f"Protection failed: {str(e)}"}), 500
+
+@basic_operations_bp.route('/pdf_to_panoramic', methods=['POST'])
+def pdf_to_panoramic():
+    """Convert PDF pages to panoramic image using Ghostscript"""
+    try:
+        # Get file from request
+        if 'file' not in request.files:
+            return jsonify({"error": "No file part in request"}), 400
+
+        file = request.files['file']
+
+        # Validate file
+        is_valid, message = validate_pdf_file(file)
+        if not is_valid:
+            return jsonify({"error": message}), 400
+
+        # Get form parameters
+        stitch_direction = request.form.get('stitch_direction', 'horizontal')
+        pages = request.form.get('pages', 'all')
+        page_range = request.form.get('page_range', '')
+        output_format = request.form.get('output_format', 'jpg')
+        quality = request.form.get('quality', 'high')
+        spacing = request.form.get('spacing', 'none')
+
+        # Validate parameters
+        if stitch_direction not in ['horizontal', 'vertical']:
+            stitch_direction = 'horizontal'
+
+        if output_format not in ['jpg', 'png', 'webp']:
+            output_format = 'jpg'
+
+        if quality not in ['high', 'medium', 'low']:
+            quality = 'high'
+
+        # Set DPI based on quality
+        dpi_map = {'high': 300, 'medium': 150, 'low': 72}
+        dpi = dpi_map[quality]
+
+        # Create secure filenames
+        original_filename = secure_filename(file.filename)
+        unique_id = str(uuid.uuid4())[:8]
+        input_filename = f"{unique_id}_{original_filename}"
+
+        input_path = os.path.join(STATIC_DIR, input_filename)
+
+        # Save uploaded file
+        file.save(input_path)
+        logging.debug(f"File saved to: {input_path}")
+
+        # Get total pages using PyPDF2
+        with open(input_path, 'rb') as pdf_file:
+            reader = PyPDF2.PdfReader(pdf_file)
+            total_pages = len(reader.pages)
+
+        # Determine which pages to process
+        page_list = []
+        if pages == 'all':
+            page_list = list(range(1, total_pages + 1))
+        elif pages == 'odd':
+            page_list = list(range(1, total_pages + 1, 2))
+        elif pages == 'even':
+            page_list = list(range(2, total_pages + 1, 2))
+        elif pages == 'range' and page_range:
+            # Parse page range (e.g., "1-3,5,7-10")
+            for part in page_range.split(','):
+                part = part.strip()
+                if '-' in part:
+                    start, end = map(int, part.split('-'))
+                    page_list.extend(range(start, min(end + 1, total_pages + 1)))
+                else:
+                    page_num = int(part)
+                    if 1 <= page_num <= total_pages:
+                        page_list.append(page_num)
+
+        if not page_list:
+            page_list = [1]  # Default to first page
+
+        # Convert pages to images using Ghostscript
+        temp_images = []
+        for page_num in page_list:
+            temp_image = os.path.join(STATIC_DIR, f"{unique_id}_page_{page_num}.png")
+
+            # Ghostscript command to convert specific page to PNG
+            gs_cmd = [
+                'gs',
+                '-dNOPAUSE',
+                '-dBATCH',
+                '-dSAFER',
+                '-sDEVICE=png16m',
+                f'-r{dpi}',
+                f'-dFirstPage={page_num}',
+                f'-dLastPage={page_num}',
+                f'-sOutputFile={temp_image}',
+                input_path
+            ]
+
+            result = subprocess.run(gs_cmd, capture_output=True, text=True)
+            if result.returncode != 0:
+                logging.error(f"Ghostscript error: {result.stderr}")
+                # Cleanup and return error
+                try:
+                    os.remove(input_path)
+                except:
+                    pass
+                return jsonify({"error": "Failed to convert PDF pages to images"}), 500
+
+            temp_images.append(temp_image)
+
+        # Load images and create panoramic
+        from PIL import Image
+        images = []
+        for img_path in temp_images:
+            if os.path.exists(img_path):
+                images.append(Image.open(img_path))
+
+        if not images:
+            return jsonify({"error": "No images were generated"}), 500
+
+        # Calculate spacing
+        spacing_pixels = 0
+        if spacing == 'small':
+            spacing_pixels = 10
+        elif spacing == 'medium':
+            spacing_pixels = 20
+        elif spacing == 'large':
+            spacing_pixels = 40
+
+        # Create panoramic image
+        if stitch_direction == 'horizontal':
+            # Horizontal stitching (side by side)
+            total_width = sum(img.width for img in images) + spacing_pixels * (len(images) - 1)
+            max_height = max(img.height for img in images)
+            panoramic = Image.new('RGB', (total_width, max_height), 'white')
+
+            x_offset = 0
+            for img in images:
+                # Center vertically
+                y_offset = (max_height - img.height) // 2
+                panoramic.paste(img, (x_offset, y_offset))
+                x_offset += img.width + spacing_pixels
+        else:
+            # Vertical stitching (top to bottom)
+            max_width = max(img.width for img in images)
+            total_height = sum(img.height for img in images) + spacing_pixels * (len(images) - 1)
+            panoramic = Image.new('RGB', (max_width, total_height), 'white')
+
+            y_offset = 0
+            for img in images:
+                # Center horizontally
+                x_offset = (max_width - img.width) // 2
+                panoramic.paste(img, (x_offset, y_offset))
+                y_offset += img.height + spacing_pixels
+
+        # Save panoramic image
+        output_filename = f"panoramic_{unique_id}_{original_filename.rsplit('.', 1)[0]}.{output_format}"
+        output_path = os.path.join(STATIC_DIR, output_filename)
+
+        if output_format == 'jpg':
+            panoramic.save(output_path, 'JPEG', quality=95)
+        elif output_format == 'png':
+            panoramic.save(output_path, 'PNG')
+        elif output_format == 'webp':
+            panoramic.save(output_path, 'WebP', quality=95)
+
+        # Clean up temporary files
+        try:
+            os.remove(input_path)
+            for img_path in temp_images:
+                if os.path.exists(img_path):
+                    os.remove(img_path)
+        except:
+            pass
+
+        return send_file(output_path, as_attachment=True, download_name=output_filename)
+
+    except Exception as e:
+        logging.error(f"Error in PDF to panoramic conversion: {str(e)}")
+        return jsonify({"error": f"Panoramic conversion failed: {str(e)}"}), 500

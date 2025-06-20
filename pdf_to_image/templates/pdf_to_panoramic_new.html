@@ -73,6 +73,19 @@
         <button type="button" id="cancelButton">Cancel</button>
     </div>
 </form>
+
+<!-- Progress indicator -->
+<div id="progressContainer" style="display: none; margin-top: 20px;">
+    <div class="progress-bar">
+        <div class="progress-fill"></div>
+    </div>
+    <p>Creating panoramic image...</p>
+</div>
+
+<!-- Error message container -->
+<div id="errorContainer" style="display: none; margin-top: 20px;">
+    <div class="error-message" id="errorMessage"></div>
+</div>
 {%endblock %}
 
 {%block right_sidebar %}
@@ -80,10 +93,45 @@
 {%endblock %}
 
 {%block scripts %}
+<style>
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    width: 0%;
+    transition: width 0.3s ease;
+    animation: progress-animation 3s ease-in-out forwards;
+}
+
+@keyframes progress-animation {
+    0% { width: 0%; }
+    100% { width: 100%; }
+}
+
+.error-message {
+    background-color: #fee;
+    color: #c33;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #fcc;
+}
+</style>
 <script>
     const dragDropBox = document.getElementById('dragDropBox');
     const fileInput = document.getElementById('fileInput');
     const pagesSelect = document.getElementById('pages');
+    const pdfToPanoramicForm = document.getElementById('pdfToPanoramicForm');
+    const progressContainer = document.getElementById('progressContainer');
+    const errorContainer = document.getElementById('errorContainer');
+    const errorMessage = document.getElementById('errorMessage');
 
     dragDropBox.addEventListener('click', function () {
         fileInput.click();
@@ -120,11 +168,56 @@
             const file = files[0];
             if (file.type === 'application/pdf') {
                 dragDropBox.querySelector('strong').textContent = file.name;
+                hideError();
             } else {
-                alert('Please upload a valid PDF file.');
+                showError('Please upload a valid PDF file.');
             }
         }
     }
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorContainer.style.display = 'block';
+    }
+
+    function hideError() {
+        errorContainer.style.display = 'none';
+    }
+
+    // Form submission
+    pdfToPanoramicForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (!fileInput.files.length) {
+            showError('Please select a PDF file.');
+            return;
+        }
+
+        // Show progress
+        progressContainer.style.display = 'block';
+        hideError();
+
+        // Set up download detection
+        const downloadTimer = setTimeout(() => {
+            // Hide progress after 10 seconds (fallback)
+            progressContainer.style.display = 'none';
+        }, 10000);
+
+        // Listen for page visibility change (when download completes)
+        const handleVisibilityChange = () => {
+            if (!document.hidden) {
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                    clearTimeout(downloadTimer);
+                    document.removeEventListener('visibilitychange', handleVisibilityChange);
+                }, 1000); // Small delay to ensure download started
+            }
+        };
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        // Submit form normally for file download
+        this.submit();
+    });
 
     document.getElementById('cancelButton').addEventListener('click', function() {
         fileInput.value = '';
@@ -136,6 +229,8 @@
         document.getElementById('quality').value = 'high';
         document.getElementById('spacing').value = 'none';
         document.getElementById('page_range_input').style.display = 'none';
+        hideError();
+        progressContainer.style.display = 'none';
     });
 </script>
 {%endblock %}

@@ -39,14 +39,225 @@
 <div class="tool-form-container">
     <h1>Merge PDF Files Online Free - Combine PDFs</h1>
     <p>Merge multiple PDF files into one document online for free. Combine PDFs quickly and securely. No software installation required.</p>
-    
-    <div class="drag-drop">
-        <strong>Select or drag and drop your files here</strong>
+
+    <form id="mergeForm" action="/merge" method="post" enctype="multipart/form-data">
+        <div id="dragDropBox" class="drag-drop">
+            <strong>Drag and drop PDF files here or click to upload (multiple files)</strong>
+            <input type="file" id="fileInput" name="files" accept=".pdf" multiple style="display: none;" required>
+        </div>
+
+        <div class="form-group">
+            <label for="merge_order">Merge Order:</label>
+            <select id="merge_order" name="merge_order">
+                <option value="upload_order" selected>Upload Order</option>
+                <option value="alphabetical">Alphabetical</option>
+                <option value="size_ascending">Size (Small to Large)</option>
+                <option value="size_descending">Size (Large to Small)</option>
+                <option value="custom">Custom Order</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="output_filename">Output Filename:</label>
+            <input type="text" id="output_filename" name="output_filename" placeholder="merged_document.pdf" value="merged_document.pdf">
+        </div>
+
+        <div class="form-group">
+            <label for="bookmark_options">Bookmark Options:</label>
+            <select id="bookmark_options" name="bookmark_options">
+                <option value="none" selected>No Bookmarks</option>
+                <option value="filename">Use Filenames as Bookmarks</option>
+                <option value="preserve">Preserve Existing Bookmarks</option>
+            </select>
+        </div>
+
+        <div class="action-buttons">
+            <button type="submit">Merge PDFs</button>
+            <button type="button" id="cancelButton">Clear</button>
+        </div>
+    </form>
+
+    <div id="fileList" style="display: none;">
+        <h3>Selected Files:</h3>
+        <ul id="selectedFiles"></ul>
     </div>
-    
-    <div class="action-buttons">
-        <button type="submit">Process File</button>
-        <button type="button">Clear</button>
+
+    <div id="progressContainer" style="display: none;">
+        <div class="progress-bar">
+            <div id="progressBar" class="progress-fill"></div>
+        </div>
+        <p id="progressText">Merging PDF files...</p>
+    </div>
+
+    <div id="errorContainer" style="display: none;">
+        <div class="error-message" id="errorMessage"></div>
     </div>
 </div>
+
+<style>
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    width: 0%;
+    transition: width 0.3s ease;
+    animation: progress-animation 2s infinite;
+}
+
+@keyframes progress-animation {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    100% { width: 100%; }
+}
+
+.error-message {
+    background-color: #fed7d7;
+    color: #c53030;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border-left: 4px solid #e53e3e;
+    margin-bottom: 16px;
+    font-weight: 500;
+}
+
+#progressContainer, #fileList {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f7fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+#progressText {
+    text-align: center;
+    color: #4a5568;
+    font-weight: 500;
+    margin: 0;
+}
+
+#selectedFiles {
+    list-style: none;
+    padding: 0;
+}
+
+#selectedFiles li {
+    padding: 8px;
+    margin: 4px 0;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+    const mergeForm = document.getElementById('mergeForm');
+    const progressContainer = document.getElementById('progressContainer');
+    const errorContainer = document.getElementById('errorContainer');
+    const errorMessage = document.getElementById('errorMessage');
+    const fileList = document.getElementById('fileList');
+    const selectedFiles = document.getElementById('selectedFiles');
+
+    // Drag and drop functionality
+    dragDropBox.addEventListener('click', () => fileInput.click());
+
+    dragDropBox.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', () => {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const validFiles = Array.from(files).filter(file =>
+                file.type === 'application/pdf'
+            );
+
+            if (validFiles.length > 0) {
+                dragDropBox.querySelector('strong').textContent =
+                    `${validFiles.length} PDF file(s) selected`;
+
+                // Show file list
+                selectedFiles.innerHTML = '';
+                validFiles.forEach((file, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = `${index + 1}. ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                    selectedFiles.appendChild(li);
+                });
+                fileList.style.display = 'block';
+                hideError();
+            } else {
+                showError('Please upload valid PDF files.');
+            }
+        }
+    }
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorContainer.style.display = 'block';
+    }
+
+    function hideError() {
+        errorContainer.style.display = 'none';
+    }
+
+    // Form submission
+    mergeForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (!fileInput.files.length) {
+            showError('Please select at least 2 PDF files to merge.');
+            return;
+        }
+
+        if (fileInput.files.length < 2) {
+            showError('Please select at least 2 PDF files to merge.');
+            return;
+        }
+
+        // Show progress
+        progressContainer.style.display = 'block';
+        hideError();
+
+        // Submit form normally for file download
+        this.submit();
+    });
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop PDF files here or click to upload (multiple files)';
+        document.getElementById('merge_order').value = 'upload_order';
+        document.getElementById('output_filename').value = 'merged_document.pdf';
+        document.getElementById('bookmark_options').value = 'none';
+        fileList.style.display = 'none';
+        hideError();
+        progressContainer.style.display = 'none';
+    });
+});
+</script>
 {% endblock %}

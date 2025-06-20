@@ -39,14 +39,124 @@
 <div class="tool-form-container">
     <h1>Protect PDF with Password - Secure PDF Online Free</h1>
     <p>Add password protection to PDF files online for free. Secure your PDFs with encryption. Easy PDF password protection tool.</p>
-    
-    <div class="drag-drop">
-        <strong>Select or drag and drop your files here</strong>
-    </div>
-    
-    <div class="action-buttons">
-        <button type="submit">Process File</button>
-        <button type="button">Clear</button>
+
+    <form id="protectForm" enctype="multipart/form-data">
+        <div class="drag-drop" onclick="document.getElementById('fileInput').click()">
+            <input type="file" id="fileInput" name="file" accept=".pdf" style="display: none;" required>
+            <strong>Select or drag and drop your PDF file here</strong>
+        </div>
+
+        <div class="form-group">
+            <label for="user_password">User Password (required to open PDF):</label>
+            <input type="password" id="user_password" name="user_password" placeholder="Enter password" required>
+        </div>
+
+        <div class="form-group">
+            <label for="owner_password">Owner Password (for editing permissions):</label>
+            <input type="password" id="owner_password" name="owner_password" placeholder="Leave empty to use same as user password">
+        </div>
+
+        <div class="form-group">
+            <label for="encryption_level">Encryption Level:</label>
+            <select id="encryption_level" name="encryption_level">
+                <option value="256">256-bit AES (Recommended)</option>
+                <option value="128">128-bit RC4</option>
+                <option value="40">40-bit RC4 (Legacy)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Permissions:</label>
+            <div style="margin-top: 10px;">
+                <label style="display: inline-block; margin-right: 20px;">
+                    <input type="checkbox" name="allow_print" value="true"> Allow Printing
+                </label>
+                <label style="display: inline-block; margin-right: 20px;">
+                    <input type="checkbox" name="allow_copy" value="true"> Allow Copying
+                </label>
+                <label style="display: inline-block; margin-right: 20px;">
+                    <input type="checkbox" name="allow_edit" value="true"> Allow Editing
+                </label>
+                <label style="display: inline-block;">
+                    <input type="checkbox" name="allow_annotate" value="true"> Allow Annotations
+                </label>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button type="submit">Protect PDF</button>
+            <button type="button" onclick="clearForm()">Clear</button>
+        </div>
+    </form>
+
+    <div id="result" style="margin-top: 20px; display: none;">
+        <div id="loading" style="text-align: center; display: none;">
+            <p>Processing your PDF...</p>
+        </div>
+        <div id="error" style="color: red; display: none;"></div>
+        <div id="success" style="color: green; display: none;"></div>
     </div>
 </div>
+
+<script>
+document.getElementById('protectForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+    const resultDiv = document.getElementById('result');
+    const loadingDiv = document.getElementById('loading');
+    const errorDiv = document.getElementById('error');
+    const successDiv = document.getElementById('success');
+
+    // Show loading
+    resultDiv.style.display = 'block';
+    loadingDiv.style.display = 'block';
+    errorDiv.style.display = 'none';
+    successDiv.style.display = 'none';
+
+    try {
+        const response = await fetch('/protect_pdf', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = response.headers.get('Content-Disposition')?.split('filename=')[1] || 'protected.pdf';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+
+            successDiv.textContent = 'PDF protected successfully! Download started.';
+            successDiv.style.display = 'block';
+        } else {
+            const error = await response.json();
+            errorDiv.textContent = error.error || 'An error occurred';
+            errorDiv.style.display = 'block';
+        }
+    } catch (error) {
+        errorDiv.textContent = 'Network error: ' + error.message;
+        errorDiv.style.display = 'block';
+    } finally {
+        loadingDiv.style.display = 'none';
+    }
+});
+
+function clearForm() {
+    document.getElementById('protectForm').reset();
+    document.getElementById('result').style.display = 'none';
+}
+
+// File input change handler
+document.getElementById('fileInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        document.querySelector('.drag-drop strong').textContent = `Selected: ${file.name}`;
+    }
+});
+</script>
 {% endblock %}

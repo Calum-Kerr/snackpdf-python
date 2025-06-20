@@ -1,155 +1,139 @@
-{%extends "base.html" %}
+{% extends "base.html" %}
 
-{%block title %}SnackPDF - Flatten PDF{%endblock %}
+{% block title %}Flatten PDF Forms Online Free - Remove Interactive Elements | SnackPDF{% endblock %}
+{% block meta_title %}Flatten PDF Forms Online Free - Remove Interactive Elements | SnackPDF{% endblock %}
+{% block meta_description %}Flatten PDF forms and remove interactive elements online for free. Convert fillable PDFs to static documents. No software needed.{% endblock %}
+{% block meta_keywords %}flatten PDF, remove PDF forms, static PDF, PDF form flattening, non-editable PDF{% endblock %}
 
-{%block page_title %}Flatten PDF Forms{%endblock %}
+{% block canonical_url %}https://www.snackpdf.com/flatten{% endblock %}
+{% block og_url %}https://www.snackpdf.com/flatten{% endblock %}
+{% block og_title %}Flatten PDF Forms Online Free - Remove Interactive Elements | SnackPDF{% endblock %}
+{% block og_description %}Flatten PDF forms and remove interactive elements online for free. Convert fillable PDFs to static documents. No software needed.{% endblock %}
 
-{%block left_sidebar %}
-<!-- Clean for AdSense auto-placement -->
-{%endblock %}
+{% block twitter_url %}https://www.snackpdf.com/flatten{% endblock %}
+{% block twitter_title %}Flatten PDF Forms Online Free - Remove Interactive Elements | SnackPDF{% endblock %}
+{% block twitter_description %}Flatten PDF forms and remove interactive elements online for free. Convert fillable PDFs to static documents. No software needed.{% endblock %}
 
-{%block tool_content %}
-<p>Flatten PDF forms and annotations to create non-editable, final documents.</p>
+{% block structured_data %}
+{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Flatten PDF Forms Online Free - Remove Interactive Elements",
+    "url": "https://www.snackpdf.com/flatten",
+    "description": "Flatten PDF forms and remove interactive elements online for free. Convert fillable PDFs to static documents. No software needed.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "SnackPDF",
+        "url": "https://www.snackpdf.com"
+    } %}
+{% endblock %}
 
-<form id="flattenForm" action="/flatten" method="post" enctype="multipart/form-data">
-    <div id="dragDropBox" class="drag-drop">
-        <strong>Drag and drop PDF files here or click to upload</strong>
-        <input type="file" id="fileInput" name="files" accept=".pdf" multiple style="display: none;" required>
-    </div>
+{% block content %}
+<div class="tool-form-container">
+    <h1>Flatten PDF Forms Online Free - Remove Interactive Elements</h1>
+    <p>Flatten PDF forms and remove interactive elements online for free. Convert fillable PDFs to static documents. No software needed.</p>
 
-    <div class="form-group">
-        <label for="flatten_type">Flatten Type:</label>
-        <select id="flatten_type" name="flatten_type">
-            <option value="forms_only" selected>Forms Only</option>
-            <option value="annotations_only">Annotations Only</option>
-            <option value="both">Forms and Annotations</option>
-            <option value="all_interactive">All Interactive Elements</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label>Elements to Flatten:</label>
-        <div style="margin-top: 10px;">
-            <label><input type="checkbox" name="flatten_text_fields" value="yes" checked> Text Fields</label><br>
-            <label><input type="checkbox" name="flatten_checkboxes" value="yes" checked> Checkboxes</label><br>
-            <label><input type="checkbox" name="flatten_radio_buttons" value="yes" checked> Radio Buttons</label><br>
-            <label><input type="checkbox" name="flatten_dropdowns" value="yes" checked> Dropdown Lists</label><br>
-            <label><input type="checkbox" name="flatten_signatures" value="yes"> Digital Signatures</label><br>
-            <label><input type="checkbox" name="flatten_comments" value="yes"> Comments/Notes</label><br>
-            <label><input type="checkbox" name="flatten_highlights" value="yes"> Highlights</label>
+    <form id="flattenForm" enctype="multipart/form-data">
+        <div class="drag-drop" onclick="document.getElementById('fileInput').click()">
+            <input type="file" id="fileInput" name="file" accept=".pdf" style="display: none;" required>
+            <strong>Select or drag and drop your PDF file here</strong>
         </div>
+
+        <div class="form-group">
+            <label>Flatten Options:</label>
+            <div style="margin-top: 10px;">
+                <label style="display: block; margin-bottom: 10px;">
+                    <input type="checkbox" name="flatten_forms" value="true" checked> Flatten Form Fields
+                </label>
+                <label style="display: block; margin-bottom: 10px;">
+                    <input type="checkbox" name="flatten_annotations" value="true" checked> Flatten Annotations
+                </label>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button type="submit">Flatten PDF</button>
+            <button type="button" onclick="clearForm()">Clear</button>
+        </div>
+    </form>
+
+    <div id="result" style="margin-top: 20px; display: none;">
+        <div id="loading" style="text-align: center; display: none;">
+            <p>Flattening your PDF...</p>
+        </div>
+        <div id="error" style="color: red; display: none;"></div>
+        <div id="success" style="color: green; display: none;"></div>
     </div>
+</div>
 
-    <div class="form-group">
-        <label for="preserve_appearance">Preserve Appearance:</label>
-        <select id="preserve_appearance" name="preserve_appearance">
-            <option value="yes" selected>Yes (Keep Visual Formatting)</option>
-            <option value="no">No (Remove All Formatting)</option>
-            <option value="minimal">Minimal (Basic Formatting Only)</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="compression">Apply Compression:</label>
-        <select id="compression" name="compression">
-            <option value="none">No Compression</option>
-            <option value="light" selected>Light Compression</option>
-            <option value="medium">Medium Compression</option>
-            <option value="high">High Compression</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="remove_metadata">Remove Metadata:</label>
-        <select id="remove_metadata" name="remove_metadata">
-            <option value="no" selected>No</option>
-            <option value="yes">Yes</option>
-            <option value="partial">Partial (Keep Basic Info)</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="output_version">PDF Version:</label>
-        <select id="output_version" name="output_version">
-            <option value="1.4">PDF 1.4 (Compatible)</option>
-            <option value="1.7" selected>PDF 1.7 (Standard)</option>
-            <option value="2.0">PDF 2.0 (Latest)</option>
-        </select>
-    </div>
-
-    <div class="action-buttons">
-        <button type="submit">Flatten PDF</button>
-        <button type="button" id="cancelButton">Cancel</button>
-    </div>
-</form>
-{%endblock %}
-
-{%block right_sidebar %}
-<!-- Clean for AdSense auto-placement -->
-{%endblock %}
-
-{%block scripts %}
 <script>
-    const dragDropBox = document.getElementById('dragDropBox');
-    const fileInput = document.getElementById('fileInput');
+document.getElementById('flattenForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
 
-    dragDropBox.addEventListener('click', function () {
-        fileInput.click();
-    });
+    const formData = new FormData(this);
+    const resultDiv = document.getElementById('result');
+    const loadingDiv = document.getElementById('loading');
+    const errorDiv = document.getElementById('error');
+    const successDiv = document.getElementById('success');
 
-    dragDropBox.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#2196F3';
-    });
+    // Show loading
+    resultDiv.style.display = 'block';
+    loadingDiv.style.display = 'block';
+    errorDiv.style.display = 'none';
+    successDiv.style.display = 'none';
 
-    dragDropBox.addEventListener('dragleave', function () {
-        dragDropBox.style.borderColor = '#d1d5db';
-    });
+    try {
+        const response = await fetch('/flatten_pdf', {
+            method: 'POST',
+            body: formData
+        });
 
-    dragDropBox.addEventListener('drop', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#d1d5db';
-        handleFileUpload(e.dataTransfer.files);
-    });
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = response.headers.get('Content-Disposition')?.split('filename=')[1] || 'flattened.pdf';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
 
-    fileInput.addEventListener('change', function () {
-        if (fileInput.files.length) {
-            handleFileUpload(fileInput.files);
+            successDiv.textContent = 'PDF flattened successfully! Download started.';
+            successDiv.style.display = 'block';
+        } else {
+            const error = await response.json();
+            errorDiv.textContent = error.error || 'An error occurred';
+            errorDiv.style.display = 'block';
         }
-    });
-
-    function handleFileUpload(files) {
-        if (files.length > 0) {
-            const validFiles = Array.from(files).filter(file => 
-                file.type === 'application/pdf'
-            );
-            
-            if (validFiles.length > 0) {
-                dragDropBox.querySelector('strong').textContent = 
-                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} PDF files selected`;
-            } else {
-                alert('Please upload valid PDF files.');
-            }
-        }
+    } catch (error) {
+        errorDiv.textContent = 'Network error: ' + error.message;
+        errorDiv.style.display = 'block';
+    } finally {
+        loadingDiv.style.display = 'none';
     }
+});
 
-    document.getElementById('cancelButton').addEventListener('click', function() {
-        fileInput.value = '';
-        dragDropBox.querySelector('strong').textContent = 'Drag and drop PDF files here or click to upload';
-        document.getElementById('flatten_type').value = 'forms_only';
-        document.getElementById('preserve_appearance').value = 'yes';
-        document.getElementById('compression').value = 'light';
-        document.getElementById('remove_metadata').value = 'no';
-        document.getElementById('output_version').value = '1.7';
-        
-        // Reset checkboxes
-        document.querySelector('input[name="flatten_text_fields"]').checked = true;
-        document.querySelector('input[name="flatten_checkboxes"]').checked = true;
-        document.querySelector('input[name="flatten_radio_buttons"]').checked = true;
-        document.querySelector('input[name="flatten_dropdowns"]').checked = true;
-        document.querySelector('input[name="flatten_signatures"]').checked = false;
-        document.querySelector('input[name="flatten_comments"]').checked = false;
-        document.querySelector('input[name="flatten_highlights"]').checked = false;
-    });
+function clearForm() {
+    document.getElementById('flattenForm').reset();
+    document.getElementById('result').style.display = 'none';
+}
+
+// File input change handler
+document.getElementById('fileInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        document.querySelector('.drag-drop strong').textContent = `Selected: ${file.name}`;
+    }
+});
 </script>
-{%endblock %}
+{% endblock %}
+
+

@@ -5,8 +5,9 @@ import os
 def create_app():
     app = Flask(__name__)
 
-    # Blueprints temporarily disabled for initial deployment
-    # Will be re-enabled once proper dependencies are added
+    # Import and register security blueprint
+    from .security import security_bp
+    app.register_blueprint(security_bp)
 
 
     @app.route('/')

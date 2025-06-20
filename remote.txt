@@ -27,6 +27,9 @@
 - Add progress indicators for large files
 - Error handling and validation
 
+# Domain: https://www.snackpdf.com/
+# Project: PDF Tools Website with Ghostscript Integration
+# Each agent builds backend scripts for their assigned category
 ---
 
 ## AGENT 2: CONVERT TO PDF CATEGORY
@@ -69,6 +72,9 @@
 - Quality settings for different output needs
 - Integration with existing Flask templates
 
+# Domain: https://www.snackpdf.com/
+# Project: PDF Tools Website with Ghostscript Integration
+# Each agent builds backend scripts for their assigned category
 ---
 
 ## AGENT 3: EDIT CATEGORY  
@@ -105,6 +111,9 @@
 - Font and styling options
 - Undo/preview functionality before final processing
 
+# Domain: https://www.snackpdf.com/
+# Project: PDF Tools Website with Ghostscript Integration
+# Each agent builds backend scripts for their assigned category
 ---
 
 ## AGENT 4: ORGANISE CATEGORY
@@ -150,6 +159,9 @@
 - Page preview thumbnails
 - Batch processing support
 
+# Domain: https://www.snackpdf.com/
+# Project: PDF Tools Website with Ghostscript Integration
+# Each agent builds backend scripts for their assigned category
 ---
 
 ## AGENT 5: CONVERT FROM PDF CATEGORY
@@ -195,6 +207,9 @@
 - Quality and resolution controls
 - OCR integration for scanned documents
 
+# Domain: https://www.snackpdf.com/
+# Project: PDF Tools Website with Ghostscript Integration
+# Each agent builds backend scripts for their assigned category
 ---
 
 ## AGENT 6: SECURITY CATEGORY
@@ -233,6 +248,9 @@
 - Encryption/decryption algorithms
 - Visual diff algorithms
 
+# Domain: https://www.snackpdf.com/
+# Project: PDF Tools Website with Ghostscript Integration
+# Each agent builds backend scripts for their assigned category
 ---
 
 ## GLOBAL REQUIREMENTS FOR ALL AGENTS:
@@ -269,4 +287,6 @@
 - Temporary file cleanup
 - Rate limiting for API endpoints
 
-Each agent should create robust, production-ready backend scripts that integrate seamlessly with the existing frontend templates and provide full functionality for their assigned PDF tools.
+# Domain: https://www.snackpdf.com/
+# Project: PDF Tools Website with Ghostscript Integration
+# Each agent builds backend scripts for their assigned category

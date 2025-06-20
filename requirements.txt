@@ -1,14 +1,29 @@
+# Core Flask dependencies
 Flask==3.0.3
 gunicorn==22.0.0
 Werkzeug==3.0.3
+
+# PDF processing core
 ghostscript==0.7
-Pillow==10.4.0
-PyPDF2==3.0.1
 PyMuPDF==1.23.26
+PyPDF2==3.0.1
+Pillow==10.4.0
+
+# Agent 2: Convert TO PDF
 python-docx==1.1.2
 openpyxl==3.1.5
 python-pptx==0.6.23
 reportlab==4.2.2
 beautifulsoup4==4.12.3
+
+# Agent 3: Edit Content
 regex==2023.12.25
 numpy==1.26.4
+
+# Agent 5: Convert FROM PDF
+pandas==2.1.0
+pdf2docx==0.5.6
+pdf2image==1.17.0
+
+# Agent 6: Security
+cryptography==42.0.8

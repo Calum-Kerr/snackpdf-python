@@ -9,12 +9,12 @@
 {%endblock %}
 
 {%block tool_content %}
-<p>Convert PowerPoint presentations to PDF with high-quality output.</p>
+<div class="tool-form-container">
+    <h1>PowerPoint to PDF Converter - Convert PPT to PDF Free</h1>
+    <p>Convert PowerPoint presentations (PPT, PPTX) to PDF online for free. Preserve slide layouts and formatting. Fast PowerPoint to PDF conversion.</p>
 
-<form id="powerPointToPdfForm" action="/powerpoint_to_pdf" method="post" enctype="multipart/form-data">
-    <div id="dragDropBox" class="drag-drop">
-        <strong>Drag and drop PowerPoint files here or click to upload</strong>
-        <input type="file" id="fileInput" name="files" accept=".ppt,.pptx" multiple style="display: none;" required>
+    <div class="drag-drop">
+        <strong>Select or drag and drop your files here</strong>
     </div>
 
     <div class="form-group">
@@ -54,10 +54,10 @@
     </div>
 
     <div class="action-buttons">
-        <button type="submit">Convert to PDF</button>
-        <button type="button" id="cancelButton">Cancel</button>
+        <button type="submit" disabled>Process File</button>
+        <button type="button">Clear</button>
     </div>
-</form>
+</div>
 {%endblock %}
 
 {%block right_sidebar %}
@@ -65,57 +65,5 @@
 {%endblock %}
 
 {%block scripts %}
-<script>
-    const dragDropBox = document.getElementById('dragDropBox');
-    const fileInput = document.getElementById('fileInput');
-
-    dragDropBox.addEventListener('click', function () {
-        fileInput.click();
-    });
-
-    dragDropBox.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#2196F3';
-    });
-
-    dragDropBox.addEventListener('dragleave', function () {
-        dragDropBox.style.borderColor = '#d1d5db';
-    });
-
-    dragDropBox.addEventListener('drop', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#d1d5db';
-        handleFileUpload(e.dataTransfer.files);
-    });
-
-    fileInput.addEventListener('change', function () {
-        if (fileInput.files.length) {
-            handleFileUpload(fileInput.files);
-        }
-    });
-
-    function handleFileUpload(files) {
-        if (files.length > 0) {
-            const validFiles = Array.from(files).filter(file => 
-                file.name.endsWith('.ppt') || file.name.endsWith('.pptx')
-            );
-            
-            if (validFiles.length > 0) {
-                dragDropBox.querySelector('strong').textContent = 
-                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} PowerPoint files selected`;
-            } else {
-                alert('Please upload valid PowerPoint files (.ppt or .pptx).');
-            }
-        }
-    }
-
-    document.getElementById('cancelButton').addEventListener('click', function() {
-        fileInput.value = '';
-        dragDropBox.querySelector('strong').textContent = 'Drag and drop PowerPoint files here or click to upload';
-        document.getElementById('quality').value = 'high';
-        document.getElementById('slides_per_page').value = '1';
-        document.getElementById('include_notes').value = 'no';
-        document.getElementById('page_orientation').value = 'landscape';
-    });
-</script>
+<script src="{{ url_for('static', filename='convert_to_pdf.js') }}"></script>
 {%endblock %}

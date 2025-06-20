@@ -9,12 +9,12 @@
 {%endblock %}
 
 {%block tool_content %}
-<p>Convert Excel spreadsheets to PDF with perfect formatting and layout preservation.</p>
+<div class="tool-form-container">
+    <h1>Excel to PDF Converter - Convert XLS to PDF Free</h1>
+    <p>Convert Excel spreadsheets (XLS, XLSX) to PDF online for free. Preserve formatting and charts. Fast Excel to PDF conversion.</p>
 
-<form id="excelToPdfForm" action="/excel_to_pdf" method="post" enctype="multipart/form-data">
-    <div id="dragDropBox" class="drag-drop">
-        <strong>Drag and drop Excel files here or click to upload</strong>
-        <input type="file" id="fileInput" name="files" accept=".xls,.xlsx" multiple style="display: none;" required>
+    <div class="drag-drop">
+        <strong>Select or drag and drop your files here</strong>
     </div>
 
     <div class="form-group">
@@ -55,10 +55,10 @@
     </div>
 
     <div class="action-buttons">
-        <button type="submit">Convert to PDF</button>
-        <button type="button" id="cancelButton">Cancel</button>
+        <button type="submit" disabled>Process File</button>
+        <button type="button">Clear</button>
     </div>
-</form>
+</div>
 {%endblock %}
 
 {%block right_sidebar %}
@@ -66,57 +66,5 @@
 {%endblock %}
 
 {%block scripts %}
-<script>
-    const dragDropBox = document.getElementById('dragDropBox');
-    const fileInput = document.getElementById('fileInput');
-
-    dragDropBox.addEventListener('click', function () {
-        fileInput.click();
-    });
-
-    dragDropBox.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#2196F3';
-    });
-
-    dragDropBox.addEventListener('dragleave', function () {
-        dragDropBox.style.borderColor = '#d1d5db';
-    });
-
-    dragDropBox.addEventListener('drop', function (e) {
-        e.preventDefault();
-        dragDropBox.style.borderColor = '#d1d5db';
-        handleFileUpload(e.dataTransfer.files);
-    });
-
-    fileInput.addEventListener('change', function () {
-        if (fileInput.files.length) {
-            handleFileUpload(fileInput.files);
-        }
-    });
-
-    function handleFileUpload(files) {
-        if (files.length > 0) {
-            const validFiles = Array.from(files).filter(file => 
-                file.name.endsWith('.xls') || file.name.endsWith('.xlsx')
-            );
-            
-            if (validFiles.length > 0) {
-                dragDropBox.querySelector('strong').textContent = 
-                    validFiles.length === 1 ? validFiles[0].name : `${validFiles.length} Excel files selected`;
-            } else {
-                alert('Please upload valid Excel files (.xls or .xlsx).');
-            }
-        }
-    }
-
-    document.getElementById('cancelButton').addEventListener('click', function() {
-        fileInput.value = '';
-        dragDropBox.querySelector('strong').textContent = 'Drag and drop Excel files here or click to upload';
-        document.getElementById('worksheet_selection').value = 'all';
-        document.getElementById('page_orientation').value = 'auto';
-        document.getElementById('scaling').value = 'fit_to_page';
-        document.getElementById('grid_lines').value = 'show';
-    });
-</script>
+<script src="{{ url_for('static', filename='convert_to_pdf.js') }}"></script>
 {%endblock %}

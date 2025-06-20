@@ -5,6 +5,7 @@ import os
 def create_app():
     app = Flask(__name__)
 
+<<<<<<< HEAD
     # Register blueprints for convert-to-PDF functionality (Agent 2)
     try:
         from .convert_to_pdf import convert_to_pdf_bp
@@ -32,6 +33,14 @@ def create_app():
     except ImportError as e:
         print(f"Warning: Could not import PDF editing blueprints: {e}")
         # Continue without blueprints for now
+=======
+    # Register PDF optimization blueprints
+    from .compress import compress_bp
+    from .repair import repair_bp
+
+    app.register_blueprint(compress_bp)
+    app.register_blueprint(repair_bp)
+>>>>>>> origin/feature/pdf-optimization-tools
 
 
     @app.route('/')

@@ -49,13 +49,229 @@
     <h1>Compress PDF Online Free - Reduce PDF File Size</h1>
     <p>Compress PDF files online for free. Reduce PDF file size without losing quality. Fast, secure, and easy PDF compression tool. No registration required.</p>
 
-    <div class="drag-drop">
-        <strong>Select or drag and drop your files here</strong>
+    <form id="compressForm" action="/compress" method="post" enctype="multipart/form-data">
+        <div id="dragDropBox" class="drag-drop">
+            <strong>Drag and drop PDF files here or click to upload</strong>
+            <input type="file" id="fileInput" name="file" accept=".pdf" style="display: none;" required>
+        </div>
+
+        <div class="form-group">
+            <label for="compression_level">Compression Level:</label>
+            <select id="compression_level" name="compression_level">
+                <option value="high">High Quality (Least Compression)</option>
+                <option value="medium" selected>Medium Quality (Balanced)</option>
+                <option value="low">Low Quality (Most Compression)</option>
+                <option value="lossless">Lossless (No Quality Loss)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="advanced_options">Advanced Options:</label>
+            <div style="margin-top: 10px;">
+                <label><input type="checkbox" name="retain_metadata" value="true" checked> Retain Document Metadata</label><br>
+                <label><input type="checkbox" name="fast_mode" value="true"> Fast Web View Optimization</label><br>
+                <label>Resolution (DPI): <input type="number" name="resolution" placeholder="300" min="72" max="600" style="width: 80px;"></label>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button type="submit" id="processBtn">Compress PDF</button>
+            <button type="button" id="clearBtn">Clear</button>
+        </div>
+    </form>
+
+    <div id="progressContainer" style="display: none;">
+        <div class="progress-bar">
+            <div id="progressBar" class="progress-fill"></div>
+        </div>
+        <p id="progressText">Processing your PDF...</p>
     </div>
 
-    <div class="action-buttons">
-        <button type="submit">Process File</button>
-        <button type="button">Clear</button>
+    <div id="errorContainer" style="display: none;">
+        <div class="error-message" id="errorMessage"></div>
     </div>
 </div>
+
+<style>
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    width: 0%;
+    transition: width 0.3s ease;
+    animation: progress-animation 2s infinite;
+}
+
+@keyframes progress-animation {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    100% { width: 100%; }
+}
+
+.error-message {
+    background-color: #fed7d7;
+    color: #c53030;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border-left: 4px solid #e53e3e;
+    margin-bottom: 16px;
+    font-weight: 500;
+}
+
+#progressContainer {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f7fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+#progressText {
+    text-align: center;
+    color: #4a5568;
+    font-weight: 500;
+    margin: 0;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+    const compressForm = document.getElementById('compressForm');
+    const processBtn = document.getElementById('processBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const progressContainer = document.getElementById('progressContainer');
+    const errorContainer = document.getElementById('errorContainer');
+    const errorMessage = document.getElementById('errorMessage');
+
+    // Drag and drop functionality
+    dragDropBox.addEventListener('click', () => fileInput.click());
+
+    dragDropBox.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dragDropBox.style.backgroundColor = '#f0f0f0';
+    });
+
+    dragDropBox.addEventListener('dragleave', () => {
+        dragDropBox.style.backgroundColor = '';
+    });
+
+    dragDropBox.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dragDropBox.style.backgroundColor = '';
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            updateFileDisplay(files[0]);
+        }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            updateFileDisplay(e.target.files[0]);
+        }
+    });
+
+    function updateFileDisplay(file) {
+        if (file.type !== 'application/pdf') {
+            showError('Please select a PDF file.');
+            return;
+        }
+        if (file.size > 50 * 1024 * 1024) {
+            showError('File size must be less than 50MB.');
+            return;
+        }
+        dragDropBox.innerHTML = `<strong>Selected: ${file.name}</strong><br><small>${(file.size / 1024 / 1024).toFixed(2)} MB</small>`;
+        hideError();
+    }
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorContainer.style.display = 'block';
+    }
+
+    function hideError() {
+        errorContainer.style.display = 'none';
+    }
+
+    // Form submission
+    compressForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (!fileInput.files.length) {
+            showError('Please select a PDF file.');
+            return;
+        }
+
+        // Show progress
+        progressContainer.style.display = 'block';
+        processBtn.disabled = true;
+        processBtn.textContent = 'Compressing...';
+        hideError();
+
+        // Submit form
+        const formData = new FormData(compressForm);
+
+        fetch('/compress', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.blob();
+            } else {
+                return response.json().then(data => {
+                    throw new Error(data.error || 'Compression failed');
+                });
+            }
+        })
+        .then(blob => {
+            // Create download link
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `compressed_${fileInput.files[0].name}`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+
+            // Reset form
+            resetForm();
+        })
+        .catch(error => {
+            showError(error.message);
+            resetForm();
+        });
+    });
+
+    function resetForm() {
+        progressContainer.style.display = 'none';
+        processBtn.disabled = false;
+        processBtn.textContent = 'Compress PDF';
+    }
+
+    // Clear button
+    clearBtn.addEventListener('click', function() {
+        compressForm.reset();
+        dragDropBox.innerHTML = '<strong>Drag and drop PDF files here or click to upload</strong>';
+        hideError();
+        resetForm();
+
+        // Reset checkboxes
+        document.querySelector('input[name="retain_metadata"]').checked = true;
+        document.querySelector('input[name="fast_mode"]').checked = false;
+        document.querySelector('select[name="compression_level"]').value = 'medium';
+    });
+});
+</script>
 {%endblock %}

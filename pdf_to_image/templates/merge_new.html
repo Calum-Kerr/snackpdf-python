@@ -35,18 +35,143 @@
     } %}
 {% endblock %}
 
-{% block content %}
-<div class="tool-form-container">
-    <h1>Merge PDF Files Online Free - Combine PDFs</h1>
-    <p>Merge multiple PDF files into one document online for free. Combine PDFs quickly and securely. No software installation required.</p>
-    
-    <div class="drag-drop">
-        <strong>Select or drag and drop your files here</strong>
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Merge multiple PDF files into one document online for free. Combine PDFs quickly and securely. No software installation required.</p>
+
+<form id="mergeForm" action="/merge" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop PDF files here or click to upload</strong>
+        <input type="file" id="fileInput" name="files" accept=".pdf" multiple style="display: none;" required>
     </div>
-    
+
+    <div id="fileList" style="display: none;">
+        <h4>Selected Files:</h4>
+        <ul id="selectedFiles"></ul>
+        <button type="button" id="clearFiles">Clear All Files</button>
+    </div>
+
+    <div class="form-group">
+        <label for="output_filename">Output Filename:</label>
+        <input type="text" id="output_filename" name="output_filename" placeholder="merged_document.pdf" value="merged_document.pdf">
+    </div>
+
+    <div class="form-group">
+        <label for="merge_order">Merge Order:</label>
+        <select id="merge_order" name="merge_order">
+            <option value="upload_order" selected>Upload Order</option>
+            <option value="alphabetical">Alphabetical</option>
+            <option value="reverse_alphabetical">Reverse Alphabetical</option>
+            <option value="custom">Custom Order</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="bookmark_handling">Bookmark Handling:</label>
+        <select id="bookmark_handling" name="bookmark_handling">
+            <option value="preserve" selected>Preserve All Bookmarks</option>
+            <option value="remove">Remove All Bookmarks</option>
+            <option value="merge_top_level">Merge as Top-Level</option>
+        </select>
+    </div>
+
     <div class="action-buttons">
-        <button type="submit">Process File</button>
-        <button type="button">Clear</button>
+        <button type="submit">Merge PDFs</button>
+        <button type="button" id="cancelButton">Cancel</button>
     </div>
-</div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+    const fileList = document.getElementById('fileList');
+    const selectedFiles = document.getElementById('selectedFiles');
+    let uploadedFiles = [];
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    function handleFileUpload(files) {
+        for (let file of files) {
+            if (file.type === 'application/pdf') {
+                uploadedFiles.push(file);
+            } else {
+                alert(`${file.name} is not a valid PDF file.`);
+            }
+        }
+        updateFileList();
+    }
+
+    function updateFileList() {
+        if (uploadedFiles.length > 0) {
+            fileList.style.display = 'block';
+            selectedFiles.innerHTML = '';
+
+            uploadedFiles.forEach((file, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${file.name}</span>
+                    <button type="button" onclick="removeFile(${index})">Remove</button>
+                `;
+                selectedFiles.appendChild(li);
+            });
+
+            dragDropBox.querySelector('strong').textContent = `${uploadedFiles.length} PDF files selected`;
+        } else {
+            fileList.style.display = 'none';
+            dragDropBox.querySelector('strong').textContent = 'Drag and drop PDF files here or click to upload';
+        }
+    }
+
+    function removeFile(index) {
+        uploadedFiles.splice(index, 1);
+        updateFileList();
+    }
+
+    document.getElementById('clearFiles').addEventListener('click', function() {
+        uploadedFiles = [];
+        fileInput.value = '';
+        updateFileList();
+    });
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        uploadedFiles = [];
+        fileInput.value = '';
+        updateFileList();
+        document.getElementById('output_filename').value = 'merged_document.pdf';
+        document.getElementById('merge_order').value = 'upload_order';
+        document.getElementById('bookmark_handling').value = 'preserve';
+    });
+</script>
 {% endblock %}

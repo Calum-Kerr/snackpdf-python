@@ -5,8 +5,27 @@ import os
 def create_app():
     app = Flask(__name__)
 
-    # Blueprints temporarily disabled for initial deployment
-    # Will be re-enabled once proper dependencies are added
+    # Register blueprints for PDF organization tools
+    try:
+        from .merge import merge_bp
+        from .split import split_bp
+        from .remove import remove_bp
+        from .extract import extract_bp
+        from .sort import sort_bp
+        from .rotate import rotate_bp
+        from .compress import compress_bp
+
+        app.register_blueprint(merge_bp)
+        app.register_blueprint(split_bp)
+        app.register_blueprint(remove_bp)
+        app.register_blueprint(extract_bp)
+        app.register_blueprint(sort_bp)
+        app.register_blueprint(rotate_bp)
+        app.register_blueprint(compress_bp)
+
+    except ImportError as e:
+        print(f"Warning: Could not import blueprint: {e}")
+        # Continue without blueprints for now
 
 
     @app.route('/')

@@ -35,18 +35,135 @@
     } %}
 {% endblock %}
 
-{% block content %}
-<div class="tool-form-container">
-    <h1>Split PDF Online Free - Extract Pages from PDF</h1>
-    <p>Split PDF files online for free. Extract specific pages or split into multiple documents. Fast and secure PDF splitter tool.</p>
-    
-    <div class="drag-drop">
-        <strong>Select or drag and drop your files here</strong>
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Split PDF files online for free. Extract specific pages or split into multiple documents. Fast and secure PDF splitter tool.</p>
+
+<form id="splitForm" action="/split" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop a PDF file here or click to upload</strong>
+        <input type="file" id="fileInput" name="file" accept=".pdf" style="display: none;" required>
     </div>
-    
+
+    <div class="form-group">
+        <label for="split_method">Split Method:</label>
+        <select id="split_method" name="split_method">
+            <option value="page_ranges" selected>Page Ranges</option>
+            <option value="every_n_pages">Every N Pages</option>
+            <option value="by_size">By File Size</option>
+            <option value="by_bookmarks">By Bookmarks</option>
+            <option value="single_pages">Individual Pages</option>
+        </select>
+    </div>
+
+    <div class="form-group" id="page_ranges_input">
+        <label for="page_ranges">Page Ranges (comma-separated):</label>
+        <input type="text" id="page_ranges" name="page_ranges" placeholder="e.g., 1-5, 6-10, 11-15">
+        <small>Enter page ranges like: 1-5, 6-10, 11-15 or individual pages: 1, 3, 5</small>
+    </div>
+
+    <div class="form-group" id="pages_per_split_input" style="display: none;">
+        <label for="pages_per_split">Pages per Split:</label>
+        <input type="number" id="pages_per_split" name="pages_per_split" min="1" value="1">
+    </div>
+
+    <div class="form-group" id="max_size_input" style="display: none;">
+        <label for="max_size_mb">Maximum Size per File (MB):</label>
+        <input type="number" id="max_size_mb" name="max_size_mb" min="1" value="10">
+    </div>
+
+    <div class="form-group">
+        <label for="output_format">Output Format:</label>
+        <select id="output_format" name="output_format">
+            <option value="separate_files" selected>Separate PDF Files</option>
+            <option value="zip_archive">ZIP Archive</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="preserve_bookmarks">Preserve Bookmarks:</label>
+        <select id="preserve_bookmarks" name="preserve_bookmarks">
+            <option value="true" selected>Yes</option>
+            <option value="false">No</option>
+        </select>
+    </div>
+
     <div class="action-buttons">
-        <button type="submit">Process File</button>
-        <button type="button">Clear</button>
+        <button type="submit">Split PDF</button>
+        <button type="button" id="cancelButton">Cancel</button>
     </div>
-</div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+    const splitMethod = document.getElementById('split_method');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    splitMethod.addEventListener('change', function() {
+        const method = this.value;
+        document.getElementById('page_ranges_input').style.display =
+            (method === 'page_ranges') ? 'block' : 'none';
+        document.getElementById('pages_per_split_input').style.display =
+            (method === 'every_n_pages') ? 'block' : 'none';
+        document.getElementById('max_size_input').style.display =
+            (method === 'by_size') ? 'block' : 'none';
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type === 'application/pdf') {
+                dragDropBox.querySelector('strong').textContent = file.name;
+            } else {
+                alert('Please upload a valid PDF file.');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
+        document.getElementById('split_method').value = 'page_ranges';
+        document.getElementById('page_ranges').value = '';
+        document.getElementById('pages_per_split').value = '1';
+        document.getElementById('max_size_mb').value = '10';
+        document.getElementById('output_format').value = 'separate_files';
+        document.getElementById('preserve_bookmarks').value = 'true';
+        splitMethod.dispatchEvent(new Event('change'));
+    });
+</script>
 {% endblock %}

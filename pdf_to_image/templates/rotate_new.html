@@ -35,18 +35,128 @@
     } %}
 {% endblock %}
 
-{% block content %}
-<div class="tool-form-container">
-    <h1>Rotate PDF Pages Online Free - Fix PDF Orientation</h1>
-    <p>Rotate PDF pages online for free. Fix page orientation, rotate clockwise or counterclockwise. Easy PDF rotation tool.</p>
-    
-    <div class="drag-drop">
-        <strong>Select or drag and drop your files here</strong>
+{% block left_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block tool_content %}
+<p>Rotate PDF pages online for free. Fix page orientation, rotate clockwise or counterclockwise. Easy PDF rotation tool.</p>
+
+<form id="rotateForm" action="/rotate" method="post" enctype="multipart/form-data">
+    <div id="dragDropBox" class="drag-drop">
+        <strong>Drag and drop a PDF file here or click to upload</strong>
+        <input type="file" id="fileInput" name="file" accept=".pdf" style="display: none;" required>
     </div>
-    
+
+    <div class="form-group">
+        <label for="rotation_angle">Rotation Angle:</label>
+        <select id="rotation_angle" name="rotation_angle">
+            <option value="90" selected>90° Clockwise</option>
+            <option value="180">180° (Upside Down)</option>
+            <option value="270">270° Clockwise (90° Counter-clockwise)</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="rotation_scope">Rotation Scope:</label>
+        <select id="rotation_scope" name="rotation_scope">
+            <option value="all_pages" selected>All Pages</option>
+            <option value="specific_pages">Specific Pages</option>
+            <option value="odd_pages">Odd Pages Only</option>
+            <option value="even_pages">Even Pages Only</option>
+        </select>
+    </div>
+
+    <div class="form-group" id="specific_pages_input" style="display: none;">
+        <label for="pages_to_rotate">Pages to Rotate:</label>
+        <input type="text" id="pages_to_rotate" name="pages_to_rotate" placeholder="e.g., 1,3,5-7,10">
+        <small>Enter page numbers or ranges. Examples: 1,3,5 or 1-5,8,10-12</small>
+    </div>
+
+    <div class="form-group">
+        <label for="preserve_aspect">Preserve Aspect Ratio:</label>
+        <select id="preserve_aspect" name="preserve_aspect">
+            <option value="true" selected>Yes</option>
+            <option value="false">No</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="auto_crop">Auto-crop After Rotation:</label>
+        <select id="auto_crop" name="auto_crop">
+            <option value="false" selected>No</option>
+            <option value="true">Yes</option>
+        </select>
+    </div>
+
     <div class="action-buttons">
-        <button type="submit">Process File</button>
-        <button type="button">Clear</button>
+        <button type="submit">Rotate Pages</button>
+        <button type="button" id="cancelButton">Cancel</button>
     </div>
-</div>
+</form>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Clean for AdSense auto-placement -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dragDropBox = document.getElementById('dragDropBox');
+    const fileInput = document.getElementById('fileInput');
+    const rotationScope = document.getElementById('rotation_scope');
+
+    dragDropBox.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    dragDropBox.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#2196F3';
+    });
+
+    dragDropBox.addEventListener('dragleave', function () {
+        dragDropBox.style.borderColor = '#d1d5db';
+    });
+
+    dragDropBox.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dragDropBox.style.borderColor = '#d1d5db';
+        handleFileUpload(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+            handleFileUpload(fileInput.files);
+        }
+    });
+
+    rotationScope.addEventListener('change', function() {
+        const scope = this.value;
+        document.getElementById('specific_pages_input').style.display =
+            (scope === 'specific_pages') ? 'block' : 'none';
+    });
+
+    function handleFileUpload(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type === 'application/pdf') {
+                dragDropBox.querySelector('strong').textContent = file.name;
+            } else {
+                alert('Please upload a valid PDF file.');
+            }
+        }
+    }
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        fileInput.value = '';
+        dragDropBox.querySelector('strong').textContent = 'Drag and drop a PDF file here or click to upload';
+        document.getElementById('rotation_angle').value = '90';
+        document.getElementById('rotation_scope').value = 'all_pages';
+        document.getElementById('pages_to_rotate').value = '';
+        document.getElementById('preserve_aspect').value = 'true';
+        document.getElementById('auto_crop').value = 'false';
+        rotationScope.dispatchEvent(new Event('change'));
+    });
+</script>
 {% endblock %}

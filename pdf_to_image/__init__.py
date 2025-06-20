@@ -137,11 +137,11 @@ def create_app():
     # SEO Routes
     @app.route('/sitemap.xml')
     def sitemap():
-        return send_from_directory('.', 'sitemap.xml', mimetype='application/xml')
+        return send_from_directory(os.path.dirname(os.path.dirname(__file__)), 'sitemap.xml', mimetype='application/xml')
 
     @app.route('/robots.txt')
     def robots():
-        return send_from_directory('.', 'robots.txt', mimetype='text/plain')
+        return send_from_directory(os.path.dirname(os.path.dirname(__file__)), 'robots.txt', mimetype='text/plain')
 
     @app.errorhandler(Exception)
     def handle_exception(e):

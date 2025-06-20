@@ -466,37 +466,70 @@ def pdf_to_panoramic():
 
         # Convert pages to images using Ghostscript
         temp_images = []
-        for page_num in page_list:
-            temp_image = os.path.join(STATIC_DIR, f"{unique_id}_page_{page_num}.png")
 
-            # Ghostscript command to convert specific page to PNG
-            gs_cmd = [
-                'gs',
-                '-dNOPAUSE',
-                '-dBATCH',
-                '-dSAFER',
-                '-sDEVICE=png16m',
-                f'-r{dpi}',
-                f'-dFirstPage={page_num}',
-                f'-dLastPage={page_num}',
-                f'-sOutputFile={temp_image}',
-                input_path
-            ]
+        # Determine Ghostscript executable
+        import platform
+        if platform.system() == 'Windows':
+            # Try different Windows Ghostscript executables
+            gs_executables = ['gswin64c.exe', 'gswin32c.exe', 'gs.exe', 'gs']
+        else:
+            gs_executables = ['gs']
 
-            result = subprocess.run(gs_cmd, capture_output=True, text=True)
-            if result.returncode != 0:
-                logging.error(f"Ghostscript error: {result.stderr}")
-                # Cleanup and return error
-                try:
-                    os.remove(input_path)
-                except:
-                    pass
-                return jsonify({"error": "Failed to convert PDF pages to images"}), 500
+        gs_executable = None
+        for gs_exe in gs_executables:
+            try:
+                result = subprocess.run([gs_exe, '--version'], capture_output=True, text=True)
+                if result.returncode == 0:
+                    gs_executable = gs_exe
+                    break
+            except FileNotFoundError:
+                continue
 
-            temp_images.append(temp_image)
+        if not gs_executable:
+            # Fallback to PyMuPDF if Ghostscript not found
+            logging.warning("Ghostscript not found, using PyMuPDF fallback")
+            doc = fitz.open(input_path)
+            for page_num in page_list:
+                if page_num <= len(doc):
+                    page = doc.load_page(page_num - 1)  # PyMuPDF uses 0-based indexing
+                    mat = fitz.Matrix(dpi/72, dpi/72)
+                    pix = page.get_pixmap(matrix=mat)
+                    temp_image = os.path.join(STATIC_DIR, f"{unique_id}_page_{page_num}.png")
+                    pix.save(temp_image)
+                    temp_images.append(temp_image)
+            doc.close()
+        else:
+            # Use Ghostscript
+            for page_num in page_list:
+                temp_image = os.path.join(STATIC_DIR, f"{unique_id}_page_{page_num}.png")
+
+                # Ghostscript command to convert specific page to PNG
+                gs_cmd = [
+                    gs_executable,
+                    '-dNOPAUSE',
+                    '-dBATCH',
+                    '-dSAFER',
+                    '-sDEVICE=png16m',
+                    f'-r{dpi}',
+                    f'-dFirstPage={page_num}',
+                    f'-dLastPage={page_num}',
+                    f'-sOutputFile={temp_image}',
+                    input_path
+                ]
+
+                result = subprocess.run(gs_cmd, capture_output=True, text=True)
+                if result.returncode != 0:
+                    logging.error(f"Ghostscript error: {result.stderr}")
+                    # Cleanup and return error
+                    try:
+                        os.remove(input_path)
+                    except:
+                        pass
+                    return jsonify({"error": "Failed to convert PDF pages to images"}), 500
+
+                temp_images.append(temp_image)
 
         # Load images and create panoramic
-        from PIL import Image
         images = []
         for img_path in temp_images:
             if os.path.exists(img_path):

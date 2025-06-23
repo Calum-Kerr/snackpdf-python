@@ -1,0 +1,13 @@
+# Priority URLs for Google Search Console Manual Indexing
+# Submit these URLs one by one in Google Search Console > URL Inspection
+
+https://www.snackpdf.com/
+https://www.snackpdf.com/compress
+https://www.snackpdf.com/pdf_to_jpg
+https://www.snackpdf.com/merge
+https://www.snackpdf.com/split
+https://www.snackpdf.com/jpg_to_pdf
+https://www.snackpdf.com/word_to_pdf
+https://www.snackpdf.com/word
+https://www.snackpdf.com/unlock
+https://www.snackpdf.com/protect

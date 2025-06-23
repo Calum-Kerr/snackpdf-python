@@ -769,5 +769,179 @@
     {%block scripts %}
     {%endblock %}
 </div>
+
+<!-- Footer -->
+<footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>SnackPDF</h4>
+                <p>Free, secure, and fast PDF tools for everyone. Based in Edinburgh, Scotland.</p>
+                <div class="footer-location">
+                    <span>📍 Edinburgh, Scotland, UK</span>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4>Popular Tools</h4>
+                <ul>
+                    <li><a href="/compress">Compress PDF</a></li>
+                    <li><a href="/pdf_to_jpg">PDF to JPG</a></li>
+                    <li><a href="/merge">Merge PDF</a></li>
+                    <li><a href="/split">Split PDF</a></li>
+                    <li><a href="/jpg_to_pdf">JPG to PDF</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Convert</h4>
+                <ul>
+                    <li><a href="/word_to_pdf">Word to PDF</a></li>
+                    <li><a href="/word">PDF to Word</a></li>
+                    <li><a href="/powerpoint_to_pdf">PowerPoint to PDF</a></li>
+                    <li><a href="/powerpoint">PDF to PowerPoint</a></li>
+                    <li><a href="/excel_to_pdf">Excel to PDF</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Information</h4>
+                <ul>
+                    <li><a href="/about">About SnackPDF</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-bottom-content">
+                <p>&copy; 2025 SnackPDF. All rights reserved. Made with ❤️ in Edinburgh, Scotland.</p>
+                <div class="footer-links">
+                    <a href="/privacy">Privacy</a>
+                    <a href="/terms">Terms</a>
+                    <a href="/about">About</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+.site-footer {
+    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+    color: #e2e8f0;
+    margin-top: 60px;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    padding: 60px 20px 40px 20px;
+}
+
+.footer-section h4 {
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.footer-section p {
+    color: #a0aec0;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.footer-location {
+    color: #667eea;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 12px;
+}
+
+.footer-section ul li a {
+    color: #a0aec0;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+    color: #667eea;
+}
+
+.footer-bottom {
+    border-top: 1px solid #4a5568;
+    padding: 20px;
+}
+
+.footer-bottom-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.footer-bottom p {
+    color: #a0aec0;
+    font-size: 14px;
+    margin: 0;
+}
+
+.footer-links {
+    display: flex;
+    gap: 24px;
+}
+
+.footer-links a {
+    color: #a0aec0;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #667eea;
+}
+
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 40px 20px 30px 20px;
+    }
+
+    .footer-bottom-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-links {
+        justify-content: center;
+    }
+}
+</style>
+
 </body>
 </html>

@@ -204,4 +204,24 @@
         <priority>0.7</priority>
     </url>
 
+    <!-- Essential Pages -->
+    <url>
+        <loc>https://www.snackpdf.com/about</loc>
+        <lastmod>2025-06-23</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://www.snackpdf.com/privacy</loc>
+        <lastmod>2025-06-23</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://www.snackpdf.com/terms</loc>
+        <lastmod>2025-06-23</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
 </urlset>

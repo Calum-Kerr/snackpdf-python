@@ -10,9 +10,11 @@ Crawl-delay: 1
 # Allow all major search engines
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Slurp
 Allow: /
@@ -22,11 +24,6 @@ Allow: /
 
 User-agent: Baiduspider
 Allow: /
-
-# Block access to admin or sensitive areas (if any in future)
-# User-agent: *
-# Disallow: /admin/
-# Disallow: /private/
 
 # Allow access to static resources
 Allow: /static/
@@ -38,3 +35,10 @@ Allow: /*.jpeg$
 Allow: /*.gif$
 Allow: /*.svg$
 Allow: /*.ico$
+
+# Block access to admin or sensitive areas (if any in future)
+# User-agent: *
+# Disallow: /admin/
+# Disallow: /private/
+
+# Last updated: 2025-06-23
